@@ -1,0 +1,6 @@
+*.pyc
+*.swp
+.vscode/
+.venv/
+__pycache__/
+static/songs/
