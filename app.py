@@ -13,13 +13,7 @@ video_urls = ["static/songs/" + video for video in
 
 @app.route("/")
 def index():
-    return render_template(
-        "home.html",
-        site_title='KaraTube',
-        title="Home",
-        transpose_value='',
-        admin=True
-    )
+    return render_template("index.html")
 
 @app.route("/player")
 def player():
