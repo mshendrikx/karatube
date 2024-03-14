@@ -3,6 +3,8 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KaraTube</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <style>
     * {
       box-sizing: border-box;
@@ -24,7 +26,7 @@
 
     .content {
       position: fixed;
-      bottom: 0;
+      top: 0;
       background: rgba(0, 0, 0, 0.5);
       color: #f1f1f1;
       width: 100%;
@@ -50,8 +52,8 @@
 
 <body>
 
-  <video autoplay loop id="myVideo">
-    <source src="rain.mp4" type="video/mp4">
+  <video autoplay controls loop id="myVideo">
+    <source src="static/songs/Bon Jovi - Livin` On A Prayer.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
 
