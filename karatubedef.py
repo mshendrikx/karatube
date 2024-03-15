@@ -2,8 +2,11 @@
 import subprocess
 import mysql.connector
 import requests
+import re
 
 from pathlib import Path
+from bs4 import BeautifulSoup
+
 
 APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = 'https://www.youtube.com/watch?v='
@@ -26,6 +29,11 @@ class SongQueue:
 class LastFM:
     artist = ''
     song = ''
+    
+class YoutubeVideos:
+    id = ''
+    thumb = ''
+    description = ''
 
 def db_connect():
 
@@ -161,3 +169,33 @@ def lastfm_search(search_arg):
     return None
   
   return tracks
+
+def youtube_search(search_arg):
+    
+    search_url = "https://www.youtube.com/results?search_query=" + search_arg    
+    response = requests.get(search_url)
+    splited = response.text.split('{"videoRenderer":{"')
+    index = 0
+    video_list = []
+    for video_data in splited:
+        #if index == 0:
+        #    index += 1
+        #    continue
+        try:
+            video_id = re.findall(r'videoId":"(.*?)","thumbnail', video_data)[0]
+            aux = video_data.replace('{"thumbnails":[{"url":"', 'zz_thumbs')
+            aux = aux.replace('?sqp', 'zz_thumbd')
+            thumbnail = re.findall(r'zz_thumbs(.*?)zz_thumbd', aux)[0]
+            aux = video_data.replace('"title":{"runs":[{"text":"', 'zz_thumbs')
+            aux = aux.replace('"}],"accessibility":', 'zz_thumbd')
+            description = re.findall(r'zz_thumbs(.*?)zz_thumbd', aux)[0]     
+            youtube_video = YoutubeVideos()
+            youtube_video.id = video_id
+            youtube_video.thumb = thumbnail
+            youtube_video.description = description
+            video_list.append(youtube_video)
+        except:
+            continue
+        
+    return video_list
+    

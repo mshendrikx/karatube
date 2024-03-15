@@ -1,3 +1,5 @@
 flask
 yt-dlp
 mysql-connector
+requests 
+beautifulsoup4

@@ -15,7 +15,11 @@ with open(file, "r") as file:
 #result = Kdef.db_add_song('7p2O3JPU5mA', 'Black', 'Pearl Jam', 'CC Karaoke')
 #result = Kdef.queue_add_song('regina', 'gabriel', '7p2O3JPU5mA')
 #result = Kdef.queue_get('regina', ' ')
-result = Kdef.lastfm_search('Forever Young')
+result = Kdef.lastfm_search('Alphaville Forever Young')
+search_string = 'Karaoke ' + result[0].artist + ' ' + result[0].song
+
+result = Kdef.youtube_search(search_string)
+
 
 breakpoint
 
