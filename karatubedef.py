@@ -11,10 +11,19 @@ from bs4 import BeautifulSoup
 APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = 'https://www.youtube.com/watch?v='
 SONGS_DIR = '/static/songs/'
-DB_PASS = ''
 #DB_HOST = 'mariadb'
 DB_HOST = '172.18.240.5'
-LASTFM_PASS = ''
+
+
+file = APP_PATH + '/passwords.txt'
+with open(file, "r") as file:
+  for line in file:
+      line_data = line.split('=')
+      line_data[1] = line_data[1].replace('\n', '')
+      if line_data[0] == 'lastfm':
+          LASTFM_PASS = line_data[1]
+      if line_data[0] == 'mariadb':
+          DB_PASS = line_data[1]  
 
 class SongQueue:
     id = 0
@@ -34,6 +43,7 @@ class YoutubeVideos:
     id = ''
     thumb = ''
     description = ''
+
 
 def db_connect():
 

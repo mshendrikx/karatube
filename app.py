@@ -1,5 +1,6 @@
-from flask import Flask, render_template, jsonify
 import time
+import karatubedef as Kdef
+from flask import Flask, render_template, jsonify, request
 
 WAIT_VIDEO = "static/videos/karacool_wait.mp4"
 
@@ -15,6 +16,25 @@ video_urls = ["static/songs/" + video for video in
 def index():
     return render_template("index.html")
 
+@app.route("/browse")
+def browse():
+    return render_template("browse.html")
+  
+@app.route("/queue")
+def queue():
+    return render_template("queue.html")
+  
+@app.route("/search")
+def search():
+    return render_template("search.html")
+  
+@app.route("/lastfm")
+def lastfm():
+  
+  lastfm = Kdef.lastfm_search(request.args['search_string'])
+
+  return render_template("lastfm.html")
+  
 @app.route("/player")
 def player():
   next_url = WAIT_VIDEO

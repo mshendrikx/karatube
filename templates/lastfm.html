@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Last FM{% endblock %}
+
+{% block css %}
+<style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        border: 1px solid #ddd;
+
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="overflow-x:auto;">
+    <table>
+        <tr>
+            <td>Artista</td>
+            <td>Música</td>
+        </tr>
+        <tr>
+            <td><img src="https://i.ytimg.com/vi/q0svmtzhhqc/hq720.jpg" height="100" width="100"></td>
+            <td>Forever Young - Alphaville (Karaoke Version)</td>
+        </tr>
+        <tr>
+            <td><img src="https://i.ytimg.com/vi/fs5bM7c3hg4/hq720.jpg" height="100" width="100"></td>
+            <td>Alphaville • Forever Young (CC) 🎤 [Karaoke] [Instrumen</td>
+        </tr>
+
+    </table>
+</div>
+{% endblock %}
