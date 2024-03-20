@@ -39,11 +39,25 @@ class LastFM:
     artist = ''
     song = ''
     
+    def get_display_data(self):
+        return {
+            "artist": self.artist,
+            "song": self.song
+        }
+    
 class YoutubeVideos:
     id = ''
     thumb = ''
     description = ''
 
+    def get_display_data(self):
+        image = self.thumb.split('/')[5]
+        return {
+            "id": self.id,
+            "thumb": self.thumb,
+            "description": self.description,
+            "image": image
+        }
 
 def db_connect():
 
@@ -182,15 +196,11 @@ def lastfm_search(search_arg):
 
 def youtube_search(search_arg):
     
-    search_url = "https://www.youtube.com/results?search_query=" + search_arg    
+    search_url = "https://www.youtube.com/results?search_query=karaoke " + search_arg    
     response = requests.get(search_url)
     splited = response.text.split('{"videoRenderer":{"')
-    index = 0
     video_list = []
     for video_data in splited:
-        #if index == 0:
-        #    index += 1
-        #    continue
         try:
             video_id = re.findall(r'videoId":"(.*?)","thumbnail', video_data)[0]
             aux = video_data.replace('{"thumbnails":[{"url":"', 'zz_thumbs')

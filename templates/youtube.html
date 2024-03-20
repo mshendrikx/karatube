@@ -28,19 +28,17 @@
 <div style="overflow-x:auto;">
     <table>
         <tr>
-            <td></td>
-            <td>Artista</td>
-            <td>Música</td>
+            <td>Video</td>
+            <td>Descrição</td>
         </tr>
-        {% for lastfml in lastfm %}
+        {% for video in videos %}
         <tr>
             <td>
-                <a href="{{ url_for('youtube', artist=lastfml['artist'], song=lastfml['song']) }}">
-                    <img src="{{ url_for('static', filename='images/icon-search.png') }}" height="24" width="24">
+                <a href="{{ url_for('youtubedl', artist=artist, song=song, id=video['id'], image=video['image'], description=video['description']) }}">
+                    <img src="{{ video['thumb'] }}" height="64" width="64">
                 </a>
             </td>
-            <td>{{ lastfml["artist"] }}</td>
-            <td>{{ lastfml["song"] }}</td>
+            <td>{{ video['description'] }}</td>
         </tr>
         {% endfor %}
     </table>

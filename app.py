@@ -32,9 +32,25 @@ def search():
 def lastfm():
   
   lastfm = Kdef.lastfm_search(request.args['search_string'])
+  lastfm_data = [row.get_display_data() for row in lastfm]
 
-  return render_template("lastfm.html")
+  return render_template("lastfm.html", lastfm=lastfm_data)
   
+@app.route("/youtube/<artist>/<song>")
+def youtube(artist, song):
+  
+  search_arg = artist + ' ' + song
+  youtube_videos = Kdef.youtube_search(search_arg)
+  videos = [video.get_display_data() for video in youtube_videos]
+
+  return render_template("youtube.html", videos=videos, artist=artist, song=song)
+
+@app.route("/youtubedl/<artist>/<song>/<id>/<image>/<description>")
+def youtubedl(artist, song, id, image, description):
+  
+  breakpoint
+
+
 @app.route("/player")
 def player():
   next_url = WAIT_VIDEO
