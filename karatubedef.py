@@ -44,6 +44,21 @@ class LastFM:
             "artist": self.artist,
             "song": self.song
         }
+
+class Songs:
+    id = ''
+    name = ''
+    artist = ''
+    image = ''
+    
+    def get_display_data(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "artist": self.artist,
+            "image": self.image
+            
+        }
     
 class YoutubeVideos:
     id = ''
@@ -219,3 +234,29 @@ def youtube_search(search_arg):
         
     return video_list
     
+def songs_get():
+    
+    conn = db_connect()
+    if conn == None:
+        return None
+    cursor = conn.cursor(buffered=True)
+    
+    sql = "SELECT * FROM songs;"    
+    
+    try:
+        cursor.execute(sql)
+    except:
+        return None
+    
+    songs = []
+    
+    for row in cursor.fetchall():
+        song = Songs()
+        song.id = row[0]
+        song.name = row[1]
+        song.artist = row[2]
+        song.image = row[3]
+        songs.append(song)
+        
+    return songs
+        

@@ -1,6 +1,6 @@
 import time
 import karatubedef as Kdef
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 
 WAIT_VIDEO = "static/videos/karacool_wait.mp4"
 
@@ -18,7 +18,9 @@ def index():
 
 @app.route("/browse")
 def browse():
-    return render_template("browse.html")
+    songs_list = Kdef.songs_get()
+    song_list = [row.get_display_data() for row in songs_list]
+    return render_template("browse.html", songs=song_list)
   
 @app.route("/queue")
 def queue():
@@ -32,9 +34,12 @@ def search():
 def lastfm():
   
   lastfm = Kdef.lastfm_search(request.args['search_string'])
-  lastfm_data = [row.get_display_data() for row in lastfm]
-
-  return render_template("lastfm.html", lastfm=lastfm_data)
+  
+  if lastfm == None:
+    return render_template("search.html")
+  else:
+    lastfm_data = [row.get_display_data() for row in lastfm]
+    return render_template("lastfm.html", lastfm=lastfm_data)
   
 @app.route("/youtube/<artist>/<song>")
 def youtube(artist, song):
@@ -50,7 +55,8 @@ def youtubedl(artist, song, id, image, description):
   
   if Kdef.youtube_download(id):
     Kdef.db_add_song(id, song, artist, image)
-    
+  
+  #return redirect(url_for('search'))  
   return render_template("search.html")
 
 @app.route("/player")
