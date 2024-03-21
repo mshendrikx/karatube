@@ -81,7 +81,7 @@ def youtube_download(videoid):
     else:
         return False
     
-def db_add_song(videoid, name, artist, description):
+def db_add_song(videoid, name, artist, image):
     
     conn = db_connect()
     if conn == None:
@@ -89,8 +89,8 @@ def db_add_song(videoid, name, artist, description):
 
     cursor = conn.cursor(buffered=True)
     
-    sql = 'INSERT INTO songs (youtubeid, name, artist, description) VALUES (%s,%s,%s,%s)'    
-    values = (videoid, name, artist, description)
+    sql = 'REPLACE INTO songs (youtubeid, name, artist, image) VALUES (%s,%s,%s,%s)'    
+    values = (videoid, name, artist, image)
     
     try:
         cursor.execute(sql, values)

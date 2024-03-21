@@ -48,8 +48,10 @@ def youtube(artist, song):
 @app.route("/youtubedl/<artist>/<song>/<id>/<image>/<description>")
 def youtubedl(artist, song, id, image, description):
   
-  breakpoint
-
+  if Kdef.youtube_download(id):
+    Kdef.db_add_song(id, song, artist, image)
+    
+  return render_template("search.html")
 
 @app.route("/player")
 def player():
