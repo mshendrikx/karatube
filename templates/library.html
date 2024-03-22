@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Browse{% endblock %}
-
 {% block headscript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-    <form action="{{ url_for('lastfm') }}" method="get">
+    <form action="{{ url_for('musicdb') }}" method="get">
     <div class="input-group">
-        <input type="text" class="form-control" id="search_string" placeholder="Enter search term" name="search_string">
+        <input type="text" class="form-control" id="search_string" placeholder="Artist + Music" name="search_string">
         <button type="submit" class="btn btn-outline-primary">Search</button>
     </div>
     </form>

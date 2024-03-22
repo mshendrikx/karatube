@@ -16,36 +16,49 @@ video_urls = ["static/songs/" + video for video in
 def index():
     return render_template("index.html")
 
-@app.route("/browse")
-def browse():
+@app.route("/library")
+def library():
     songs_list = Kdef.songs_get()
     song_list = [row.get_display_data() for row in songs_list]
-    return render_template("browse.html", songs=song_list, alert='', artist='', music='' )
+    return render_template("library.html", songs=song_list, alert='', artist='', music='' )
   
 @app.route("/queue")
 def queue():
     return render_template("queue.html")
-  
-@app.route("/search")
-def search():
-    return render_template("search.html")
   
 @app.route("/lastfm")
 def lastfm():
   
   if request.args['search_string'] == '':
     alert = 'I'
-    return redirect(url_for("browse"))
-    #return render_template("browse.html", alert=alert)
+    return redirect(url_for("library"))
+    #return render_template("library.html", alert=alert)
   
   lastfm = Kdef.lastfm_search(request.args['search_string'])
   
   if lastfm == None:
     alert = 'W'
-    return render_template("browse.html", alert=alert)
+    return redirect(url_for("library"))
   else:
     lastfm_data = [row.get_display_data() for row in lastfm]
     return render_template("lastfm.html", lastfm=lastfm_data)
+
+@app.route("/musicdb")
+def musicdb():
+  
+  if request.args['search_string'] == '':
+    alert = 'I'
+    return redirect(url_for("library"))
+    #return render_template("library.html", alert=alert)
+  
+  lastfm = Kdef.lastfm_search(request.args['search_string'])
+  
+  if lastfm == None:
+    alert = 'W'
+    return redirect(url_for("library"))
+  else:
+    lastfm_data = [row.get_display_data() for row in lastfm]
+    return render_template("musicdb.html", lastfm=lastfm_data)
   
 @app.route("/youtube/<artist>/<song>")
 def youtube(artist, song):
@@ -72,7 +85,7 @@ def youtubedl(artist, song, id, image, description):
   else:
     alert = 'W'
   
-  return render_template("browse.html", alert=alert, artist=artist, music=song)
+  return redirect(url_for("library"))
   
 @app.route("/player")
 def player():
