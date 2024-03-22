@@ -1,4 +1,5 @@
 flask
+flask_login
 yt-dlp
 mysql-connector
 requests 
