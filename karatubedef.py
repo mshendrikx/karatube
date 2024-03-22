@@ -5,7 +5,6 @@ import requests
 import re
 
 from pathlib import Path
-from bs4 import BeautifulSoup
 
 
 APP_PATH = str(Path(__file__).parent.absolute())
@@ -24,38 +23,6 @@ with open(file, "r") as file:
           LASTFM_PASS = line_data[1]
       if line_data[0] == 'mariadb':
           DB_PASS = line_data[1]  
-
-class User:
-  def __init__(self, userid, name, roomid, password, admin, lastlogin):
-    self.id = userid
-    self.name = name
-    self.roomid = roomid
-    self.password = password
-    self.admin = admin
-    self.lastlogin = lastlogin
-
-  @staticmethod
-  def get_by_userid(userid):
-    """Fetches a user by email address."""
-    connection = db_connect()
-    cursor = connection.cursor()
-    query = "SELECT * FROM users WHERE userid = %s"
-    cursor.execute(query, (userid,))
-    result = cursor.fetchone()
-    connection.close()
-    if result:
-      return User(*result)  # Unpack tuple into User object
-    else:
-      return None
-
-  @staticmethod
-  def verify_password(userid, password):
-    """Checks if the provided password matches the user's email."""
-    user = User.get_by_userid(userid)
-    if user and user.password == password:
-      return True
-    else:
-      return False
 
 class SongQueue:
     id = 0

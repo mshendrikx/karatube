@@ -1,22 +1,11 @@
 import time
 import karatubedef as Kdef
 from flask import Flask, render_template, jsonify, request, redirect, url_for
-from flask_login import LoginManager
-from app import views  # Import views
+
 
 WAIT_VIDEO = "static/videos/karacool_wait.mp4"
 
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = '35ab4b6fd905da243ba2b43d1830797ff7fbad883254a75e'  # Replace with a strong secret key
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'  # Redirect to login on unauthorized access
-
-@login_manager.user_loader
-def load_user(user_id):
-  return Kdef.User.get_by_userid(user_id)  # Use User.get_by_email to fetch user
 
 # List of video URLs
 video_urls = ["static/songs/" + video for video in 
