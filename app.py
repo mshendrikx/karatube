@@ -36,7 +36,8 @@ def lastfm():
   lastfm = Kdef.lastfm_search(request.args['search_string'])
   
   if lastfm == None:
-    return render_template("search.html")
+    alert = 'No song found'
+    return render_template("search.html", alert=alert)
   else:
     lastfm_data = [row.get_display_data() for row in lastfm]
     return render_template("lastfm.html", lastfm=lastfm_data)
@@ -53,12 +54,21 @@ def youtube(artist, song):
 @app.route("/youtubedl/<artist>/<song>/<id>/<image>/<description>")
 def youtubedl(artist, song, id, image, description):
   
+  result = False
+    
   if Kdef.youtube_download(id):
-    Kdef.db_add_song(id, song, artist, image)
+    if Kdef.db_add_song(id, song, artist, image):
+      result = True
+    else:
+      Kdef.video_delete(id)
   
-  #return redirect(url_for('search'))  
-  return render_template("search.html")
-
+  if result == True:
+    message = artist + ' - ' + song + ' downloaded'
+    return render_template("search.html", success=message)
+  else:
+    message = artist + ' - ' + song + 'download fails'
+    return render_template("search.html", alert=message)
+  
 @app.route("/player")
 def player():
   next_url = WAIT_VIDEO

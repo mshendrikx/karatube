@@ -96,6 +96,19 @@ def youtube_download(videoid):
     else:
         return False
     
+def video_delete(videoid):
+    
+    filename = APP_PATH + SONGS_DIR + str(videoid) + '.mp4'
+    cmd = ["rm", filename]
+
+    rc = subprocess.call(cmd)
+    if rc != 0:
+        rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
+    if rc == 0:
+        return True
+    else:
+        return False
+    
 def db_add_song(videoid, name, artist, image):
     
     conn = db_connect()
@@ -241,7 +254,7 @@ def songs_get():
         return None
     cursor = conn.cursor(buffered=True)
     
-    sql = "SELECT * FROM songs;"    
+    sql = "SELECT * FROM songs ORDER BY artist, name;"    
     
     try:
         cursor.execute(sql)
