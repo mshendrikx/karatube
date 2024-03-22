@@ -61,7 +61,6 @@ def musicdb():
   if request.args['search_string'] == '':
     alert = 'I'
     return redirect(url_for("library"))
-    #return render_template("library.html", alert=alert)
   
   lastfm = Kdef.lastfm_search(request.args['search_string'])
   
