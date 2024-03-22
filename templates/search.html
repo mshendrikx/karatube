@@ -1,43 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Search Page{% endblock %}
-{% block css %}
-<style>
-.alert {
-    overflow: hidden;
-    background-color: #f4f80d;
-    color: black;
-    text-align: center;
-}
-.success {
-    overflow: hidden;
-    background-color: #17e004;
-    color: black;
-    text-align: center;
-}
-</style>
-{% endblock %}
+{% block title %}Search{% endblock %}
 
 {% block content %}
-<div class="field is-hidden" id="container_search_form">
+<div class="container mt-3">
     <form action="{{ url_for('lastfm') }}" method="get">
-        <br>
-        <label for="sstring">Artist - Music:</label>
-        <br><br>
-        <input id="search_string" type="text" name="search_string" />
-        <input type="submit" value="Procurar">
+        <div class="mb-3 mt-3">
+            <input type="text" class="form-control" id="search_string" placeholder="Artist - Music"
+                name="search_string">
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Search</button>
     </form>
     <br>
-    {% if alert %}
-    <div class="alert" id="searchalert">
-        <p>{{ alert }}</p>
+    {% if alert == 'E'%}
+    <div class="alert alert-danger">
+        <strong>Error!</strong> {{ artist }} - {{ music }} fails to dowmload
     </div>
+    {% elif alert == 'S'%}
+    <div class="alert alert-success">
+        <strong>Success!</strong> {{ artist }} - {{ music }} downloaded 
+    </div>
+    {% elif alert == 'W'%}
+    <div class="alert alert-warning">
+        <strong>Warnig!</strong> Can't find any music 
+    </div>    
+    {% elif alert == 'I'%}
+    <div class="alert alert-warning">
+        <strong>Info!</strong> Enter search data
+    </div>    
     {% endif %}
-    {% if success %}
-    <div class="success" id="searchsuccess">
-        <p>{{ success }}</p>
-    </div>   
-    {% endif %}
-
 </div>
 {% endblock %}

@@ -20,7 +20,7 @@ def index():
 def browse():
     songs_list = Kdef.songs_get()
     song_list = [row.get_display_data() for row in songs_list]
-    return render_template("browse.html", songs=song_list)
+    return render_template("browse.html", songs=song_list, alert='', artist='', music='' )
   
 @app.route("/queue")
 def queue():
@@ -33,11 +33,16 @@ def search():
 @app.route("/lastfm")
 def lastfm():
   
+  if request.args['search_string'] == '':
+    alert = 'I'
+    return redirect(url_for("browse"))
+    #return render_template("browse.html", alert=alert)
+  
   lastfm = Kdef.lastfm_search(request.args['search_string'])
   
   if lastfm == None:
-    alert = 'No song found'
-    return render_template("search.html", alert=alert)
+    alert = 'W'
+    return render_template("browse.html", alert=alert)
   else:
     lastfm_data = [row.get_display_data() for row in lastfm]
     return render_template("lastfm.html", lastfm=lastfm_data)
@@ -63,11 +68,11 @@ def youtubedl(artist, song, id, image, description):
       Kdef.video_delete(id)
   
   if result == True:
-    message = artist + ' - ' + song + ' downloaded'
-    return render_template("search.html", success=message)
+    alert = 'S'
   else:
-    message = artist + ' - ' + song + 'download fails'
-    return render_template("search.html", alert=message)
+    alert = 'W'
+  
+  return render_template("browse.html", alert=alert, artist=artist, music=song)
   
 @app.route("/player")
 def player():
@@ -85,3 +90,4 @@ def get_next_song():
 
 if __name__ == "__main__":
   app.run(debug=True, port=7001)
+  

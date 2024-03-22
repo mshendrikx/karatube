@@ -25,24 +25,30 @@
 {% endblock %}
 
 {% block content %}
-<div style="overflow-x:auto;">
-    <table>
-        <tr>
-            <td></td>
-            <td>Artista</td>
-            <td>Música</td>
-        </tr>
-        {% for lastfml in lastfm %}
-        <tr>
-            <td>
-                <a href="{{ url_for('youtube', artist=lastfml['artist'], song=lastfml['song']) }}">
-                    <img src="{{ url_for('static', filename='images/icon-search.png') }}" height="24" width="24">
-                </a>
-            </td>
-            <td>{{ lastfml["artist"] }}</td>
-            <td>{{ lastfml["song"] }}</td>
-        </tr>
-        {% endfor %}
+
+<div class="container mt-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Artist</th>
+                <th>Music</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lastfml in lastfm %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('youtube', artist=lastfml['artist'], song=lastfml['song']) }}">
+                        <img src="{{ url_for('static', filename='images/icon-search.png') }}" height="24" width="24">
+                    </a>
+                </td>
+                <td>{{ lastfml["artist"] }}</td>
+                <td>{{ lastfml["song"] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
+
 {% endblock %}

@@ -8,30 +8,7 @@
 
 {% block content %}
 <div class="container mt-3">
-    <form action="{{ url_for('lastfm') }}" method="get">
-    <div class="input-group">
-        <input type="text" class="form-control" id="search_string" placeholder="Enter search term" name="search_string">
-        <button type="submit" class="btn btn-outline-primary">Search</button>
-    </div>
-    </form>
-    {% if alert == 'E'%}
-    <div class="alert alert-danger">
-        <strong>Error!</strong> {{ artist }} - {{ music }} fails to dowmload
-    </div>
-    {% elif alert == 'S'%}
-    <div class="alert alert-success">
-        <strong>Success!</strong> {{ artist }} - {{ music }} downloaded 
-    </div>
-    {% elif alert == 'W'%}
-    <div class="alert alert-warning">
-        <strong>Warnig!</strong> Can't find any music 
-    </div>    
-    {% elif alert == 'I'%}
-    <div class="alert alert-warning">
-        <strong>Info!</strong> Enter search data
-    </div>    
-    {% endif %}
-    <br>
+    <input type="text" class="form-control" id="search-box" placeholder="Enter search term" name="search">
     <table class="table">
         <thead>
             <tr>
@@ -59,7 +36,7 @@
 </div>
 <script>
     $(document).ready(function () {
-        $("#search_string").on("keyup", function () {
+        $("#search-box").on("keyup", function () {
             var searchTerm = $(this).val().toLowerCase();  // Get user input and convert to lowercase
             $("table tr").not(":first").hide();  // Hide all table rows except header
 
