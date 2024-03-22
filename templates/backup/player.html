@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>KaraTube</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
+</head>
+
+<body>
+  <div class="video-container">
+    <video id="myVideo" autoplay controls playsinline>
+    </video>
+    <div id="overlay-singing">Cantando:</div>
+    <div id="overlay-next">Próximo:</div>
+    <script>
+      const videoElement = document.getElementById("myVideo");
+
+      videoElement.src = "{{ next_video_url }}";
+      videoElement.load();
+      videoElement.play();
+
+      videoElement.addEventListener('ended', () => {
+        // Fetch the next video URL from the server using AJAX
+        fetch('/next-video')
+          .then(response => response.json())
+          .then(data => {
+            videoElement.src = data.url;
+            videoElement.load();
+            videoElement.play();
+          });
+      });
+    </script>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Search Page{% endblock %}
+{% block css %}
+<style>
+.alert {
+    overflow: hidden;
+    background-color: #f4f80d;
+    color: black;
+    text-align: center;
+}
+.success {
+    overflow: hidden;
+    background-color: #17e004;
+    color: black;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="field is-hidden" id="container_search_form">
+    <form action="{{ url_for('lastfm') }}" method="get">
+        <br>
+        <label for="sstring">Artist - Music:</label>
+        <br><br>
+        <input id="search_string" type="text" name="search_string" />
+        <input type="submit" value="Procurar">
+    </form>
+    <br>
+    {% if alert %}
+    <div class="alert" id="searchalert">
+        <p>{{ alert }}</p>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="success" id="searchsuccess">
+        <p>{{ success }}</p>
+    </div>   
+    {% endif %}
+
+</div>
+{% endblock %}
