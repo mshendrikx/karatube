@@ -1,11 +1,20 @@
 import time
 import karatubedef as Kdef
 from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 
 
 WAIT_VIDEO = "static/videos/karacool_wait.mp4"
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = '8635aa5d7d90eac37bf2bf58481ed20e5964b88cd1a6d741'
+
+# Configure Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 
 # List of video URLs
 video_urls = ["static/songs/" + video for video in 
@@ -13,9 +22,9 @@ video_urls = ["static/songs/" + video for video in
               "Pearl Jam - State of Love and Trust.mp4",
               "Chrystian e Ralf - Saudade.mp4"]]
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+@app.route("/home")
+def home():
+    return render_template("home.html")
 
 @app.route("/library")
 def library():

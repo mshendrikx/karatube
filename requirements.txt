@@ -1,6 +1,6 @@
 flask
-flask_login
+flask-login
+flask-sqlalchemy
 yt-dlp
 mysql-connector
 requests 
-beautifulsoup4
