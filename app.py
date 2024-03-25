@@ -8,7 +8,7 @@ WAIT_VIDEO = "static/videos/karacool_wait.mp4"
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = '8635aa5d7d90eac37bf2bf58481ed20e5964b88cd1a6d741'
+app.config['SECRET_KEY'] = Kdef.SECRET_KEY
 
 # List of video URLs
 video_urls = ["static/songs/" + video for video in 
