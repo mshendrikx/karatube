@@ -23,7 +23,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # User model class
-class User(UserMixin):
+class User(UserMixin): 
 
     def __init__(self, userid, name, roomid, password, admin, lastlogin):
         self.userid = userid
