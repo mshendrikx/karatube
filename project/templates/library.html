@@ -37,7 +37,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="https://www.youtube.com/watch?v={{ song.youtubeid }}">
+                    <a href="{{ url_for('main.miniplayer', youtubeid=song.youtubeid) }}">
                         <img src="/static/thumbs/{{ song.youtubeid }}.jpg" height="64" width="64">
                     </a>
                 </td>

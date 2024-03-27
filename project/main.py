@@ -122,7 +122,14 @@ def addqueue(youtubeid):
         flash("alert-danger")
         
     return redirect(url_for("main.library"))
-        
+
+@main.route("/miniplayer/<youtubeid>")
+@login_required
+def miniplayer(youtubeid):
+    video_url = "/static/songs/" + str(youtubeid) + '.mp4'
+       
+    return render_template("miniplayer.html", video_url=video_url)
+      
 @main.route('/queue')
 @login_required
 def queue():
