@@ -4,4 +4,6 @@
 .venv/
 __pycache__/
 static/songs/
+project/static/songs/
+project/static/thumbs/
 passwords.txt

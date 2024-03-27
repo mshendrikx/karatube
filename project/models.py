@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from . import db
 
 class User(UserMixin, db.Model):
-    userid = db.Column(db.String(100), primary_key=True) # primary keys are required by SQLAlchemy
+    id = db.Column(db.String(100), primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(100))
     roomid = db.Column(db.String(100))
     password = db.Column(db.String(1000))

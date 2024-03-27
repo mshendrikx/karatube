@@ -4,8 +4,8 @@
 <div class="container mt-3">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
-    <div class="notification is-danger">
-        {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+    <div class="alert alert-danger">
+        {{ messages[0] }}.
     </div>
     {% endif %}
     {% endwith %}
@@ -15,16 +15,24 @@
             <input type="text" class="form-control" id="userid" name="userid" required>
         </div>
         <div class="mb-3">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="repass">Re-type Password:</label>
+            <input type="password" class="form-control" id="repass" name="repass" required>
+        </div>
+        <div class="mb-3">
             <label for="name">Name:</label>
             <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="mb-3">
-            <label for="rooid">Room:</label>
-            <input type="text" class="form-control" id="rooid" name="rooid" required>
+            <label for="roomid">Room:</label>
+            <input type="text" class="form-control" id="roomid" name="roomid" required>
         </div>
         <div class="mb-3">
-            <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <label for="roompass">Room Password:</label>
+            <input type="password" class="form-control" id="roompass" name="roompass" required>
         </div>
         <button class="btn btn-outline-primary">Sign Up</button>
     </form>
