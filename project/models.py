@@ -3,6 +3,7 @@ from . import db
 
 class User(UserMixin, db.Model):
     id = db.Column(db.String(100), primary_key=True)
+    name = db.Column(db.String(100))
     roomid = db.Column(db.String(100))
     password = db.Column(db.String(1000))
     admin = db.Column(db.String(1))

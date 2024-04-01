@@ -54,7 +54,14 @@ def profile_post():
 @login_required
 def library():
     song_list = Song.query.order_by('artist', 'name') 
-    return render_template("library.html", songs=song_list)
+    user_sel = []
+    user_sel.append(current_user)
+    user_list = User.query.filter_by(roomid=current_user.roomid)
+    for user in user_list:
+        if user.id != current_user.id:
+            user_sel.append(user)
+            
+    return render_template("library.html", songs=song_list, user_sel=user_sel, current_user=current_user)
 
 @main.route("/library", methods=['POST'])
 @login_required
@@ -108,11 +115,11 @@ def youtubedl(artist, song, id, image, description):
   
   return redirect(url_for("main.library"))
 
-@main.route("/addqueue/<youtubeid>")
+@main.route("/addqueue/<youtubeid>/<userid>")
 @login_required
-def addqueue(youtubeid):
+def addqueue(youtubeid, userid):
     try:
-        new_queue = Queue(roomid=current_user.roomid, userid=current_user.id, youtubeid=youtubeid, status='')
+        new_queue = Queue(roomid=current_user.roomid, userid=userid, youtubeid=youtubeid, status='')
         db.session.add(new_queue)
         db.session.commit()
         flash("Song added to queue")
@@ -129,7 +136,7 @@ def miniplayer(youtubeid):
     video_url = "/static/songs/" + str(youtubeid) + '.mp4'
        
     return render_template("miniplayer.html", video_url=video_url)
-      
+
 @main.route('/queue')
 @login_required
 def queue():

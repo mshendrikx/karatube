@@ -23,11 +23,12 @@
     <br>
     <div class="input-group">
         <label for="user_selection">Singer:&nbsp;&nbsp;</label>
-        <select name="user_selection" id="user_selection">
+        <input class="form-control" list="singers" name="user_selection" id="user_selection">
+        <datalist id="singers">
             {% for user in user_sel %}
             <option value="{{ user.id }}">{{ user.name }}</option>
             {% endfor %}
-        </select>
+        </datalist>        
     </div>
     <br>
     <table class="table">
@@ -42,7 +43,7 @@
             {% for song in songs %}
             <tr>
                 <td>
-                    <a class="clickable-image" id="{{ song.youtubeid }}" href="{{ url_for('main.addqueue', youtubeid=song.youtubeid, userid=current_user.id) }}">
+                    <a id="addqueue" href="/addqueue/{{ song.youtubeid }}/">
                         <img src="{{ url_for('static', filename='images/icon-addlist.png') }}" height="24" width="24">
                     </a>
                 </td>
@@ -69,17 +70,13 @@
             }).show();  // Show rows that match the search term
         });
     });
+    var userSelection = document.getElementById("user_selection");
+    var addQueue = document.getElementById("addqueue");
 
-    const dynamicLinks = document.querySelectorAll('.clickable-image');
-    const selectElement = document.getElementById('user_selection');
-
-    selectElement.addEventListener('change', function () {
-        const selectedValue = this.value;
-
-        dynamicLinks.forEach(link => {
-
-            link.href = '/addqueue/' + link.id + '/' + selectedValue
-        });
+    userSelection.addEventListener('change', function () {
+        var userValue = this.value;
+        addQueue.href = addQueue.href + userValue;
     });
+
 </script>
 {% endblock %}
