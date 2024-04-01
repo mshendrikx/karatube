@@ -6,7 +6,7 @@ from pathlib import Path
 from . import db
 
 from .models import User, Room, Song, Queue
-from .karatube import lastfm_search, youtube_search, youtube_download, video_delete
+from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get
 
 main = Blueprint('main', __name__)
 
@@ -140,4 +140,7 @@ def miniplayer(youtubeid):
 @main.route('/queue')
 @login_required
 def queue():
-    return render_template('profile.html', name=current_user.name)
+    
+    queue = queue_get(roomid=current_user.roomid)
+
+    return render_template('queue.html', queue=queue)

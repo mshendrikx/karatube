@@ -5,6 +5,7 @@ import requests
 import re
 
 from pathlib import Path
+from .models import User, Room, Song, Queue
 
 APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = 'https://www.youtube.com/watch?v='
@@ -26,11 +27,10 @@ with open(file, "r") as file:
 
 class SongQueue:
     id = 0
-    pos = 0
     roomid = ''
     userid = ''
-    firstname = ''
-    lastname = ''
+    singer = ''
+    youtubeid = ''
     artist = ''
     song = ''
     
@@ -145,63 +145,42 @@ def queue_add_song(roomid, userid, youtubeid):
     except:
         return False
     
-def queue_get(roomid, status):
+def queue_get(roomid):
 
-    index = 1
     reorder_array = []
     counter = {}
-        
-    conn = db_connect()
-    if conn == None:
-        return None
-    cursor = conn.cursor(buffered=True)
-    
-    sql = "SELECT * FROM songqueue WHERE roomid = %s AND status = %s ;"    
-    values = (roomid, status)
-    
-    try:
-        cursor.execute(sql, values)
-    except:
-        return None
-    
-    for row in cursor.fetchall():
-        if row[2] in counter:
-            counter[row[2]] += 1
-        else:
-            counter[row[2]] = 1
-        reorder_array.append([row, counter[row[2]], row[0]])        
 
+    queue = Queue.query.filter_by(roomid=roomid)
+
+    for queue_item in queue:
+        if queue_item.userid in counter:
+            counter[queue_item.userid] += 1
+        else:
+            counter[queue_item.userid] = 1
+        reorder_array.append([queue_item, counter[queue_item.userid], queue_item.id])
+    
     reorder_array.sort(key=lambda x: (x[1], x[2]))
     
     queue_array = []
-    for ordered_line in reorder_array:
-        try:
-            sql = "SELECT firstname, lastname FROM users WHERE userid = %s ;"  
-            values = (ordered_line[0][2],)
-            cursor.execute(sql, values)
-            for user in cursor.fetchall():
-                break
-            sql = "SELECT name, artist FROM songs WHERE youtubeid = %s ;"  
-            values = (ordered_line[0][3],)
-            cursor.execute(sql, values)
-            for song in cursor.fetchall():
-                break        
-            song_queue = SongQueue()
-            song_queue.id = ordered_line[0][0]
-            song_queue.pos = index
-            song_queue.roomid = roomid
-            song_queue.userid = ordered_line[0][2]
-            song_queue.firstname = user[0]
-            song_queue.lastname = user[1]
-            song_queue.artist = song[1]
-            song_queue.song = song[0]
-            queue_array.append(song_queue)
-            index += 1           
-        except:
-            continue        
-        
-    conn.close()
     
+    for queue_item in reorder_array:
+        if queue_item[0].status != ' ':
+            continue
+        try:
+            user = User.query.filter_by(id=queue_item[0].userid).first()
+            song = Song.query.filter_by(youtubeid=queue_item[0].youtubeid).first()
+            song_queue = SongQueue()
+            song_queue.id = queue_item[0].id
+            song_queue.roomid = queue_item[0].roomid
+            song_queue.userid = queue_item[0].userid
+            song_queue.singer = user.name
+            song_queue.youtubeid = queue_item[0].youtubeid
+            song_queue.artist = song.artist
+            song_queue.song = song.name
+            queue_array.append(song_queue)
+        except:
+            continue
+
     return queue_array
 
 def lastfm_search(search_arg):

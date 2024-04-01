@@ -6,21 +6,18 @@
     <table class="table">
         <thead>
             <tr>
-                <th></th>
                 <th>Singer</th>
+                <th>Artist</th>
                 <th>Music</th>
             </tr>
         </thead>
         <tbody>
-            {% for lastfml in lastfm %}
+            {% for queue_item in queue %}
             <tr>
-                <td>
-                    <a href="{{ url_for('main.youtube', artist=lastfml['artist'], song=lastfml['song']) }}">
-                        <img src="{{ url_for('static', filename='images/icon-search.png') }}" height="24" width="24">
-                    </a>
+                <td>{{ queue_item.singer }}
                 </td>
-                <td>{{ lastfml["artist"] }}</td>
-                <td>{{ lastfml["song"] }}</td>
+                <td>{{ queue_item.artist }}</td>
+                <td>{{ queue_item.song }}</td>
             </tr>
             {% endfor %}
         </tbody>
