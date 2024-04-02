@@ -1,18 +1,19 @@
 from urllib.request import urlretrieve
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from pathlib import Path
 from . import db
 
 from .models import User, Room, Song, Queue
-from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get
+from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get, next_queue_item
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    
+    return render_template('index.html', user=current_user)
 
 @main.route('/profile')
 @login_required
@@ -144,3 +145,19 @@ def queue():
     queue = queue_get(roomid=current_user.roomid)
 
     return render_template('queue.html', queue=queue)
+
+@main.route("/player")
+@login_required
+def player():
+    
+  next_url = next_queue_item(True, current_user)
+  
+  return render_template("player.html", next_video_url=next_url)
+
+@main.route("/next-video")
+@login_required
+def next_video():
+
+  next_url = next_queue_item(False, current_user)
+      
+  return jsonify({"url": next_url})

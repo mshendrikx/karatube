@@ -15,23 +15,33 @@ def login_post():
     # login code goes here
     userid = request.form.get('userid')
     password = request.form.get('password')
+    roomid = request.form.get('roomid')
+    roompass = request.form.get('roompass')
     remember = True if request.form.get('remember') else False
 
     user = User.query.filter_by(id=userid).first()
-
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
+        flash("alert-danger")
         return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
 
+    room = Room.query.filter_by(roomid=roomid).first()
+    # check if the room actually exists
+    # take the room-supplied password, hash it, and compare it to the hashed password in the database
+    if not room or not check_password_hash(room.password, roompass):
+        flash('Please check room details and try again.')
+        flash("alert-danger")
+        return redirect(url_for('auth.login')) # if the room doesn't exist or password is wrong, reload the page
+       
     # if the above check passes, then we know the user has the right credentials
-    user.roomid = ''
+    user.roomid = room.roomid
     login_user(user, remember=remember)
     db.session.add(user)
     db.session.commit()
        
-    return redirect(url_for('main.profile'))
+    return redirect(url_for('main.index'))
 
 @auth.route('/signup')
 def signup():

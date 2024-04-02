@@ -6,6 +6,7 @@ import re
 
 from pathlib import Path
 from .models import User, Room, Song, Queue
+from . import db
 
 APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = 'https://www.youtube.com/watch?v='
@@ -157,6 +158,7 @@ def queue_get(roomid):
             counter[queue_item.userid] += 1
         else:
             counter[queue_item.userid] = 1
+        
         reorder_array.append([queue_item, counter[queue_item.userid], queue_item.id])
     
     reorder_array.sort(key=lambda x: (x[1], x[2]))
@@ -164,7 +166,7 @@ def queue_get(roomid):
     queue_array = []
     
     for queue_item in reorder_array:
-        if queue_item[0].status != ' ':
+        if queue_item[0].status != '':
             continue
         try:
             user = User.query.filter_by(id=queue_item[0].userid).first()
@@ -182,6 +184,38 @@ def queue_get(roomid):
             continue
 
     return queue_array
+
+def next_queue_item(page_load, current_user):
+    
+    next_song = None
+    
+    if page_load:
+        queue = Queue.query.filter_by(roomid=current_user.roomid, status='P').first()
+        try:
+            if queue.status == 'P':
+                next_song = queue
+        except:
+            1 == 1
+
+    if next_song == None:
+        queue = queue_get(roomid=current_user.roomid)
+        try:
+            queue = queue[0]    
+            Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
+            queue_update = Queue.query.filter_by(id=queue.id).first()
+            queue_update.status = 'P'
+            db.session.add(queue_update)
+            db.session.commit()        
+
+        except:
+            next_song = None
+    
+    if queue:
+        next_url = "/static/songs/" + str(queue.youtubeid) + '.mp4'
+    else:
+        next_url = ''
+        
+    return next_url
 
 def lastfm_search(search_arg):
   
