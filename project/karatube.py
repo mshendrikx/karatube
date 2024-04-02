@@ -74,14 +74,6 @@ class YoutubeVideos:
             "image": image
         }
 
-def db_connect():
-
-    try:    
-        conn = mysql.connector.connect(user='root', password=DB_PASS, host=DB_HOST, database='karatube')
-        return conn
-    except:
-        return None
-    
 def youtube_download(videoid):
     
     filename = APP_PATH + SONGS_DIR + str(videoid) + '.mp4'
@@ -107,43 +99,6 @@ def video_delete(videoid):
     if rc == 0:
         return True
     else:
-        return False
-    
-def db_add_song(videoid, name, artist, image):
-    
-    conn = db_connect()
-    if conn == None:
-        return False
-
-    cursor = conn.cursor(buffered=True)
-    
-    sql = 'REPLACE INTO songs (youtubeid, name, artist, image) VALUES (%s,%s,%s,%s)'    
-    values = (videoid, name, artist, image)
-    
-    try:
-        cursor.execute(sql, values)
-        conn.commit()
-        conn.close()
-        return True
-    except:
-        return False
-    
-def queue_add_song(roomid, userid, youtubeid):
-    
-    conn = db_connect()
-    if conn == None:
-        return False    
-    cursor = conn.cursor(buffered=True)
-
-    sql = 'INSERT INTO songqueue (roomid, userid, youtubeid, status) VALUES (%s,%s,%s,%s)'    
-    values = (roomid, userid, youtubeid, ' ')
-    
-    try:
-        cursor.execute(sql, values)
-        conn.commit()
-        conn.close()
-        return True
-    except:
         return False
     
 def queue_get(roomid):
@@ -258,30 +213,3 @@ def youtube_search(search_arg):
             continue
         
     return video_list
-    
-def songs_get():
-    
-    conn = db_connect()
-    if conn == None:
-        return None
-    cursor = conn.cursor(buffered=True)
-    
-    sql = "SELECT * FROM songs ORDER BY artist, name;"    
-    
-    try:
-        cursor.execute(sql)
-    except:
-        return None
-    
-    songs = []
-    
-    for row in cursor.fetchall():
-        song = Songs()
-        song.id = row[0]
-        song.name = row[1]
-        song.artist = row[2]
-        song.image = row[3]
-        songs.append(song)
-        
-    return songs
-
