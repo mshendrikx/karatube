@@ -1,11 +1,10 @@
 
 import subprocess
-import mysql.connector
 import requests
 import re
 
 from pathlib import Path
-from .models import User, Room, Song, Queue
+from .models import User, Song, Queue
 from . import db
 
 APP_PATH = str(Path(__file__).parent.absolute())
