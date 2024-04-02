@@ -150,17 +150,23 @@ def queue():
 @login_required
 def player():
     
-  player_data = get_player_data(True, current_user, True)
-  
+  video_url = ''  
+  while video_url == '':
+      player_data = get_player_data(True, current_user, True)
+      video_url = player_data.video_url
+      
   return render_template("player.html", player_data=player_data)
 
 @main.route("/playerdata")
 @login_required
 def playerdata():
-
-  player_data = get_player_data(False, current_user, True)
-      
-  return jsonify({"url": player_data.video_url,
+  
+  video_url = ''  
+  while video_url == '':
+    player_data = get_player_data(False, current_user, True)
+    video_url = player_data.video_url
+    
+  return jsonify({"url": video_url,
                   "singer": player_data.singer,
                   "next_singer": player_data.next_singer,
                   "song": player_data.song,
