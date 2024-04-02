@@ -22,8 +22,13 @@ with open(file, "r") as file:
         LASTFM_PASS = line_data[1]
       elif line_data[0] == 'mariadb':
         DB_PASS = line_data[1]  
-      elif line_data[0] == 'secretkey':
-        SECRET_KEY = line_data[1]          
+
+class PlayerData:
+    singer = ''
+    song = ''
+    next_singer = ''
+    next_song = ''
+    video_url = ''    
 
 class SongQueue:
     id = 0
@@ -197,3 +202,35 @@ def youtube_search(search_arg):
             continue
         
     return video_list
+
+def get_player_data(page_load, current_user):
+    
+    next_song = None
+    
+    if page_load:
+        queue = Queue.query.filter_by(roomid=current_user.roomid, status='P').first()
+        try:
+            if queue.status == 'P':
+                next_song = queue
+        except:
+            1 == 1
+
+    if next_song == None:
+        queue = queue_get(roomid=current_user.roomid)
+        try:
+            queue = queue[0]    
+            Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
+            queue_update = Queue.query.filter_by(id=queue.id).first()
+            queue_update.status = 'P'
+            db.session.add(queue_update)
+            db.session.commit()        
+
+        except:
+            next_song = None
+    
+    if queue:
+        next_url = "/static/songs/" + str(queue.youtubeid) + '.mp4'
+    else:
+        next_url = ''
+        
+    return next_url
