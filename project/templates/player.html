@@ -9,12 +9,12 @@
 
 <body>
   <div class="video-container">
-    <video id="myVideo" autoplay controls playsinline>
+    <video id="video" autoplay controls playsinline>
     </video>
-    <div id="overlay-singing">Cantando:</div>
-    <div id="overlay-next">Próximo:</div>
+    <div id="overlay-singing">Singing:</div>
+    <div id="overlay-next">Next:</div>
     <script>
-      const videoElement = document.getElementById("myVideo");
+      const videoElement = document.getElementById("video");
 
       videoElement.src = "{{ next_video_url }}";
       videoElement.load();
@@ -22,7 +22,7 @@
 
       videoElement.addEventListener('ended', () => {
         // Fetch the next video URL from the server using AJAX
-        fetch('/next-video')
+        fetch('/playerdata')
           .then(response => response.json())
           .then(data => {
             videoElement.src = data.url;

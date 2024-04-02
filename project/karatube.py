@@ -44,21 +44,6 @@ class LastFM:
             "song": self.song
         }
 
-class Songs:
-    id = ''
-    name = ''
-    artist = ''
-    image = ''
-    
-    def get_display_data(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "artist": self.artist,
-            "image": self.image
-            
-        }
-    
 class YoutubeVideos:
     id = ''
     thumb = ''

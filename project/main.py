@@ -154,9 +154,9 @@ def player():
   
   return render_template("player.html", next_video_url=next_url)
 
-@main.route("/next-video")
+@main.route("/playerdata")
 @login_required
-def next_video():
+def playerdata():
 
   next_url = next_queue_item(False, current_user)
       
