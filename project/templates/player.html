@@ -3,20 +3,23 @@
 
 <head>
   <title>KaraTube</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
 </head>
 
 <body>
   <div class="video-container">
-    <video id="video" autoplay controls playsinline>
-    </video>
-    <div id="overlay-singing">Singing:</div>
-    <div id="overlay-next">Next:</div>
+    <video id="video" autoplay controls playsinline></video>
+    <span id="overlay-singing">Singing: </span>
+    <span id="overlay-now">{{ player_data.singer }} - {{ player_data.song }}</span>
+    <span id="overlay-next">Next:</span>
+    <span id="overlay-queued">{{ player_data.next_singer }} - {{ player_data.next_song }}</span>
+
     <script>
       const videoElement = document.getElementById("video");
 
-      videoElement.src = "{{ next_video_url }}";
+      videoElement.src = "{{ player_data.video_url }}";
       videoElement.load();
       videoElement.play();
 
@@ -25,6 +28,8 @@
         fetch('/playerdata')
           .then(response => response.json())
           .then(data => {
+            $('#overlay-now').text(data.singer + ' - ' + data.song);
+            $('#overlay-queued').text(data.next_singer + ' - ' + data.next_song);
             videoElement.src = data.url;
             videoElement.load();
             videoElement.play();

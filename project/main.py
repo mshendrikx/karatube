@@ -6,7 +6,7 @@ from pathlib import Path
 from . import db
 
 from .models import User, Room, Song, Queue
-from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get, next_queue_item
+from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get, get_player_data
 
 main = Blueprint('main', __name__)
 
@@ -150,14 +150,19 @@ def queue():
 @login_required
 def player():
     
-  next_url = next_queue_item(True, current_user)
+  player_data = get_player_data(True, current_user)
   
-  return render_template("player.html", next_video_url=next_url)
+  return render_template("player.html", player_data=player_data)
 
 @main.route("/playerdata")
 @login_required
 def playerdata():
 
-  next_url = next_queue_item(False, current_user)
+  player_data = get_player_data(False, current_user)
       
-  return jsonify({"url": next_url})
+  return jsonify({"url": player_data.video_url,
+                  "singer": player_data.singer,
+                  "next_singer": player_data.next_singer,
+                  "song": player_data.song,
+                  "next_song": player_data.next_song
+                  })

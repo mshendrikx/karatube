@@ -129,38 +129,6 @@ def queue_get(roomid):
 
     return queue_array
 
-def next_queue_item(page_load, current_user):
-    
-    next_song = None
-    
-    if page_load:
-        queue = Queue.query.filter_by(roomid=current_user.roomid, status='P').first()
-        try:
-            if queue.status == 'P':
-                next_song = queue
-        except:
-            1 == 1
-
-    if next_song == None:
-        queue = queue_get(roomid=current_user.roomid)
-        try:
-            queue = queue[0]    
-            Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
-            queue_update = Queue.query.filter_by(id=queue.id).first()
-            queue_update.status = 'P'
-            db.session.add(queue_update)
-            db.session.commit()        
-
-        except:
-            next_song = None
-    
-    if queue:
-        next_url = "/static/songs/" + str(queue.youtubeid) + '.mp4'
-    else:
-        next_url = ''
-        
-    return next_url
-
 def lastfm_search(search_arg):
   
   url = "https://ws.audioscrobbler.com/2.0/?method=track.search&track=" + search_arg + '&api_key=' + LASTFM_PASS + '&limit=20&format=json'
@@ -205,32 +173,44 @@ def youtube_search(search_arg):
 
 def get_player_data(page_load, current_user):
     
-    next_song = None
-    
+    count = 0
+    player_data = PlayerData()
+    queue = queue_get(roomid=current_user.roomid)
+
     if page_load:
-        queue = Queue.query.filter_by(roomid=current_user.roomid, status='P').first()
+        playing = Queue.query.filter_by(roomid=current_user.roomid, status='P').first()
         try:
-            if queue.status == 'P':
-                next_song = queue
+            if playing.status == 'P':
+                user = User.query.filter_by(id=playing.userid).first()
+                song = Song.query.filter_by(youtubeid=playing.youtubeid).first()
+                player_data.singer = user.name
+                player_data.song = song.name
+                player_data.video_url = '/static/songs/' + str(playing.youtubeid) + '.mp4'
+                count += 1 
         except:
             1 == 1
-
-    if next_song == None:
-        queue = queue_get(roomid=current_user.roomid)
-        try:
-            queue = queue[0]    
-            Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
-            queue_update = Queue.query.filter_by(id=queue.id).first()
-            queue_update.status = 'P'
-            db.session.add(queue_update)
-            db.session.commit()        
-
-        except:
-            next_song = None
-    
-    if queue:
-        next_url = "/static/songs/" + str(queue.youtubeid) + '.mp4'
     else:
-        next_url = ''
+        Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
+        db.session.commit() 
         
-    return next_url
+    while count < 2:
+        try:
+            queue_item = queue[0]
+            if count == 0:
+                player_data.singer = queue_item.singer 
+                player_data.song = queue_item.song
+                player_data.video_url = '/static/songs/' + str(queue_item.youtubeid) + '.mp4'
+                queue_update = Queue.query.filter_by(id=queue_item.id).first()
+                queue_update.status = 'P'
+                db.session.add(queue_update)
+                db.session.commit()  
+            else: 
+                player_data.next_singer = queue_item.singer 
+                player_data.next_song  = queue_item.song
+        except:
+            break
+        
+        del queue[0]
+        count += 1
+            
+    return player_data
