@@ -6,6 +6,25 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
+  <script>
+    function getLatestInfo() {
+        $.ajax({
+            url: "/screenupdate",
+            success: function(data) {
+                $("#overlay-now").html(data.singer + ' - ' + data.song);
+                $("#overlay-queued").html(data.next_singer + ' - ' + data.next_song);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getLatestInfo();  // Get initial info on page load
+        setInterval(getLatestInfo, 3000); // Check for updates every 2 seconds
+    });
+</script>
 </head>
 
 <body>

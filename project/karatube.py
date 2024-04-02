@@ -171,7 +171,7 @@ def youtube_search(search_arg):
         
     return video_list
 
-def get_player_data(page_load, current_user):
+def get_player_data(page_load, current_user, updatedb):
     
     count = 0
     player_data = PlayerData()
@@ -190,8 +190,9 @@ def get_player_data(page_load, current_user):
         except:
             1 == 1
     else:
-        Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
-        db.session.commit() 
+        if updatedb:
+            Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
+            db.session.commit() 
         
     while count < 2:
         try:
@@ -200,10 +201,11 @@ def get_player_data(page_load, current_user):
                 player_data.singer = queue_item.singer 
                 player_data.song = queue_item.song
                 player_data.video_url = '/static/songs/' + str(queue_item.youtubeid) + '.mp4'
-                queue_update = Queue.query.filter_by(id=queue_item.id).first()
-                queue_update.status = 'P'
-                db.session.add(queue_update)
-                db.session.commit()  
+                if updatedb:
+                    queue_update = Queue.query.filter_by(id=queue_item.id).first()
+                    queue_update.status = 'P'
+                    db.session.add(queue_update)
+                    db.session.commit()  
             else: 
                 player_data.next_singer = queue_item.singer 
                 player_data.next_song  = queue_item.song

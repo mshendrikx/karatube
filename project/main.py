@@ -150,7 +150,7 @@ def queue():
 @login_required
 def player():
     
-  player_data = get_player_data(True, current_user)
+  player_data = get_player_data(True, current_user, True)
   
   return render_template("player.html", player_data=player_data)
 
@@ -158,7 +158,20 @@ def player():
 @login_required
 def playerdata():
 
-  player_data = get_player_data(False, current_user)
+  player_data = get_player_data(False, current_user, True)
+      
+  return jsonify({"url": player_data.video_url,
+                  "singer": player_data.singer,
+                  "next_singer": player_data.next_singer,
+                  "song": player_data.song,
+                  "next_song": player_data.next_song
+                  })
+
+@main.route("/screenupdate")
+@login_required
+def screenupdate():
+
+  player_data = get_player_data(True, current_user, False)
       
   return jsonify({"url": player_data.video_url,
                   "singer": player_data.singer,
