@@ -16,7 +16,8 @@
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <img src="{{  url_for('static', filename='images/karatube_logo1.jpg') }}" alt="Avatar Logo" style="width:40px;" class="rounded-pill">     
+                <img src="{{  url_for('static', filename='images/karatube_logo1.jpg') }}" alt="Avatar Logo"
+                    style="width:40px;" class="rounded-pill">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -41,6 +42,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
                     </li>
+                    {% if current_user.admin == 'X' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.createroom') }}">Create Room</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
                     </li>

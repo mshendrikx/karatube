@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from pathlib import Path
 from . import db
 
-from .models import User, Room, Song, Queue
+from .models import User, Room, Song, Queue, Roomadm
 from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get, get_player_data
 
 class PlayerData:
@@ -219,3 +219,47 @@ def queueupdate():
       1 == 1
       
   return jsonify({})
+
+@main.route('/createroom')
+@login_required
+def createroom():
+    return render_template('create_room.html', current_user=current_user)
+
+@main.route('/createroom', methods=['POST'])
+@login_required
+def createroom_post():
+    
+    # login code goes here
+    userid = request.form.get('userid')
+    roomid = request.form.get('roomid')
+    roompass = request.form.get('roompass')
+
+    user = User.query.filter_by(id=userid).first()
+    # check if the user actually exists
+    # take the user-supplied password, hash it, and compare it to the hashed password in the database
+    if not user:
+        flash('No user in DB.')
+        flash("alert-danger")
+        return redirect(url_for('main.createroom')) # if the user doesn't exist or password is wrong, reload the page
+
+    room = Room.query.filter_by(roomid=roomid).first()
+    # check if the room actually exists
+    # take the room-supplied password, hash it, and compare it to the hashed password in the database
+    if room:
+        flash('Room alredy exists.')
+        flash("alert-danger")
+        return redirect(url_for('main.createroom')) # if the room doesn't exist or password is wrong, reload the page
+    
+    try:
+        new_room = Room(roomid=roomid, password=generate_password_hash(roompass, method='pbkdf2:sha256'))
+        db.session.add(new_room)
+        new_roomadm = Roomadm(roomid=roomid, userid=userid)
+        db.session.add(new_roomadm)
+        db.session.commit()
+        flash('Room created.')
+        flash("alert-success")
+    except:
+        flash('Fail to create Room.')
+        flash("alert-danger")
+        
+    return redirect(url_for('main.createroom'))

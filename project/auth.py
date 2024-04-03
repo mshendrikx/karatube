@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
-from .models import User, Room
+from .models import User, Room, Roomadm
 from . import db
 
 auth = Blueprint('auth', __name__)
@@ -36,6 +36,18 @@ def login_post():
         return redirect(url_for('auth.login')) # if the room doesn't exist or password is wrong, reload the page
        
     # if the above check passes, then we know the user has the right credentials
+    if user.admin == 'X':
+        user.roomadm = 'X'
+    else:    
+        roomadm = Roomadm.query.filter_by(roomid=room.roomid, userid=user.id).first
+        try:
+            if roomadm.roomid == roomid:
+                user.roomadm = 'X'
+            else:
+                user.roomadm = ''
+        except:
+            user.roomadm = ''
+        
     user.roomid = room.roomid
     login_user(user, remember=remember)
     db.session.add(user)
@@ -75,7 +87,7 @@ def signup_post():
         return redirect(url_for('auth.signup'))
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(id=userid, name=name, roomid='', password=generate_password_hash(password, method='pbkdf2:sha256'))
+    new_user = User(id=userid, name=name, roomid='', password=generate_password_hash(password, method='pbkdf2:sha256'), roomadm="", admin="")
 
     # add the new user to the database
     db.session.add(new_user)
