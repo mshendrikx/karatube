@@ -6,6 +6,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100))
     roomid = db.Column(db.String(100))
     password = db.Column(db.String(1000))
+    roomadm = db.Column(db.String(1))
     admin = db.Column(db.String(1))
     
 class Song(db.Model):
@@ -15,7 +16,6 @@ class Song(db.Model):
     
 class Room(db.Model):
     roomid = db.Column(db.String(100), primary_key=True)
-    adminid = db.Column(db.String(100))
     password = db.Column(db.String(1000))
     
 class Queue(db.Model):
@@ -24,3 +24,7 @@ class Queue(db.Model):
     userid = db.Column(db.String(100))
     youtubeid = db.Column(db.String(100))
     status = db.Column(db.String(1))
+
+class Roomadm(db.Model):
+    roomid = db.Column(db.String(100), primary_key=True)
+    userid = db.Column(db.String(100), primary_key=True)

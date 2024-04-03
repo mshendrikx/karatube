@@ -127,11 +127,16 @@ def youtubedl(artist, song, id, image, description):
 @login_required
 def addqueue(youtubeid, userid):
     try:
-        new_queue = Queue(roomid=current_user.roomid, userid=userid, youtubeid=youtubeid, status='')
-        db.session.add(new_queue)
-        db.session.commit()
-        flash("Song added to queue")
-        flash("alert-success")
+        queue_check = Queue.query.filter_by(userid=current_user.id, youtubeid=youtubeid, roomid=current_user.roomid).first()
+        if queue_check:
+            flash("Song alredy in queue")
+            flash("alert-warning")            
+        else:
+            new_queue = Queue(roomid=current_user.roomid, userid=userid, youtubeid=youtubeid, status='')
+            db.session.add(new_queue)
+            db.session.commit()
+            flash("Song added to queue")
+            flash("alert-success")
     except:
         flash("Fail to add song to queue")
         flash("alert-danger")

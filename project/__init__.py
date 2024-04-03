@@ -20,7 +20,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User, Room
+    from .models import User, Room, Roomadm
     
     with app.app_context():
         
@@ -30,16 +30,18 @@ def create_app():
         # add admin user to the database        
         user = User.query.filter_by(id='admin').first()
         if not user:
-            new_user = User(id='admin', name='Administrator', roomid='main', password=generate_password_hash('admin', method='pbkdf2:sha256'), admin='X')
+            new_user = User(id='admin', name='Administrator', roomid='main', password=generate_password_hash('admin', method='pbkdf2:sha256'), roomadm='X', admin='X')
             db.session.add(new_user)
             db.session.commit()
 
         # add main room to the database 
         room = Room.query.filter_by(roomid='main').first()
         if not room:
-            new_room = Room(roomid='main', adminid='admin', password=generate_password_hash('room', method='pbkdf2:sha256'))
+            new_room = Room(roomid='main', password=generate_password_hash('room', method='pbkdf2:sha256'))
+            new_roomadm = Roomadm(roomid='main', userid='admin')
+            db.session.add(new_roomadm)
             db.session.add(new_room)
-            db.session.commit()
+            db.session.commit()            
 
     @login_manager.user_loader
     def load_user(userid):

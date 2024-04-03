@@ -10,6 +10,13 @@
 
   <script>
 
+    function busyWait(delayInMs) {
+      let startTime = Date.now();
+      while (Date.now() - startTime < delayInMs) {
+        // This loop does nothing but wait
+      }
+    }
+
     $(document).ready(function () {
       getLatestInfo();  // Get initial info on page load
       setInterval(getLatestInfo, 3000); // Check for updates every 3 seconds
@@ -20,6 +27,7 @@
         url: "/screenupdate",
         success: function (data) {
           var currentSrc = $("#video").attr("src");
+          $("#overlay-presents").hide();
           if (data.song !== "") {
             $("#overlay-now").show();
             $("#overlay-singing").show();
@@ -39,9 +47,10 @@
           // Check if current src is empty or not the same as the new URL
           if (currentSrc === "") {
             if (data.video_url !== "") {
-              $("#video").show();
               $("#splashImage").hide();
+              $("#video").show();
               $("#video").attr("src", data.video_url);
+              // busyWait(5000);
               $("#video")[0].load(); // Load the video
               $("#video")[0].play(); // Start playback
             } else {
@@ -64,6 +73,7 @@
   <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
     alt="Video Placeholder">
   <video id="video" src="" controls autoplay playsinline></video>
+  <div id="overlay-presents"> Presents </div>
   <div id="overlay-singing"> Singing: </div>
   <div id="overlay-now"></div>
   <div id="overlay-next"> Next: </div>
