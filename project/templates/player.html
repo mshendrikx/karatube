@@ -5,10 +5,30 @@
   <title>KaraTube</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/karatube_logo1.jpg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
 
   <script>
+
+    // Run the function on page load
+    window.onload = enterFullScreenOnLoad;
+
+    function enterFullScreenOnLoad() {
+      const docElement = document.documentElement;
+
+      // Check for browser prefixes for Fullscreen API
+      if (docElement.requestFullscreen) {
+        docElement.requestFullscreen();
+      } else if (docElement.webkitRequestFullscreen) { /* Safari */
+        docElement.webkitRequestFullscreen();
+      } else if (docElement.msRequestFullscreen) { /* IE11 */
+        docElement.msRequestFullscreen();
+      } else if (docElement.mozRequestFullScreen) { /* Firefox */
+        docElement.mozRequestFullScreen();
+      } else {
+        console.error("Fullscreen API not supported by this browser.");
+      }
+    }
 
     $(document).ready(function () {
       getLatestInfo();  // Get initial info on page load
@@ -47,8 +67,9 @@
 
 <body>
 
-  <img id="splashImage" src="{{ url_for('static', filename='images/karatube.jpg') }}" alt="Video Placeholder">
-  <video id="video" src="" autoplay controls></video>
+  <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
+    alt="Video Placeholder">
+  <video id="video" src="" controls autoplay playsinline></video>
   <div id="overlay-singing"> Singing: </div>
   <div id="overlay-now"></div>
   <div id="overlay-next"> Next: </div>
