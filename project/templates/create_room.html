@@ -9,6 +9,7 @@
     </div>
     {% endif %}
     {% endwith %}
+    {% if current_user.admin == 'X' %}
     <form method="POST" action="{{ url_for('main.createroom') }}">
         <div class="mb-3 mt-3">
             <label for="userid">Administrator:</label>
@@ -24,6 +25,11 @@
         </div>
         <button type="submit" class="btn btn-outline-primary">Create</button>
     </form>
+    {% else %}
+    <h3 class="title">
+        Must be Administrator!
+    </h3>
+    {% endif %}
 </div>
 
 {% endblock %}

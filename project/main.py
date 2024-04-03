@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from pathlib import Path
 from . import db
 
-from .models import User, Room, Song, Queue, Roomadm
+from .models import User, Room, Song, Queue, Roomadm, Config
 from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get, get_player_data
 
 class PlayerData:
@@ -90,7 +90,11 @@ def library_post():
   if lastfm == None:
     flash("No music found in Last FM database")
     flash("alert-warning")
-    return redirect(url_for("library"))
+    return redirect(url_for("main.library"))
+  elif lastfm == 403:
+    flash("Update LAST.FM API Key in configuration.")
+    flash("alert-danger")
+    return redirect(url_for("main.library"))
   else:
     lastfm_data = [row.get_display_data() for row in lastfm]
     return render_template("musicdb.html", lastfm=lastfm_data)
@@ -232,12 +236,23 @@ def queueupdate():
 @main.route('/createroom')
 @login_required
 def createroom():
+    
+    if current_user.admin == '':
+        flash('Must be administrator.')
+        flash("alert-danger")   
+        return redirect(url_for('main.index'))
+    
     return render_template('create_room.html', current_user=current_user)
 
 @main.route('/createroom', methods=['POST'])
 @login_required
 def createroom_post():
     
+    if current_user.admin == '':
+        flash('Must be administrator.')
+        flash("alert-danger")   
+        return redirect(url_for('main.index'))
+       
     # login code goes here
     userid = request.form.get('userid')
     roomid = request.form.get('roomid')
@@ -272,3 +287,36 @@ def createroom_post():
         flash("alert-danger")
         
     return redirect(url_for('main.createroom'))
+
+@main.route('/configuration')
+@login_required
+def configuration():
+    
+    if current_user.admin == '':
+        flash('Must be administrator.')
+        flash("alert-danger")   
+        return redirect(url_for('main.index'))
+    
+    config = Config.query.filter_by(id='CONFIG').first()
+    
+    return render_template('configuration.html', current_user=current_user, config=config)
+
+@main.route('/configuration', methods=['POST'])
+@login_required
+def configuration_post():
+
+    if current_user.admin == '':
+        flash('Must be administrator.')
+        flash("alert-danger")   
+        return redirect(url_for('main.index'))
+    
+    lastfm = request.form.get('lastfm')    
+    config = Config.query.filter_by(id='CONFIG').first()    
+    config.lastfm = lastfm
+    db.session.add(config)
+    db.session.commit()
+    
+    flash('Configuration updated.')
+    flash("alert-success")
+        
+    return render_template('configuration.html', current_user=current_user, config=config)

@@ -45,7 +45,7 @@ def create_app():
             
         config = Config.query.filter_by(id='CONFIG').first()
         if not config:
-            new_config = Config(id='CONGIG', lastfm='')
+            new_config = Config(id='CONFIG', lastfm='')
             db.session.add(new_config)
             db.session.commit()
                   

@@ -132,6 +132,8 @@ def lastfm_search(search_arg):
   url = "https://ws.audioscrobbler.com/2.0/?method=track.search&track=" + search_arg + '&api_key=' + get_lastfm_pass() + '&limit=20&format=json'
   try:
     response = requests.get(url)
+    if response.status_code != 200:
+        return response.status_code
     data = response.json()  
     tracks = []
     for results in data['results']['trackmatches']['track']:
