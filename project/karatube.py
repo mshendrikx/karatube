@@ -4,7 +4,7 @@ import requests
 import re
 
 from pathlib import Path
-from .models import User, Song, Queue
+from .models import User, Song, Queue, Config
 from . import db
 
 APP_PATH = str(Path(__file__).parent.absolute())
@@ -18,9 +18,7 @@ with open(file, "r") as file:
   for line in file:
       line_data = line.split('=')
       line_data[1] = line_data[1].replace('\n', '')
-      if line_data[0] == 'lastfm':
-        LASTFM_PASS = line_data[1]
-      elif line_data[0] == 'mariadb':
+      if line_data[0] == 'mariadb':
         DB_PASS = line_data[1]  
 
 class PlayerData:
@@ -131,7 +129,7 @@ def queue_get(roomid):
 
 def lastfm_search(search_arg):
   
-  url = "https://ws.audioscrobbler.com/2.0/?method=track.search&track=" + search_arg + '&api_key=' + LASTFM_PASS + '&limit=20&format=json'
+  url = "https://ws.audioscrobbler.com/2.0/?method=track.search&track=" + search_arg + '&api_key=' + get_lastfm_pass() + '&limit=20&format=json'
   try:
     response = requests.get(url)
     data = response.json()  
@@ -216,3 +214,11 @@ def get_player_data(page_load, current_user, updatedb):
         count += 1
             
     return player_data
+
+def get_lastfm_pass():
+    
+    config = Config.query.filter_by(id='CONFIG').first()
+    if config:
+        return str(config.lastfm)
+    else:
+        return ''

@@ -20,7 +20,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User, Room, Roomadm
+    from .models import User, Room, Roomadm, Config
     
     with app.app_context():
         
@@ -41,7 +41,14 @@ def create_app():
             new_roomadm = Roomadm(roomid='main', userid='admin')
             db.session.add(new_roomadm)
             db.session.add(new_room)
-            db.session.commit()            
+            db.session.commit()  
+            
+        config = Config.query.filter_by(id='CONFIG').first()
+        if not config:
+            new_config = Config(id='CONGIG', lastfm='')
+            db.session.add(new_config)
+            db.session.commit()
+                  
 
     @login_manager.user_loader
     def load_user(userid):

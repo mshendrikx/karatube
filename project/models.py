@@ -28,3 +28,7 @@ class Queue(db.Model):
 class Roomadm(db.Model):
     roomid = db.Column(db.String(100), primary_key=True)
     userid = db.Column(db.String(100), primary_key=True)
+    
+class Config(db.Model):
+    id = db.Column(db.String(6), primary_key=True)
+    lastfm = db.Column(db.String(100))

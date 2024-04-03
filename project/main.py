@@ -38,13 +38,21 @@ def profile_post():
     
     if password != repass:
         flash("Password don't match")
+        flash("alert-danger")
         return redirect(url_for('main.profile'))
     
     if roomid != '':
+
+        if roomid == current_user.roomid:
+            flash("Already logged at room")
+            flash("alert-warning")
+            return redirect(url_for('main.profile'))
+
         room = Room.query.filter_by(roomid=roomid).first()
     
         if not room or not check_password_hash(room.password, roompass):
             flash('Wrong room or room password')
+            flash("alert-danger")
             return redirect(url_for('main.profile'))
     
     if password != '':
@@ -53,6 +61,7 @@ def profile_post():
     if roomid != current_user.roomid:
         current_user.roomid = roomid
         
+    Queue.query.filter_by(userid=current_user.id).delete()
     db.session.add(current_user)
     db.session.commit()
     
