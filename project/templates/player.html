@@ -10,26 +10,6 @@
 
   <script>
 
-    // Run the function on page load
-    window.onload = enterFullScreenOnLoad;
-
-    function enterFullScreenOnLoad() {
-      const docElement = document.documentElement;
-
-      // Check for browser prefixes for Fullscreen API
-      if (docElement.requestFullscreen) {
-        docElement.requestFullscreen();
-      } else if (docElement.webkitRequestFullscreen) { /* Safari */
-        docElement.webkitRequestFullscreen();
-      } else if (docElement.msRequestFullscreen) { /* IE11 */
-        docElement.msRequestFullscreen();
-      } else if (docElement.mozRequestFullScreen) { /* Firefox */
-        docElement.mozRequestFullScreen();
-      } else {
-        console.error("Fullscreen API not supported by this browser.");
-      }
-    }
-
     $(document).ready(function () {
       getLatestInfo();  // Get initial info on page load
       setInterval(getLatestInfo, 3000); // Check for updates every 3 seconds
@@ -40,8 +20,22 @@
         url: "/screenupdate",
         success: function (data) {
           var currentSrc = $("#video").attr("src");
-          $("#overlay-now").text(data.singer + ' - ' + data.song);
-          $("#overlay-queued").text(data.next_singer + ' - ' + data.next_song);
+          if (data.song !== "") {
+            $("#overlay-now").show();
+            $("#overlay-singing").show();
+            $("#overlay-now").text(data.singer + ' - ' + data.song);
+          } else {
+            $("#overlay-now").hide();
+            $("#overlay-singing").hide();
+          }
+          if (data.next_song !== "") {
+            $("#overlay-next").show();
+            $("#overlay-queued").show();
+            $("#overlay-queued").text(data.next_singer + ' - ' + data.next_song);
+          } else {
+            $("#overlay-next").hide();
+            $("#overlay-queued").hide();
+          }
           // Check if current src is empty or not the same as the new URL
           if (currentSrc === "") {
             if (data.video_url !== "") {
