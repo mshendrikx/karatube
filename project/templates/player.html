@@ -3,16 +3,38 @@
 
 <head>
   <title>KaraTube</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
+
   <script>
+
+    $(document).ready(function () {
+      getLatestInfo();  // Get initial info on page load
+      setInterval(getLatestInfo, 3000); // Check for updates every 3 seconds
+    });
+
     function getLatestInfo() {
       $.ajax({
         url: "/screenupdate",
         success: function (data) {
+          var currentSrc = $("#video").attr("src");
           $("#overlay-now").text(data.singer + ' - ' + data.song);
           $("#overlay-queued").text(data.next_singer + ' - ' + data.next_song);
+          // Check if current src is empty or not the same as the new URL
+          if (currentSrc === "") {
+            if (data.video_url !== "") {
+              $("#video").show();
+              $("#splashImage").hide();
+              $("#video").attr("src", data.video_url);
+              $("#video")[0].load(); // Load the video
+              $("#video")[0].play(); // Start playback
+            } else {
+              $("#video").hide();
+              $("#splashImage").show();
+            }
+          }
         },
         error: function (jqXHR, textStatus, errorThrown) {
           console.error("Error:", textStatus, errorThrown);
@@ -20,50 +42,27 @@
       });
     }
 
-    $(document).ready(function () {
-      getLatestInfo();  // Get initial info on page load
-      setInterval(getLatestInfo, 3000); // Check for updates every 3 seconds
-    });
   </script>
 </head>
 
 <body>
-  <div class="video-container">
-    <video id="video" autoplay controls playsinline></video>
-    <span id="overlay-singing">Singing: </span>
-    <span id="overlay-now">{{ player_data.singer }} - {{ player_data.song }}</span>
-    <span id="overlay-next">Next:</span>
-    <span id="overlay-queued">{{ player_data.next_singer }} - {{ player_data.next_song }}</span>
-    <img id="image" src="/statis/images/karatube.jpg" alt="Post-video image">
 
-    <script>
-      const videoElement = document.getElementById("video");
-      const image = document.getElementById('image');
+  <img id="splashImage" src="{{ url_for('static', filename='images/karatube.jpg') }}" alt="Video Placeholder">
+  <video id="video" src="" autoplay controls></video>
+  <div id="overlay-singing"> Singing: </div>
+  <div id="overlay-now"></div>
+  <div id="overlay-next"> Next: </div>
+  <div id="overlay-queued"></div>
 
-      videoElement.src = "{{ player_data.video_url }}";
-      videoElement.load();
-      videoElement.play();
+  <script>
+    const video = document.getElementById("video");
 
-      videoElement.addEventListener('ended', () => {
-        videoElement.style.display = 'none';
-        image.style.display = 'block';
-        // Fetch the next video URL from the server using AJAX
-        fetch('/playerdata')
-          .then(response => response.json())
-          .then(data => {
-            $('#overlay-now').text(data.singer + ' - ' + data.song);
-            $('#overlay-queued').text(data.next_singer + ' - ' + data.next_song);
-            if (data.url !== '') {
-              videoElement.src = data.url;
-              videoElement.load();
-              videoElement.play();
-            }
-          });
-        videoElement.style.display = 'block';
-        image.style.display = 'none';
-      });
-    </script>
-  </div>
+    video.addEventListener('ended', () => {
+      // Fetch the next video URL from the server using AJAX
+      fetch('/queueupdate');
+      video.src = "";
+    });
+  </script>
 </body>
 
 </html>

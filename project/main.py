@@ -8,6 +8,13 @@ from . import db
 from .models import User, Room, Song, Queue
 from .karatube import lastfm_search, youtube_search, youtube_download, video_delete, queue_get, get_player_data
 
+class PlayerData:
+    singer = ''
+    song = ''
+    next_singer = ''
+    next_song = ''
+    video_url = ''    
+    
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -149,39 +156,61 @@ def queue():
 @main.route("/player")
 @login_required
 def player():
-    
-  video_url = ''  
-  while video_url == '':
-      player_data = get_player_data(True, current_user, True)
-      video_url = player_data.video_url
-      
-  return render_template("player.html", player_data=player_data)
 
-@main.route("/playerdata")
-@login_required
-def playerdata():
-  
-  video_url = ''  
-  while video_url == '':
-    player_data = get_player_data(False, current_user, True)
-    video_url = player_data.video_url
-    
-  return jsonify({"url": video_url,
-                  "singer": player_data.singer,
-                  "next_singer": player_data.next_singer,
-                  "song": player_data.song,
-                  "next_song": player_data.next_song
-                  })
+  return render_template("player.html")
 
 @main.route("/screenupdate")
 @login_required
 def screenupdate():
 
-  player_data = get_player_data(True, current_user, False)
+  player_data = PlayerData()
+  queue_play = Queue.query.filter_by(roomid=current_user.roomid, status='P').first()
+  queue = queue_get(roomid=current_user.roomid)
+ 
+  try:
+    if queue_play.status == 'P':
+        user = User.query.filter_by(id=queue_play.userid).first()
+        song = Song.query.filter_by(youtubeid=queue_play.youtubeid).first()
+        player_data.singer = user.name
+        player_data.song = song.name
+        player_data.video_url = '/static/songs/' + str(queue_play.youtubeid) + '.mp4'
+        
+        for queue_next in queue:
+            player_data.next_singer = queue_next.singer
+            player_data.next_song = queue_next.song
+            break
+        
+  except:
+      player_data = PlayerData()
+      for queue_next in queue:
+          queue_update = Queue.query.filter_by(id=queue_next.id).first()
+          if queue_update:
+            queue_update.status = 'P'
+            db.session.add(queue_update)
+            db.session.commit()    
       
-  return jsonify({"url": player_data.video_url,
+  return jsonify({"video_url": player_data.video_url,
                   "singer": player_data.singer,
                   "next_singer": player_data.next_singer,
                   "song": player_data.song,
                   "next_song": player_data.next_song
                   })
+
+@main.route("/queueupdate")
+@login_required
+def queueupdate():
+    
+  Queue.query.filter_by(roomid=current_user.roomid, status='P').delete()
+  db.session.commit() 
+  
+  queue = queue_get(roomid=current_user.roomid)
+  try: 
+    if queue[0]:
+        queue_next = Queue.query.filter_by(id=queue[0].id).first()
+        queue_next.status = 'P'
+        db.session.add(queue_next)
+        db.session.commit()  
+  except:
+      1 == 1
+      
+  return jsonify({})
