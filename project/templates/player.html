@@ -10,6 +10,9 @@
 
   <script>
 
+    var screenData
+    var procStep
+
     function busyWait(delayInMs) {
       let startTime = Date.now();
       while (Date.now() - startTime < delayInMs) {
@@ -17,53 +20,114 @@
       }
     }
 
-    $(document).ready(function () {
-      getLatestInfo();  // Get initial info on page load
-      setInterval(getLatestInfo, 3000); // Check for updates every 3 seconds
-    });
-
     function getLatestInfo() {
-      $.ajax({
-        url: "/screenupdate",
-        success: function (data) {
-          var currentSrc = $("#video").attr("src");
-          $("#overlay-presents").hide();
-          if (data.song !== "") {
-            $("#overlay-now").show();
-            $("#overlay-singing").show();
-            $("#overlay-now").text(data.singer + ' - ' + data.song);
-          } else {
-            $("#overlay-now").hide();
-            $("#overlay-singing").hide();
+      return new Promise((resolve) => {
+        $.ajax({
+          url: "/screenupdate",
+          success: function (data) {
+            screenData = data
+            $("#overlay-now").text(screenData.singer + ' - ' + screenData.song);
+            $("#overlay-queued").text(screenData.next_singer + ' - ' + screenData.next_song);
+            $("#overlay-presents").text(screenData.singer + ' - ' + screenData.song + ' - ' + screenData.artist);
+            procStep = 1;
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            procStep = 4;
           }
-          if (data.next_song !== "") {
-            $("#overlay-next").show();
-            $("#overlay-queued").show();
-            $("#overlay-queued").text(data.next_singer + ' - ' + data.next_song);
-          } else {
-            $("#overlay-next").hide();
-            $("#overlay-queued").hide();
-          }
-          // Check if current src is empty or not the same as the new URL
-          if (currentSrc === "") {
-            if (data.video_url !== "") {
-              $("#splashImage").hide();
-              $("#video").show();
-              $("#video").attr("src", data.video_url);
-              // busyWait(5000);
-              $("#video")[0].load(); // Load the video
-              $("#video")[0].play(); // Start playback
-            } else {
-              $("#video").hide();
-              $("#splashImage").show();
-            }
-          }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.error("Error:", textStatus, errorThrown);
-        }
+        });
+        resolve();
       });
     }
+
+    function setSong() {
+      return new Promise((resolve) => {
+        var currentSrc = $("#video").attr("src");
+        if (procStep === 1) {
+          if (currentSrc === "") {
+            if (screenData.video_url !== "") {
+              procStep = 2;
+            }
+            else {
+              procStep = 4;
+            }
+          } else {
+            procStep = 99;
+          }
+        }
+        resolve();
+      });
+    }
+
+    function presentationScreen() {
+      return new Promise((resolve) => {
+        if (procStep === 2) {
+          procStep = 3;
+          $("#overlay-presents").show();
+          $("#splashImage").show();
+          $("#video").hide();
+          $("#overlay-now").hide();
+          $("#overlay-singing").hide();
+          $("#overlay-next").hide();
+          $("#overlay-queued").hide();
+        }
+        resolve();
+      });
+    }
+
+    function playVideo() {
+      return new Promise((resolve) => {
+        if (procStep === 3) {
+          procStep = 99;
+          busyWait(5000);
+          $("#overlay-presents").hide();
+          $("#splashImage").hide();
+          $("#video").show();
+          $("#video").attr("src", screenData.video_url);
+          $("#video")[0].load(); // Load the video
+          $("#video")[0].play(); // Start playback
+          if (screenData.song === '') {
+            $("#overlay-now").hide();
+            $("#overlay-singing").hide();
+          } else {
+            $("#overlay-now").show();
+            $("#overlay-singing").show();
+          }
+          if (screenData.next_song === '') {
+            $("#overlay-next").hide();
+            $("#overlay-queued").hide();
+          } else {
+            $("#overlay-next").show();
+            $("#overlay-queued").show();
+          }
+        }
+        resolve();
+      });
+    }
+
+    function splashImage() {
+      return new Promise((resolve) => {
+        if (procStep === 4) {
+          procStep = 99;
+          $("#splashImage").show();
+          $("#overlay-presents").hide();
+          $("#video").hide();
+          $("#overlay-now").hide();
+          $("#overlay-singing").hide();
+          $("#overlay-next").hide();
+          $("#overlay-queued").hide();
+        }
+        resolve();
+      });
+    }
+
+    // Call fetchData every 3 seconds and chain promises
+    const intervalId = setInterval(() => {
+      getLatestInfo()
+        .then(setSong)
+        .then(presentationScreen)
+        .then(playVideo)
+        .then(splashImage);
+    }, 3000);
 
   </script>
 </head>
@@ -73,7 +137,7 @@
   <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
     alt="Video Placeholder">
   <video id="video" src="" controls autoplay playsinline></video>
-  <div id="overlay-presents"> Presents </div>
+  <div id="overlay-presents"></div>
   <div id="overlay-singing"> Singing: </div>
   <div id="overlay-now"></div>
   <div id="overlay-next"> Next: </div>

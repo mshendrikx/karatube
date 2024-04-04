@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>KaraTube</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/karatube_logo1.jpg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
+
+  <script>
+
+    function busyWait(delayInMs) {
+      let startTime = Date.now();
+      while (Date.now() - startTime < delayInMs) {
+        // This loop does nothing but wait
+      }
+    }
+
+    $(document).ready(function () {
+      getLatestInfo();  // Get initial info on page load
+      setInterval(getLatestInfo, 3000); // Check for updates every 3 seconds
+    });
+
+    function getLatestInfo() {
+      $.ajax({
+        url: "/screenupdate",
+        success: function (data) {
+          var currentSrc = $("#video").attr("src");
+          $("#overlay-presents").hide();
+          if (data.song !== "") {
+            $("#overlay-now").show();
+            $("#overlay-singing").show();
+            $("#overlay-now").text(data.singer + ' - ' + data.song);
+          } else {
+            $("#overlay-now").hide();
+            $("#overlay-singing").hide();
+          }
+          if (data.next_song !== "") {
+            $("#overlay-next").show();
+            $("#overlay-queued").show();
+            $("#overlay-queued").text(data.next_singer + ' - ' + data.next_song);
+          } else {
+            $("#overlay-next").hide();
+            $("#overlay-queued").hide();
+          }
+          // Check if current src is empty or not the same as the new URL
+          if (currentSrc === "") {
+            if (data.video_url !== "") {
+              $("#splashImage").hide();
+              $("#video").show();
+              $("#video").attr("src", data.video_url);
+              // busyWait(5000);
+              $("#video")[0].load(); // Load the video
+              $("#video")[0].play(); // Start playback
+            } else {
+              $("#video").hide();
+              $("#splashImage").show();
+            }
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error("Error:", textStatus, errorThrown);
+        }
+      });
+    }
+
+  </script>
+</head>
+
+<body>
+
+  <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
+    alt="Video Placeholder">
+  <video id="video" src="" controls autoplay playsinline></video>
+  <div id="overlay-presents"> Presents </div>
+  <div id="overlay-singing"> Singing: </div>
+  <div id="overlay-now"></div>
+  <div id="overlay-next"> Next: </div>
+  <div id="overlay-queued"></div>
+
+  <script>
+    const video = document.getElementById("video");
+
+    video.addEventListener('ended', () => {
+      // Fetch the next video URL from the server using AJAX
+      fetch('/queueupdate');
+      video.src = "";
+    });
+  </script>
+</body>
+
+</html>

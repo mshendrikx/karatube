@@ -9,6 +9,7 @@ body {
 }
 
 #video {
+  z-index: 1;
   position: fixed;
   right: 0;
   bottom: 0;
@@ -17,6 +18,7 @@ body {
 }
 
 #overlay-presents {
+  z-index: 4;
   position: absolute;
   text-align: left;
   top: 0;
@@ -27,6 +29,7 @@ body {
   z-index: 999;
 }
 #overlay-singing {
+  z-index: 2;
   position: absolute;
   text-align: left;
   top: 0;
@@ -37,6 +40,7 @@ body {
 }
 
 #overlay-now {
+  z-index: 2;
   position: absolute;
   text-align: left;
   top: 0;
@@ -47,6 +51,7 @@ body {
 }
 
 #overlay-next {
+  z-index: 2;
   position: absolute;
   text-align: left;
   bottom: 0;
@@ -57,6 +62,7 @@ body {
 }
 
 #overlay-queued {
+  z-index: 2;
   position: absolute;
   text-align: left;
   bottom: 0;

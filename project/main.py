@@ -14,6 +14,7 @@ class PlayerData:
     next_singer = ''
     next_song = ''
     video_url = ''    
+    artist = ''
     
 main = Blueprint('main', __name__)
 
@@ -191,6 +192,7 @@ def screenupdate():
         song = Song.query.filter_by(youtubeid=queue_play.youtubeid).first()
         player_data.singer = user.name
         player_data.song = song.name
+        player_data.artist = song.artist
         player_data.video_url = '/static/songs/' + str(queue_play.youtubeid) + '.mp4'
         
         for queue_next in queue:
@@ -211,7 +213,8 @@ def screenupdate():
                   "singer": player_data.singer,
                   "next_singer": player_data.next_singer,
                   "song": player_data.song,
-                  "next_song": player_data.next_song
+                  "next_song": player_data.next_song,
+                  "artist": player_data.artist
                   })
 
 @main.route("/queueupdate")
