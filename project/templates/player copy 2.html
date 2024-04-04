@@ -44,8 +44,10 @@
               $("#overlay-next").show();
               $("#overlay-queued").show();
             }
+            procStep = 1;
           },
           error: function (jqXHR, textStatus, errorThrown) {
+            procStep = 4;
           }
         });
         resolve();
@@ -55,20 +57,22 @@
     function setSong() {
       return new Promise((resolve) => {
         var currentSrc = $("#video").attr("src");
-        if (currentSrc === "") {
-          if (screenData.video_url !== "") {
-            if (queueId !== screenData.queueid) {
-              queueId = screenData.queueid;
-              procStep = 2;
-            } else {
-              procStep = 99;
+        if (procStep === 1) {
+          if (currentSrc === "") {
+            if (screenData.video_url !== "") {
+              if (queueId !== screenData.queueid) {
+                queueId = screenData.queueid;
+                procStep = 2;
+              } else {
+                procStep = 4;
+              }
             }
+            else {
+              procStep = 4;
+            }
+          } else {
+            procStep = 99;
           }
-          else {
-            procStep = 4;
-          }
-        } else {
-          procStep = 99;
         }
         resolve();
       });
@@ -123,17 +127,13 @@
     }
 
     // Call fetchData every 3 seconds and chain promises
-    const interval1 = setInterval(() => {
-      getLatestInfo();
-    }, 3000);
-
-    // Call fetchData every 1 seconds and chain promises
-    const interval2 = setInterval(() => {
-      setSong()
+    const intervalId = setInterval(() => {
+      getLatestInfo()
+        .then(setSong)
         .then(presentationScreen)
         .then(playVideo)
         .then(splashImage);
-    }, 1000);
+    }, 3000);
 
   </script>
 </head>
