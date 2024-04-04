@@ -43,7 +43,6 @@
               $("#overlay-next").show();
               $("#overlay-queued").show();
             }
-            $("#overlay-presents").text(screenData.singer + ' - ' + screenData.song + ' - ' + screenData.artist);
             procStep = 1;
           },
           error: function (jqXHR, textStatus, errorThrown) {
@@ -82,6 +81,7 @@
       return new Promise((resolve) => {
         if (procStep === 2) {
           procStep = 3;
+          $("#overlay-presents").text(screenData.singer + ' - ' + screenData.song + ' - ' + screenData.artist);
           $("#overlay-presents").show();
           $("#splashImage").hide();
           $("#video").hide();
@@ -89,7 +89,6 @@
           $("#overlay-singing").hide();
           $("#overlay-next").hide();
           $("#overlay-queued").hide();
-
         }
         resolve();
       });
