@@ -11,129 +11,74 @@
   <script>
 
     var screenData
-    var procStep
+    var procStep = 0
     var queueId = ''
 
-    function busyWait(delayInMs) {
-      let startTime = Date.now();
-      while (Date.now() - startTime < delayInMs) {
-        // This loop does nothing but wait
+    async function getLatestInfo() {
+      $.ajax({
+        url: "/screenupdate",
+        success: function (data) {
+          screenData = data
+          if (screenData.song === '') {
+            $("#overlay-now").hide();
+            $("#overlay-singing").hide();
+          } else {
+            $("#overlay-now").text(screenData.singer + ' - ' + screenData.song);
+            $("#overlay-now").show();
+            $("#overlay-singing").show();
+          }
+          if (screenData.next_song === '') {
+            $("#overlay-next").hide();
+            $("#overlay-queued").hide();
+          } else {
+            $("#overlay-queued").text(screenData.next_singer + ' - ' + screenData.next_song);
+            $("#overlay-next").show();
+            $("#overlay-queued").show();
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+      });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await getLatestInfo();
+    }
+
+    async function exec_control() {
+      if (screenData.queueid === '') {
+        $("#splashImage").show();
+        $("#overlay-presents").hide();
+        $("#overlay-singer").hide();
+        $("#overlay-music").hide();
+        $("#overlay-song").hide();
+        $("#overlay-artist").hide();
+        $("#video").hide();
+      } else {
+        if (queueId !== screenData.queueid) {
+          queueId = screenData.queueid;
+          $("#splashImage").show();
+          $("#overlay-presents").show();
+          $("#overlay-presents").text(screenData.singer + ' - ' + screenData.song + ' - ' + screenData.artist);
+
+          await new Promise(resolve => setTimeout(resolve, 10000));
+          await play_video();
+        }
       }
     }
 
-    function getLatestInfo() {
-      return new Promise((resolve) => {
-        $.ajax({
-          url: "/screenupdate",
-          success: function (data) {
-            screenData = data
-            $("#overlay-presents").text(screenData.singer + ' - ' + screenData.song + ' - ' + screenData.artist);
-            if (screenData.song === '') {
-              $("#overlay-now").hide();
-              $("#overlay-singing").hide();
-            } else {
-              $("#overlay-now").text(screenData.singer + ' - ' + screenData.song);
-              $("#overlay-now").show();
-              $("#overlay-singing").show();
-            }
-            if (screenData.next_song === '') {
-              $("#overlay-next").hide();
-              $("#overlay-queued").hide();
-            } else {
-              $("#overlay-queued").text(screenData.next_singer + ' - ' + screenData.next_song);
-              $("#overlay-next").show();
-              $("#overlay-queued").show();
-            }
-            procStep = 1;
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            procStep = 4;
-          }
-        });
-        resolve();
-      });
+    async function play_video() {
+      $("#overlay-presents").hide();
+      $("#splashImage").hide();
+      $("#video").attr("src", screenData.video_url);
+      $("#video").show();
+      $("#video")[0].load(); // Load the video
+      $("#video")[0].play(); // Start playback
     }
 
-    function setSong() {
-      return new Promise((resolve) => {
-        var currentSrc = $("#video").attr("src");
-        if (procStep === 1) {
-          if (currentSrc === "") {
-            if (screenData.video_url !== "") {
-              if (queueId !== screenData.queueid) {
-                queueId = screenData.queueid;
-                procStep = 2;
-              } else {
-                procStep = 4;
-              }
-            }
-            else {
-              procStep = 4;
-            }
-          } else {
-            procStep = 99;
-          }
-        }
-        resolve();
-      });
-    }
+    getLatestInfo();
 
-    function presentationScreen() {
-      return new Promise((resolve) => {
-        if (procStep === 2) {
-          procStep = 3;
-          $("#overlay-presents").show();
-          $("#splashImage").show();
-          $("#video").hide();
-          $("#overlay-now").hide();
-          $("#overlay-singing").hide();
-          $("#overlay-next").hide();
-          $("#overlay-queued").hide();
-        }
-        resolve();
-      });
-    }
-
-    function playVideo() {
-      return new Promise((resolve) => {
-        if (procStep === 3) {
-          procStep = 99;
-          busyWait(5000);
-          $("#overlay-presents").hide();
-          $("#splashImage").hide();
-          $("#video").show();
-          $("#video").attr("src", screenData.video_url);
-          $("#video")[0].load(); // Load the video
-          $("#video")[0].play(); // Start playback
-        }
-        resolve();
-      });
-    }
-
-    function splashImage() {
-      return new Promise((resolve) => {
-        if (procStep === 4) {
-          procStep = 99;
-          $("#splashImage").show();
-          $("#overlay-presents").hide();
-          $("#video").hide();
-          $("#overlay-now").hide();
-          $("#overlay-singing").hide();
-          $("#overlay-next").hide();
-          $("#overlay-queued").hide();
-        }
-        resolve();
-      });
-    }
-
-    // Call fetchData every 3 seconds and chain promises
-    const intervalId = setInterval(() => {
-      getLatestInfo()
-        .then(setSong)
-        .then(presentationScreen)
-        .then(playVideo)
-        .then(splashImage);
-    }, 3000);
+    const intervalControl = setInterval(() => {
+      exec_control();
+    }, 1000);
 
   </script>
 </head>
@@ -141,6 +86,10 @@
 <body>
 
   <div id="overlay-presents"></div>
+  <div id="overlay-singer"></div>
+  <div id="overlay-music">Singing:</div>
+  <div id="overlay-song"></div>
+  <div id="overlay-artist"></div>
   <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
     alt="Video Placeholder">
   <video id="video" src="" controls autoplay playsinline></video>
@@ -155,7 +104,6 @@
     video.addEventListener('ended', () => {
       // Fetch the next video URL from the server using AJAX
       fetch('/queueupdate');
-      video.src = "";
     });
   </script>
 </body>
