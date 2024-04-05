@@ -2,6 +2,7 @@
 *.swp
 .vscode/
 .venv/
+.env
 __pycache__/
 project/static/songs/
 project/static/thumbs/

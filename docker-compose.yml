@@ -1,0 +1,14 @@
+version: '3.3'
+
+services:
+
+  karatube:
+    image: karatube:latest
+    env_file:
+      - .env
+    volumes:
+      - /home/mauricio/karatube_songs:/app/project/static/songs
+      - /home/mauricio/karatube_thumbs:/app/project/static/thumbs
+    ports:
+      - 5000:5000
+    restart: unless-stopped

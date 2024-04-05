@@ -177,7 +177,8 @@ def queue():
 @login_required
 def player():
 
-  return render_template("player.html")
+  config = Config.query.filter_by(id='CONFIG').first()  
+  return render_template("player.html", player_config=config)
 
 @main.route("/screenupdate")
 @login_required
@@ -214,17 +215,13 @@ def screenupdate():
   except:
     1 == 1
     
-  config = Config.query.filter_by(id='CONFIG').first() 
-          
   return jsonify({"video_url": player_data.video_url,
                   "singer": player_data.singer,
                   "next_singer": player_data.next_singer,
                   "song": player_data.song,
                   "next_song": player_data.next_song,
                   "artist": player_data.artist,
-                  "queueid": player_data.queueid,
-                  "updateratio": config.updateratio * 1000,
-                  "songint": config.songint * 1000
+                  "queueid": player_data.queueid
                   })
 
 @main.route("/queueupdate")
