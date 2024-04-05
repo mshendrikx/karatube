@@ -11,8 +11,8 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     
-    mariadb_pass = os.environ.get('MARIADB_ROOT_PASSWORD')
-    mariadb_host = os.environ.get('MARIADB_HOST')
+    mariadb_pass = os.environ.get('MYSQL_ROOT_PASSWORD')
+    mariadb_host = os.environ.get('MYSQL_HOST')
 
     app.config['SECRET_KEY'] = os.urandom(24).hex()
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:' + mariadb_pass + '@' + mariadb_host + '/karatube'
