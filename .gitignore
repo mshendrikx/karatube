@@ -2,8 +2,9 @@
 *.swp
 .vscode/
 .venv/
-.env
+*.env
 __pycache__/
 project/static/songs/**
 project/static/thumbs/**
 passwords.txt
+app.sh

@@ -5,3 +5,4 @@ yt-dlp
 mysql-connector
 pymysql
 requests 
+python-dotenv

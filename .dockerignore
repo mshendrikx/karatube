@@ -7,3 +7,4 @@ __pycache__/
 project/static/songs/**
 project/static/thumbs/**
 passwords.txt
+app.sh
