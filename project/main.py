@@ -188,7 +188,7 @@ def screenupdate():
   queue = queue_get(roomid=current_user.roomid)
  
   try:
-    if queue_play.status == 'P':
+    if queue_play:
         user = User.query.filter_by(id=queue_play.userid).first()
         song = Song.query.filter_by(youtubeid=queue_play.youtubeid).first()
         player_data.singer = user.name
@@ -202,7 +202,7 @@ def screenupdate():
             player_data.next_song = queue_next.song
             break
         
-  except:
+    else:
       player_data = PlayerData()
       for queue_next in queue:
           queue_update = Queue.query.filter_by(id=queue_next.id).first()
@@ -210,7 +210,10 @@ def screenupdate():
             queue_update.status = 'P'
             db.session.add(queue_update)
             db.session.commit()    
-      
+          break
+  except:
+    1 == 1
+          
   return jsonify({"video_url": player_data.video_url,
                   "singer": player_data.singer,
                   "next_singer": player_data.next_singer,
