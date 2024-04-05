@@ -213,6 +213,8 @@ def screenupdate():
           break
   except:
     1 == 1
+    
+  config = Config.query.filter_by(id='CONFIG').first() 
           
   return jsonify({"video_url": player_data.video_url,
                   "singer": player_data.singer,
@@ -220,7 +222,9 @@ def screenupdate():
                   "song": player_data.song,
                   "next_song": player_data.next_song,
                   "artist": player_data.artist,
-                  "queueid": player_data.queueid
+                  "queueid": player_data.queueid,
+                  "updateratio": config.updateratio * 1000,
+                  "songint": config.songint * 1000
                   })
 
 @main.route("/queueupdate")
@@ -319,9 +323,17 @@ def configuration_post():
         flash("alert-danger")   
         return redirect(url_for('main.index'))
     
-    lastfm = request.form.get('lastfm')    
+    lastfm = request.form.get('lastfm')  
+    updateratio = request.form.get('updateratio') 
+    songint = request.form.get('songint')
     config = Config.query.filter_by(id='CONFIG').first()    
     config.lastfm = lastfm
+    config.updateratio = int(updateratio)
+    if config.updateratio == 0:
+        config.updateratio = 1
+    config.songint = int(songint)
+    if config.songint == 0:
+        config.songint = 10
     db.session.add(config)
     db.session.commit()
     
