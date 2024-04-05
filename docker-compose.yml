@@ -4,6 +4,7 @@ services:
 
   karatube:
     image: karatube:latest
+    container_name: karatube
     env_file:
       - .env
     volumes:

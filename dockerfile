@@ -5,7 +5,7 @@ FROM ubuntu:22.04
 RUN apt-get update
 
 # Install Apache2 web server
-RUN apt-get install -y python3-pip
+RUN apt-get install -y python3-pip net-tools
 
 WORKDIR /app
 
