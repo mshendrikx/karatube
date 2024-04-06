@@ -5,16 +5,18 @@ FROM ubuntu:22.04
 RUN apt-get update
 
 # Install Apache2 web server
-RUN apt-get install -y python3-pip net-tools
+RUN apt-get install -y python3-pip nano
 
 WORKDIR /app
 
-COPY . .
+COPY requirements.txt . 
 
 RUN pip3 install -r requirements.txt
 
-# Expose port 80 for web traffic
-EXPOSE 5000
+COPY . .
+
+# Expose port 7003 for web traffic
+EXPOSE 7003
 
 # Start Apache2 in the foreground
 CMD ["python3", "/app/app.py"]

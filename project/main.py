@@ -116,25 +116,31 @@ def youtubedl(artist, song, id, image, description):
   
   result = False
     
-  if youtube_download(id):
-      try:
-          new_song = Song(youtubeid=id, name=song, artist=artist)
-          db.session.add(new_song)
-          db.session.commit()
-          result = True
-      except:
-          video_delete(id)
-          result = False
- 
-  if result == True:
-      image_url = 'https://i.ytimg.com/vi/' + str(id) + '/' + image
-      file_name = str(Path(__file__).parent.absolute()) + '/static/thumbs/' + str(id) + '.jpg'
-      urlretrieve(image_url, file_name)
-      flash("Youtube video downloaded")
-      flash("alert-success")
-  else:
-      flash("Fail to download Youtube video")
-      flash("alert-danger")
+  song_exists = Song.query.filter_by(youtubeid=id).first()
+  
+  if song_exists:
+      flash("Youtube video alredy downloaded")
+      flash("alert-warning")
+  else:    
+      if youtube_download(id):
+          try:
+              new_song = Song(youtubeid=id, name=song, artist=artist)
+              db.session.add(new_song)
+              db.session.commit()
+              result = True
+          except:
+              video_delete(id)
+              result = False
+    
+      if result == True:
+          image_url = 'https://i.ytimg.com/vi/' + str(id) + '/' + image
+          file_name = str(Path(__file__).parent.absolute()) + '/static/thumbs/' + str(id) + '.jpg'
+          urlretrieve(image_url, file_name)
+          flash("Youtube video downloaded")
+          flash("alert-success")
+      else:
+          flash("Fail to download Youtube video")
+          flash("alert-danger")
   
   return redirect(url_for("main.library"))
 

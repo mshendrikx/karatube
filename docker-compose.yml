@@ -1,5 +1,8 @@
 version: '3.3'
 
+networks:
+  mauricio:
+
 services:
   karatube:
     image: karatube:latest
@@ -9,6 +12,8 @@ services:
     volumes:
       - /home/mauricio/karatube_songs:/app/project/static/songs
       - /home/mauricio/karatube_thumbs:/app/project/static/thumbs
-    ports:
-      - 5678:5000
+#    ports:
+#      - 5000:5000
+    networks:
+      - mauricio
     restart: unless-stopped
