@@ -6,6 +6,9 @@
     <table class="table">
         <thead>
             <tr>
+                {% if current_user.roomadm == 'X' %}
+                <th></th>
+                {% endif #}
                 <th>Singer</th>
                 <th>Music</th>
                 <th>Artist</th>
@@ -14,6 +17,13 @@
         <tbody>
             {% for queue_item in queue %}
             <tr>
+                {% if current_user.roomadm == 'X' %}
+                <td>
+                    <a class="clickable-image" id="{{ song.youtubeid }}" href="{{ url_for('main.addqueue', youtubeid=song.youtubeid }}">
+                        <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
+                    </a>
+                </td>
+                {% endif #}
                 <td>{{ queue_item.singer }}
                 </td>
                 <td>{{ queue_item.song }}</td>

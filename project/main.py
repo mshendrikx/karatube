@@ -177,7 +177,27 @@ def queue():
     
     queue = queue_get(roomid=current_user.roomid)
 
-    return render_template('queue.html', queue=queue)
+    return render_template('queue.html', queue=queue, current_user=current_user)
+
+@main.route("/delqueue/<queueid>")
+@login_required
+def delqueue(queueid):
+    try:
+        queue_check = Queue.query.filter_by(userid=current_user.id, youtubeid=youtubeid, roomid=current_user.roomid).first()
+        if queue_check:
+            flash("Song alredy in queue")
+            flash("alert-warning")            
+        else:
+            new_queue = Queue(roomid=current_user.roomid, userid=userid, youtubeid=youtubeid, status='')
+            db.session.add(new_queue)
+            db.session.commit()
+            flash("Song added to queue")
+            flash("alert-success")
+    except:
+        flash("Fail to add song to queue")
+        flash("alert-danger")
+        
+    return redirect(url_for("main.library"))
 
 @main.route("/player")
 @login_required
