@@ -26,7 +26,7 @@
             <tr>
                 {% if current_user.roomadm == 'X' %}
                 <td>
-                    <a class="clickable-image" id="{{ song.youtubeid }}" href="{{ url_for('main.addqueue', youtubeid=song.youtubeid }}">
+                    <a class="clickable-image" id="{{ queue_item.id }}" href="{{ url_for('main.delqueue', queueid=queue_item.id }}">
                         <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
                     </a>
                 </td>
