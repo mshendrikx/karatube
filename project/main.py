@@ -195,7 +195,7 @@ def delqueue(queueid):
             flash("alert-danger")       
     
     else:
-        flash("Must be room admin to delete queue")
+        flash("Only room admin can delete queue")
         flash("alert-danger")        
     
     return redirect(url_for("main.queue"))
