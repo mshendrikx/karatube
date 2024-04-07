@@ -10,6 +10,7 @@ from . import db
 APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = 'https://www.youtube.com/watch?v='
 SONGS_DIR = '/static/songs/'
+THUMBS_DIR = '/static/thumbs/'
 
 class PlayerData:
     singer = ''
@@ -74,9 +75,13 @@ def video_delete(videoid):
     if rc != 0:
         rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
     if rc == 0:
+        filename = APP_PATH + THUMBS_DIR + str(videoid) + '.jpg'
+        cmd = ["rm", filename]
+        rc = subprocess.call(cmd)
         return True
     else:
         return False
+    
     
 def queue_get(roomid):
 

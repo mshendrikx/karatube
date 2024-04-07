@@ -164,6 +164,28 @@ def addqueue(youtubeid, userid):
         
     return redirect(url_for("main.library"))
 
+@main.route("/delsong/<youtubeid>")
+@login_required
+def delsong(youtubeid):
+    
+    if current_user.admin == 'X':
+        if video_delete(youtubeid):
+            del_song = Song.query.filter_by(youtubeid=youtubeid).delete()
+            db.session.commit()
+            if del_song:
+                Queue.query.filter_by(youtubeid=youtubeid).delete()
+                db.session.commit()
+                flash("Song deleted")
+                flash("alert-success")   
+        else:
+            flash("Song delete fails")
+            flash("alert-danger")     
+    else:
+            flash("Only admin can delete song")
+            flash("alert-danger")                            
+        
+    return redirect(url_for("main.library"))
+
 @main.route("/miniplayer/<youtubeid>")
 @login_required
 def miniplayer(youtubeid):
