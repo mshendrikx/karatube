@@ -85,14 +85,12 @@ def video_delete(videoid):
     rc = subprocess.call(cmd)
     if rc != 0:
         rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
-    if rc == 0:
-        filename = APP_PATH + THUMBS_DIR + str(videoid) + ".jpg"
-        cmd = ["rm", filename]
-        rc = subprocess.call(cmd)
-        return True
-    else:
-        return False
-
+    
+    filename = APP_PATH + THUMBS_DIR + str(videoid) + ".jpg"
+    cmd = ["rm", filename]
+    rc = subprocess.call(cmd)
+    
+    return True
 
 def queue_get(roomid):
 
@@ -174,8 +172,8 @@ def musicbrainz_search(search_arg):
         result = musicbrainzngs.search_recordings(query=search_arg)
         for record in result["recording-list"]:
             music_data = MusicData()
-            music_data.song = record["artist-credit-phrase"]
-            music_data.artist = record["title"]
+            music_data.song = record["title"] 
+            music_data.artist = record["artist-credit-phrase"]
             tracks.append(music_data)
     except:
         return None

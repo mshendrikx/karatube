@@ -1,3 +1,5 @@
+import time
+
 from urllib.request import urlretrieve
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -14,7 +16,7 @@ from .karatube import (
     video_delete,
     queue_get,
     check_video,
-    musicbrainz_search
+    musicbrainz_search,
 )
 
 
@@ -106,7 +108,7 @@ def library_post():
 
     search_string = request.form.get("search_string")
     lastfm_pass = get_lastfm_pass()
-    if lastfm_pass != '': 
+    if lastfm_pass != "":
         musics = lastfm_search(search_string, lastfm_pass=lastfm_pass)
     else:
         musics = musicbrainz_search(search_string)
@@ -141,30 +143,36 @@ def youtubedl(artist, song, id, image, description):
         flash("Youtube video alredy downloaded")
         flash("alert-warning")
     else:
-        if youtube_download(id):
-            try:
-                new_song = Song(youtubeid=id, name=song, artist=artist)
-                db.session.add(new_song)
-                db.session.commit()
-                result = True
-            except:
-                video_delete(id)
-                result = False
-
+        try:
+            new_song = Song(youtubeid=id, name=song, artist=artist)
+            db.session.add(new_song)
+            db.session.commit()    
+            result = True 
+        except: 
+            result = False
+            
         if result == True:
-            image_url = "https://i.ytimg.com/vi/" + str(id) + "/" + image
-            file_name = (
-                str(Path(__file__).parent.absolute())
-                + "/static/thumbs/"
-                + str(id)
-                + ".jpg"
-            )
-            urlretrieve(image_url, file_name)
-            flash("Youtube video downloaded")
-            flash("alert-success")
-        else:
-            flash("Fail to download Youtube video")
-            flash("alert-danger")
+            if youtube_download(id):
+                result = True
+            else:
+                video_delete(id)
+                Song.query.filter_by(youtubeid=id).delete()
+                db.session.commit() 
+                result = False
+            if result == True:
+                image_url = "https://i.ytimg.com/vi/" + str(id) + "/" + image
+                file_name = (
+                    str(Path(__file__).parent.absolute())
+                    + "/static/thumbs/"
+                    + str(id)
+                    + ".jpg"
+                )
+                urlretrieve(image_url, file_name)
+                flash("Youtube video downloaded")
+                flash("alert-success")
+            else:
+                flash("Fail to download Youtube video")
+                flash("alert-danger")
 
     return redirect(url_for("main.library"))
 

@@ -15,9 +15,11 @@
             {% for video in videos %}
             <tr>
                 <td>
-                    <a href="{{ url_for('main.youtubedl', artist=artist, song=song, id=video['id'], image=video['image'], description=video['description']) }}">
-                        <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24">
-                    </a>               
+                    <a
+                        href="{{ url_for('main.youtubedl', artist=artist, song=song, id=video['id'], image=video['image'], description=video['description']) }}">
+                        <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24"
+                            id="addVideo">
+                    </a>
                 </td>
                 <td>
                     <a href="http://www.youtube.com/watch?v={{ video['id'] }}">
@@ -27,10 +29,19 @@
                 <td>{{ video['description'] }}</td>
             </tr>
             {% endfor %}
-    
+
         </tbody>
-        </table>
+    </table>
     </table>
 </div>
 
+<script>
+    var addVideo = document.getElementsById("addVideo"); // Replace with your link's ID
+
+    addVideo.addEventListener("click", function (event) {
+        event.preventDefault();
+        // Optionally remove href for visual indication
+        this.removeAttribute('href');
+    });
+</script>
 {% endblock %}
