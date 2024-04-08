@@ -42,6 +42,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
                     </li>
+                    {% if current_user.roomadm == 'X' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.player') }}">Player</a>
+                    </li>
+                    {% endif %}
                     {% if current_user.admin == 'X' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.configuration') }}">Configuration</a>

@@ -10,8 +10,9 @@
 
   <script>
 
-    var screenData
-    var queueId = ''
+    const karaokeVideo = document.getElementById("video");
+    var screenData;
+    var queueId = '';
 
     async function getLatestInfo() {
       $.ajax({
@@ -34,6 +35,25 @@
             $("#overlay-next").show();
             $("#overlay-queued").show();
           }
+          // if (screenData.command !== "") {
+          //   var videoDuration = karaokeVideo.duration;
+          //   if (screenData.command !== "prev") {
+          //     karaokeVideo.pause();
+          //     karaokeVideo.currentTime = 0;
+          //     karaokeVideo.play();
+          //   }
+          //   if (screenData.command !== "next") {
+          //     karaokeVideo.pause();
+          //     karaokeVideo.currentTime = videoDuration - 0.1;
+          //     karaokeVideo.play();
+          //   }
+          //   if (screenData.command !== "play") {
+          //     karaokeVideo.play();
+          //   }
+          //   if (screenData.command !== "pause") {
+          //     karaokeVideo.pause();
+          //   }
+          // }
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }
@@ -96,7 +116,7 @@
 
   <div id="overlay-presents"></div>
   <div id="overlay-singer"></div>
-  <div id="overlay-music">Singing:</div>
+  <div id="overlay-music">Now:</div>
   <div id="overlay-song"></div>
   <div id="overlay-artist"></div>
   <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
