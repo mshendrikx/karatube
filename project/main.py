@@ -8,11 +8,13 @@ from . import db
 from .models import User, Room, Song, Queue, Roomadm, Config, Controls
 from .karatube import (
     lastfm_search,
+    get_lastfm_pass,
     youtube_search,
     youtube_download,
     video_delete,
     queue_get,
     check_video,
+    musicbrainz_search
 )
 
 
@@ -103,19 +105,18 @@ def library():
 def library_post():
 
     search_string = request.form.get("search_string")
-    lastfm = lastfm_search(search_string)
+    lastfm_pass = get_lastfm_pass()
+    if lastfm_pass != '': 
+        musics = lastfm_search(search_string, lastfm_pass=lastfm_pass)
+    else:
+        musics = musicbrainz_search(search_string)
 
-    if lastfm == None:
-        flash("No music found in Last FM database")
+    if musics == None:
+        flash("No music found in database")
         flash("alert-warning")
         return redirect(url_for("main.library"))
-    elif lastfm == 403:
-        flash("Update LAST.FM API Key in configuration.")
-        flash("alert-danger")
-        return redirect(url_for("main.library"))
     else:
-        lastfm_data = [row.get_display_data() for row in lastfm]
-        return render_template("musicdb.html", lastfm=lastfm_data)
+        return render_template("musicdb.html", musics=musics)
 
 
 @main.route("/youtube/<artist>/<song>")
@@ -290,11 +291,8 @@ def screenupdate():
                 )
                 player_data.queueid = str(queue_item.id)
                 if queue_item.status == "":
-                    queue_update = Queue.query.filter_by(id=queue_item.id).first()
-                    if queue_update:
-                        queue_update.status = "P"
-                        db.session.add(queue_update)
-                        db.session.commit()
+                    Queue.query.filter_by(id=queue_item.id).update({"status": "P"})
+                    db.session.commit()
                 first = False
             else:
                 player_data.next_singer = queue_item.singer

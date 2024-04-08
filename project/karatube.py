@@ -1,3 +1,4 @@
+import musicbrainzngs
 import subprocess
 import requests
 import re
@@ -11,6 +12,12 @@ APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = "https://www.youtube.com/watch?v="
 SONGS_DIR = "/static/songs/"
 THUMBS_DIR = "/static/thumbs/"
+
+musicbrainzngs.set_useragent(
+    "python-musicbrainzngs-example",
+    "0.1",
+    "https://github.com/alastair/python-musicbrainzngs/",
+)
 
 
 class PlayerData:
@@ -32,7 +39,7 @@ class SongQueue:
     status = ""
 
 
-class LastFM:
+class MusicData:
     artist = ""
     song = ""
 
@@ -134,13 +141,13 @@ def queue_get(roomid):
     return queue_array
 
 
-def lastfm_search(search_arg):
+def lastfm_search(search_arg, lastfm_pass):
 
     url = (
         "https://ws.audioscrobbler.com/2.0/?method=track.search&track="
         + search_arg
         + "&api_key="
-        + get_lastfm_pass()
+        + lastfm_pass
         + "&limit=20&format=json"
     )
     try:
@@ -150,10 +157,26 @@ def lastfm_search(search_arg):
         data = response.json()
         tracks = []
         for results in data["results"]["trackmatches"]["track"]:
-            last_fm = LastFM()
-            last_fm.artist = results["artist"]
-            last_fm.song = results["name"]
-            tracks.append(last_fm)
+            music_data = MusicData()
+            music_data.artist = results["artist"]
+            music_data.song = results["name"]
+            tracks.append(music_data)
+    except:
+        return None
+
+    return tracks
+
+
+def musicbrainz_search(search_arg):
+
+    tracks = []
+    try:
+        result = musicbrainzngs.search_recordings(query=search_arg)
+        for record in result["recording-list"]:
+            music_data = MusicData()
+            music_data.song = record["artist-credit-phrase"]
+            music_data.artist = record["title"]
+            tracks.append(music_data)
     except:
         return None
 
