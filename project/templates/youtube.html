@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block headscript %}
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container mt-3">
@@ -17,8 +21,7 @@
                 <td>
                     <a
                         href="{{ url_for('main.youtubedl', artist=artist, song=song, id=video['id'], image=video['image'], description=video['description']) }}">
-                        <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24"
-                            id="addVideo">
+                        <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24">
                     </a>
                 </td>
                 <td>
@@ -35,13 +38,4 @@
     </table>
 </div>
 
-<script>
-    var addVideo = document.getElementsById("addVideo"); // Replace with your link's ID
-
-    addVideo.addEventListener("click", function (event) {
-        event.preventDefault();
-        // Optionally remove href for visual indication
-        this.removeAttribute('href');
-    });
-</script>
 {% endblock %}
