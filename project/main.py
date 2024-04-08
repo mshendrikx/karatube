@@ -278,8 +278,8 @@ def screenupdate():
 
     try:
         first = True
-        queue = queue_get(roomid=current_user.roomid)
         player_data = PlayerData()
+        queue = queue_get(roomid=current_user.roomid)
         for queue_item in queue:
             if first:
                 player_data.singer = queue_item.singer
