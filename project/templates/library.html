@@ -15,20 +15,20 @@
     {% endwith %}
     <form action="/library" method="POST">
         <div class="input-group">
+            <label for="user_selection">Singer:&nbsp;&nbsp;</label>
+            <select name="user_selection" id="user_selection">
+                {% for user in user_sel %}
+                <option value="{{ user.id }}">{{ user.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="input-group">
             <input type="text" class="form-control" id="search_string" placeholder="Artist + Music" name="search_string"
                 required>
             <button type="submit" class="btn btn-outline-primary">Search</button>
         </div>
     </form>
-    <br>
-    <div class="input-group">
-        <label for="user_selection">Singer:&nbsp;&nbsp;</label>
-        <select name="user_selection" id="user_selection">
-            {% for user in user_sel %}
-            <option value="{{ user.id }}">{{ user.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
     <br>
     <table class="table">
         <thead>

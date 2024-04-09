@@ -107,6 +107,7 @@ def library():
 def library_post():
 
     search_string = request.form.get("search_string")
+    singer_user = request.form.get("user_selection")
     lastfm_pass = get_lastfm_pass()
     if lastfm_pass != "":
         musics = lastfm_search(search_string, lastfm_pass=lastfm_pass)
@@ -118,22 +119,24 @@ def library_post():
         flash("alert-warning")
         return redirect(url_for("main.library"))
     else:
-        return render_template("musicdb.html", musics=musics)
+        return render_template("musicdb.html", musics=musics, singer_user=singer_user)
 
 
-@main.route("/youtube/<artist>/<song>")
+@main.route("/youtube/<artist>/<song>/<singer>")
 @login_required
-def youtube(artist, song):
+def youtube(artist, song, singer):
     search_arg = artist + " " + song
     youtube_videos = youtube_search(search_arg)
     videos = [video.get_display_data() for video in youtube_videos]
 
-    return render_template("youtube.html", videos=videos, artist=artist, song=song)
+    return render_template(
+        "youtube.html", videos=videos, artist=artist, song=song, singer=singer
+    )
 
 
-@main.route("/youtubedl/<artist>/<song>/<id>/<image>/<description>")
+@main.route("/youtubedl/<artist>/<song>/<id>/<image>/<singer>")
 @login_required
-def youtubedl(artist, song, id, image, description):
+def youtubedl(artist, song, id, image, singer):
 
     result = False
 
@@ -146,18 +149,18 @@ def youtubedl(artist, song, id, image, description):
         try:
             new_song = Song(youtubeid=id, name=song, artist=artist)
             db.session.add(new_song)
-            db.session.commit()    
-            result = True 
-        except: 
+            db.session.commit()
+            result = True
+        except:
             result = False
-            
+
         if result == True:
             if youtube_download(id):
                 result = True
             else:
                 video_delete(id)
                 Song.query.filter_by(youtubeid=id).delete()
-                db.session.commit() 
+                db.session.commit()
                 result = False
             if result == True:
                 image_url = "https://i.ytimg.com/vi/" + str(id) + "/" + image
@@ -168,13 +171,14 @@ def youtubedl(artist, song, id, image, description):
                     + ".jpg"
                 )
                 urlretrieve(image_url, file_name)
+
                 flash("Youtube video downloaded")
                 flash("alert-success")
             else:
                 flash("Fail to download Youtube video")
                 flash("alert-danger")
 
-    return redirect(url_for("main.library"))
+    return redirect(url_for("main.addqueue", youtubeid=id, userid=singer))
 
 
 @main.route("/addqueue/<youtubeid>/<userid>")
@@ -336,13 +340,16 @@ def screenupdate():
 @login_required
 def queueupdate():
 
+    queue_list = queue_get(roomid=current_user.roomid)
+
     Queue.query.filter_by(roomid=current_user.roomid, status="P").delete()
     db.session.commit()
 
-    queue = queue_get(roomid=current_user.roomid)
     try:
-        if queue[0]:
-            queue_next = Queue.query.filter_by(id=queue[0].id).first()
+        for queue in queue_list:
+            if queue.status == "P":
+                continue
+            queue_next = Queue.query.filter_by(id=queue.id).first()
             queue_next.status = "P"
             db.session.add(queue_next)
             db.session.commit()

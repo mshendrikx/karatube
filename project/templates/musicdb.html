@@ -15,7 +15,7 @@
             {% for music in musics %}
             <tr>
                 <td>
-                    <a href="{{ url_for('main.youtube', artist=music.artist, song=music.song) }}">
+                    <a href="{{ url_for('main.youtube', artist=music.artist, song=music.song, singer=singer_user) }}">
                         <img src="{{ url_for('static', filename='images/icon-search.png') }}" height="24" width="24">
                     </a>
                 </td>
