@@ -33,6 +33,19 @@
             <img src="{{ url_for('static', filename='images/icon-next.png') }}" height="64" width="64">
         </a>
     </div>
+    <div class="input-group">
+        <a href="{{ url_for('main.setcommand', command='vold') }}">
+            <img src="{{ url_for('static', filename='images/icon-volumedown.png') }}" height="64" width="64">
+        </a>
+        <br><br>
+        <a href="{{ url_for('main.setcommand', command='volu') }}">
+            <img src="{{ url_for('static', filename='images/icon-volumeup.png') }}" height="64" width="64">
+        </a>
+        <br><br>
+        <a href="{{ url_for('main.setcommand', command='voln') }}">
+            <img src="{{ url_for('static', filename='images/icon-volumeno.png') }}" height="64" width="64">
+        </a>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
