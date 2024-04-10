@@ -10,7 +10,6 @@
 
   <script>
 
-    const karaokeVideo = document.getElementById("video");
     var screenData;
     var queueId = '';
 
@@ -35,25 +34,26 @@
             $("#overlay-next").show();
             $("#overlay-queued").show();
           }
-          // if (screenData.command !== "") {
-          //   var videoDuration = karaokeVideo.duration;
-          //   if (screenData.command !== "prev") {
-          //     karaokeVideo.pause();
-          //     karaokeVideo.currentTime = 0;
-          //     karaokeVideo.play();
-          //   }
-          //   if (screenData.command !== "next") {
-          //     karaokeVideo.pause();
-          //     karaokeVideo.currentTime = videoDuration - 0.1;
-          //     karaokeVideo.play();
-          //   }
-          //   if (screenData.command !== "play") {
-          //     karaokeVideo.play();
-          //   }
-          //   if (screenData.command !== "pause") {
-          //     karaokeVideo.pause();
-          //   }
-          // }
+          if (screenData.command !== "") {
+            var karaokeVideo = document.getElementById("video");
+            var videoDuration = karaokeVideo.duration;
+            if (screenData.command === "prev") {
+              karaokeVideo.pause();
+              karaokeVideo.currentTime = 0;
+              karaokeVideo.play();
+            }
+            if (screenData.command === "next") {
+              karaokeVideo.pause();
+              karaokeVideo.currentTime = videoDuration - 0.1;
+              karaokeVideo.play();
+            }
+            if (screenData.command === "play") {
+              karaokeVideo.play();
+            }
+            if (screenData.command === "pause") {
+              karaokeVideo.pause();
+            }
+          }
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if user.roomadm == "X" %}
 <div class="container mt-3">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -9,19 +10,12 @@
     </div>
     {% endif %}
     {% endwith %}
-    {% if user.name %}
     <h3 class="title">
-        Hello, {{ current_user.name }} !
+        Room {{ current_user.roomid }} control
     </h3>
-    {% else %}
-    <h3 class="title">
-        Login first !
-    </h3>
-    {% endif %}
 </div>
 <br>
-{% if user.roomadm == "X" %}
-<div class="container mt-3">
+<div class="container mt-3"> Player Controls
     <div class="input-group">
         <a href="{{ url_for('main.setcommand', command='prev') }}">
             <img src="{{ url_for('static', filename='images/icon-previous.png') }}" height="64" width="64">

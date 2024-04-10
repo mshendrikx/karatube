@@ -480,3 +480,14 @@ def setcommand(command):
         db.session.commit()
 
     return redirect(url_for("main.index"))
+
+@main.route("/roomcontrol")
+@login_required
+def setcommand(command):
+
+    if current_user.roomadm == "X":
+        control = Controls(roomid=current_user.roomid, command=command)
+        db.session.add(control)
+        db.session.commit()
+
+    return redirect(url_for("main.index"))
