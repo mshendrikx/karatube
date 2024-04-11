@@ -6,3 +6,4 @@ mysql-connector
 pymysql
 requests 
 musicbrainzngs
+qrcode
