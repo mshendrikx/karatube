@@ -19,26 +19,5 @@
     </h3>
     {% endif %}
 </div>
-<br>
-{% if user.roomadm == "X" %}
-<div class="container mt-3">
-    <div class="input-group">
-        <a href="{{ url_for('main.setcommand', command='prev') }}">
-            <img src="{{ url_for('static', filename='images/icon-previous.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='play') }}">
-            <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='pause') }}">
-            <img src="{{ url_for('static', filename='images/icon-pause.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='next') }}">
-            <img src="{{ url_for('static', filename='images/icon-next.png') }}" height="64" width="64">
-        </a>
-    </div>
-</div>
-{% endif %}
+
 {% endblock %}

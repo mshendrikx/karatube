@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if user.roomadm == "X" %}
+{% if current_user.roomadm == "X" %}
 <div class="container mt-3">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -15,37 +15,49 @@
     </h3>
 </div>
 <br>
-<div class="container mt-3"> Player Controls
-    <div class="input-group">
-        <a href="{{ url_for('main.setcommand', command='prev') }}">
-            <img src="{{ url_for('static', filename='images/icon-previous.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='play') }}">
-            <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='pause') }}">
-            <img src="{{ url_for('static', filename='images/icon-pause.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='next') }}">
-            <img src="{{ url_for('static', filename='images/icon-next.png') }}" height="64" width="64">
-        </a>
-    </div>
-    <div class="input-group">
-        <a href="{{ url_for('main.setcommand', command='vold') }}">
-            <img src="{{ url_for('static', filename='images/icon-volumedown.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='volu') }}">
-            <img src="{{ url_for('static', filename='images/icon-volumeup.png') }}" height="64" width="64">
-        </a>
-        <br><br>
-        <a href="{{ url_for('main.setcommand', command='voln') }}">
-            <img src="{{ url_for('static', filename='images/icon-volumeno.png') }}" height="64" width="64">
-        </a>
+<div class="container mt-3">
+    <h3 class="fa fa-align-center" aria-hidden="true">Player Controls</h3>
+    <div class="row">
+        <div class="col-3">
+            <a href="{{ url_for('main.setcommand', command='prev') }}">
+                <img src="{{ url_for('static', filename='images/icon-previous.png') }}" height="48" width="48">
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{{ url_for('main.setcommand', command='play') }}">
+                <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="48" width="48">
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{{ url_for('main.setcommand', command='pause') }}">
+                <img src="{{ url_for('static', filename='images/icon-pause.png') }}" height="48" width="48">
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{{ url_for('main.setcommand', command='next') }}">
+                <img src="{{ url_for('static', filename='images/icon-next.png') }}" height="48" width="48">
+            </a>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <img src="{{ url_for('static', filename='images/icon-volumedown.png') }}" height="48" width="48">
+            </div>
+            <div class="col-6">
+                <input type="range" id="volume-control" min="0" max="1" step="0.01" value="0.85">
+            </div>
+            <div class="col-3">
+                <img src="{{ url_for('static', filename='images/icon-volumeup.png') }}" height="48" width="48">
+            </div>
+        </div>
     </div>
 </div>
+<script>
+    const video = document.getElementById('video');
+    const volumeControl = document.getElementById('volume-control');
+
+    volumeControl.addEventListener('change', function() {
+        video.volume = this.value;
+    });
+</script>
 {% endif %}
 {% endblock %}

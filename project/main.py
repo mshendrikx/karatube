@@ -479,15 +479,22 @@ def setcommand(command):
         db.session.add(control)
         db.session.commit()
 
-    return redirect(url_for("main.index"))
+    return redirect(url_for("main.roomcontrol"))
+
 
 @main.route("/roomcontrol")
 @login_required
-def setcommand(command):
+def roomcontrol():
 
     if current_user.roomadm == "X":
-        control = Controls(roomid=current_user.roomid, command=command)
-        db.session.add(control)
-        db.session.commit()
+        room = Room.query.filter_by(roomid=current_user.roomid).first()
+        roomadms = Roomadm.query.filter_by(roomid=current_user.roomid).first()
+        users = User.query.all()
 
-    return redirect(url_for("main.index"))
+    return render_template(
+        "room.html",
+        current_user=current_user,
+        room=room,
+        roomadms=roomadms,
+        users=users,
+    )
