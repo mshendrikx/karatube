@@ -17,7 +17,7 @@ def create_app():
 
     app.config["SECRET_KEY"] = os.urandom(24).hex()
     app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + ":3306/karatube"
+        "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/karatube"
     )
 
     db.init_app(app)

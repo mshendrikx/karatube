@@ -1,5 +1,3 @@
-import time
-
 from urllib.request import urlretrieve
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -317,10 +315,13 @@ def screenupdate():
     control = Controls.query.filter_by(roomid=current_user.roomid).first()
     if control:
         command = control.command
+        commvalue = control.commvalue
         Controls.query.filter_by(id=control.id).delete()
         db.session.commit()
+        
     else:
         command = ""
+        commvalue = ""
 
     return jsonify(
         {
@@ -332,6 +333,7 @@ def screenupdate():
             "artist": player_data.artist,
             "queueid": player_data.queueid,
             "command": command,
+            "commvalue": commvalue
         }
     )
 
@@ -475,7 +477,7 @@ def configuration_post():
 def setcommand(command):
 
     if current_user.roomadm == "X":
-        control = Controls(roomid=current_user.roomid, command=command)
+        control = Controls(roomid=current_user.roomid, command=command, commvalue="")
         db.session.add(control)
         db.session.commit()
 
@@ -498,3 +500,15 @@ def roomcontrol():
         roomadms=roomadms,
         users=users,
     )
+
+
+@main.route("/volumechange", methods=['POST'])
+@login_required
+def handle_volume_change():
+
+    volume = request.get_json().get('rangeValue')
+    control = Controls(roomid=current_user.roomid, command="vol", commvalue=volume)
+    db.session.add(control)
+    db.session.commit()
+    
+    return '', 204

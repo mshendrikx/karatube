@@ -46,3 +46,4 @@ class Controls(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     roomid = db.Column(db.String(100))
     command = db.Column(db.String(10))
+    commvalue = db.Column(db.String(10))
