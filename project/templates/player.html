@@ -87,7 +87,7 @@
           $("#overlay-song").text(screenData.song);
           $("#overlay-artist").text(screenData.artist);
 
-          await new Promise(resolve => setTimeout(resolve, 10000));
+          await new Promise(resolve => setTimeout(resolve, 7000));
           await play_video();
         }
       }
@@ -110,7 +110,7 @@
 
     const intervalControl = setInterval(() => {
       exec_control();
-    }, 1000);
+    }, 3000);
 
   </script>
 </head>
