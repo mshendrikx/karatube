@@ -123,3 +123,13 @@ body {
   right: 0;
   bottom: 0;
 }
+
+#overlay-qrcode {
+  z-index: 5;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  top: 0;
+  left: 10%;
+  right: 0;
+  bottom: 10%;
+}

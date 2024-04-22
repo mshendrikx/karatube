@@ -1,3 +1,9 @@
+import os
+import qrcode
+import io
+import base64
+
+from PIL import Image
 from urllib.request import urlretrieve
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -279,8 +285,47 @@ def delqueue(queueid):
 @login_required
 def player():
 
+    roomadm = Roomadm.query.filter_by(
+        roomid=current_user.roomid, userid=current_user.id
+    ).first()
+    if not roomadm:
+        flash("User is not room admin.")
+        flash("alert-danger")
+        return redirect(url_for("main.index"))
+
+    room = Room.query.filter_by(roomid=current_user.roomid).first()
+    if not room:
+        flash("Room is not in database.")
+        flash("alert-danger")
+        return redirect(url_for("main.index"))
+
+    roompass = os.urandom(24).hex()
+    room.password = generate_password_hash(roompass, method="pbkdf2:sha256")
+    db.session.commit()
+
+    qrcode_data = (
+        str(os.environ.get("KARATUBE_URL"))
+        + "/"
+        + str(current_user.roomid)
+        + "/"
+        + str(roompass)
+    )
+    # Create a QR code object with desired error correction level
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+    qr.add_data(qrcode_data)
+    qr.make(fit=True)
+    qrcodeimg = qr.make_image(fill_color="black", back_color="white")
+    # Create an in-memory file-like object
+    buffer = io.BytesIO()
+    qrcodeimg.save(buffer, format="PNG")
+    # Get image data as bytes
+    image_bytes = buffer.getvalue()
+    base64_string = base64.b64encode(image_bytes).decode("utf-8")
+
     config = Config.query.filter_by(id="CONFIG").first()
-    return render_template("player.html", player_config=config)
+    return render_template(
+        "player.html", player_config=config, base64_img=base64_string
+    )
 
 
 @main.route("/screenupdate")
@@ -318,7 +363,7 @@ def screenupdate():
         commvalue = control.commvalue
         Controls.query.filter_by(id=control.id).delete()
         db.session.commit()
-        
+
     else:
         command = ""
         commvalue = ""
@@ -333,7 +378,7 @@ def screenupdate():
             "artist": player_data.artist,
             "queueid": player_data.queueid,
             "command": command,
-            "commvalue": commvalue
+            "commvalue": commvalue,
         }
     )
 
@@ -502,13 +547,13 @@ def roomcontrol():
     )
 
 
-@main.route("/volumechange", methods=['POST'])
+@main.route("/volumechange", methods=["POST"])
 @login_required
 def handle_volume_change():
 
-    volume = request.get_json().get('rangeValue')
+    volume = request.get_json().get("rangeValue")
     control = Controls(roomid=current_user.roomid, command="vol", commvalue=volume)
     db.session.add(control)
     db.session.commit()
-    
-    return '', 204
+
+    return "", 204

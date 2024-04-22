@@ -60,8 +60,9 @@ def login_post():
     return redirect(url_for("main.index"))
 
 
-@auth.route("/signup")
-def signup():
+@auth.route("/signup/<roomid>/<apikey>")
+def signup(roomid, apikey):
+    
     return render_template("signup.html")
 
 
