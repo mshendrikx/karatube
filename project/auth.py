@@ -17,8 +17,6 @@ def login_post():
     # login code goes here
     userid = request.form.get("userid")
     password = request.form.get("password")
-    roomid = request.form.get("roomid")
-    roompass = request.form.get("roompass")
     remember = True if request.form.get("remember") else False
 
     user = User.query.filter_by(id=userid).first()
@@ -31,30 +29,30 @@ def login_post():
             url_for("auth.login")
         )  # if the user doesn't exist or password is wrong, reload the page
 
-    room = Room.query.filter_by(roomid=roomid).first()
+    room = Room.query.filter_by(roomid=user.roomid).first()
     # check if the room actually exists
     # take the room-supplied password, hash it, and compare it to the hashed password in the database
-    if not room or not check_password_hash(room.password, roompass):
-        flash("Please check room details and try again.")
-        flash("alert-danger")
-        return redirect(
-            url_for("auth.login")
-        )  # if the room doesn't exist or password is wrong, reload the page
-
     # if the above check passes, then we know the user has the right credentials
+    if not room:
+        if user.admin != "X":
+            flash("User not assigned to room.")
+            flash("alert-danger")
+            return redirect(
+                url_for("auth.login")
+            )  # if the user doesn't exist or password is wrong, reload the page
+
     if user.admin == "X":
         user.roomadm = "X"
     else:
         roomadm = Roomadm.query.filter_by(roomid=room.roomid, userid=user.id).first
         try:
-            if roomadm.roomid == roomid:
+            if roomadm.roomid == user.roomid:
                 user.roomadm = "X"
             else:
                 user.roomadm = ""
         except:
             user.roomadm = ""
 
-    user.roomid = room.roomid
     login_user(user, remember=remember)
     db.session.add(user)
     db.session.commit()
@@ -102,7 +100,7 @@ def signup_post():
     new_user = User(
         id=userid,
         name=name,
-        roomid="",
+        roomid=roomid,
         password=generate_password_hash(password, method="pbkdf2:sha256"),
         roomadm="",
         admin="",
