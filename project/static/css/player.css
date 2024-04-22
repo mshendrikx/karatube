@@ -13,7 +13,7 @@ body {
   position: fixed;
   right: 0;
   bottom: 0;
-  min-width: 100%; 
+  min-width: 100%;
   min-height: 100%;
 }
 
@@ -124,12 +124,9 @@ body {
   bottom: 0;
 }
 
-#overlay-qrcode {
+#qrCode {
   z-index: 5;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.9);
-  top: 0;
-  left: 10%;
+  position: fixed;
   right: 0;
-  bottom: 10%;
+  bottom: 0;
 }

@@ -42,7 +42,6 @@ def index():
 
     return render_template("index.html", user=current_user)
 
-
 @main.route("/profile")
 @login_required
 def profile():
@@ -305,7 +304,7 @@ def player():
 
     qrcode_data = (
         str(os.environ.get("KARATUBE_URL"))
-        + "/"
+        + "/signup/"
         + str(current_user.roomid)
         + "/"
         + str(roompass)
