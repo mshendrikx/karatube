@@ -74,7 +74,7 @@ def signup(roomid, roomkey):
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
-    return render_template("signup.html")
+    return render_template("signup.html", roomid=roomid, roomkey=roomkey)
 
 
 @auth.route("/signup", methods=["POST"])

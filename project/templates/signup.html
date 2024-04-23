@@ -27,12 +27,10 @@
             <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="mb-3">
-            <label for="roomid">Room:</label>
-            <input type="text" class="form-control" id="roomid" name="roomid" required>
+            <input type="hidden" class="form-control" id="roomid" name="roomid" value="{{ roomid }}"  required>
         </div>
         <div class="mb-3">
-            <label for="roompass">Room Password:</label>
-            <input type="password" class="form-control" id="roompass" name="roompass" required>
+            <input type="hidden" class="form-control" id="roompass" name="roompass"  value="{{ roomkey }}" required>
         </div>
         <button class="btn btn-outline-primary">Sign Up</button>
     </form>

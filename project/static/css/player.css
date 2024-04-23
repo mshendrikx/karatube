@@ -124,9 +124,16 @@ body {
   bottom: 0;
 }
 
-#qrCode {
+#signup-qrcode {
   z-index: 5;
   position: fixed;
   right: 0;
   bottom: 0;
+}
+
+#login-qrcode {
+  z-index: 5;
+  position: fixed;
+  right: 0;
+  top: 0;
 }

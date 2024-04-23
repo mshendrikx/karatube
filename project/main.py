@@ -319,11 +319,27 @@ def player():
     qrcodeimg.save(buffer, format="PNG")
     # Get image data as bytes
     image_bytes = buffer.getvalue()
-    base64_string = base64.b64encode(image_bytes).decode("utf-8")
+    signup_img = base64.b64encode(image_bytes).decode("utf-8")
 
+    qrcode_data = (
+        str(os.environ.get("KARATUBE_URL"))
+        + "/login"
+    )
+    # Create a QR code object with desired error correction level
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+    qr.add_data(qrcode_data)
+    qr.make(fit=True)
+    qrcodeimg = qr.make_image(fill_color="black", back_color="white")
+    # Create an in-memory file-like object
+    buffer = io.BytesIO()
+    qrcodeimg.save(buffer, format="PNG")
+    # Get image data as bytes
+    image_bytes = buffer.getvalue()
+    login_img = base64.b64encode(image_bytes).decode("utf-8")
+    
     config = Config.query.filter_by(id="CONFIG").first()
     return render_template(
-        "player.html", player_config=config, base64_img=base64_string
+        "player.html", player_config=config, signup_img=signup_img, login_img=login_img
     )
 
 
@@ -345,7 +361,8 @@ def screenupdate():
                 )
                 player_data.queueid = str(queue_item.id)
                 if queue_item.status == "":
-                    Queue.query.filter_by(id=queue_item.id).update({"status": "P"})
+                    queue_update = Queue.query.filter_by(id=queue_item.id).first()
+                    queue_update.status = "P"
                     db.session.commit()
                 first = False
             else:
@@ -396,9 +413,11 @@ def queueupdate():
             if queue.status == "P":
                 continue
             queue_next = Queue.query.filter_by(id=queue.id).first()
-            queue_next.status = "P"
-            db.session.add(queue_next)
-            db.session.commit()
+            if queue_next:
+                queue_next.status = "P"
+                #db.session.add(queue_next)
+                db.session.commit()
+                break
     except:
         1 == 1
 
@@ -516,7 +535,7 @@ def configuration_post():
     )
 
 
-@main.route("/setcommand/<command>")
+@main.route("/setcommand/<command>", methods=["POST"])
 @login_required
 def setcommand(command):
 
