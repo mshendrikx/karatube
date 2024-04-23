@@ -66,7 +66,7 @@ def youtube_download(videoid):
 
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
     download_url = YT_BASE_URL + str(videoid)
-    cmd = ["yt-dlp", "-f", "mp4", "-o", filename, download_url]
+    cmd = ["yt-dlp", "-f", "18", "-o", filename, download_url]
 
     rc = subprocess.call(cmd)
     if rc != 0:

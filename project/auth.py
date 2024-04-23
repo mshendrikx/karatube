@@ -57,7 +57,7 @@ def login_post():
     db.session.add(user)
     db.session.commit()
 
-    return redirect(url_for("main.index"))
+    return redirect(url_for("main.profile"))
 
 
 @auth.route("/signup/<roomid>/<roomkey>")
@@ -90,12 +90,14 @@ def signup_post():
 
     if password != repass:
         flash("Password don't match")
+        flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
     room = Room.query.filter_by(roomid=roomid).first()
 
     if not room or not check_password_hash(room.password, roompass):
         flash("Wrong room or room password")
+        flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
     user = User.query.filter_by(
@@ -106,6 +108,7 @@ def signup_post():
         user
     ):  # if a user is found, we want to redirect back to signup page so user can try again
         flash("User already exists")
+        flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.

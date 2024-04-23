@@ -124,18 +124,14 @@
   <div id="overlay-artist"></div>
   <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
     alt="Video Placeholder">
-  <div class="video-container">
-    <video id="video" autoplay>
-      <source src="" type="video/mp4">
-    </video>
-  </div>
+  <video id="video" src="" autoplay></video>
   <div id="overlay-singing"> Now: </div>
   <div id="overlay-now"></div>
   <div id="overlay-next"> Next: </div>
   <div id="overlay-queued"></div>
   <img id="signup-qrcode" src="data:image/png;base64,{{ signup_img }}" width="96" height="96">
   <img id="login-qrcode" src="data:image/png;base64,{{ login_img }}" width="96" height="96">
-
+  
   <script>
     const video = document.getElementById("video");
 

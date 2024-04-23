@@ -42,10 +42,22 @@ def index():
 
     return render_template("index.html", user=current_user)
 
+
 @main.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", current_user=current_user)
+
+    rooms = []
+    rooms.append(current_user.roomid)
+    if current_user.admin == "X":
+        roomadm_sel = Roomadm.query
+    else:
+        roomadm_sel = Roomadm.query.filter_by(userid=current_user.id)
+    for roomadm in roomadm_sel:
+        if roomadm.roomid != current_user.roomid:
+            rooms.append(roomadm.roomid)
+
+    return render_template("profile.html", current_user=current_user, rooms=rooms)
 
 
 @main.route("/profile", methods=["POST"])
@@ -54,39 +66,24 @@ def profile_post():
 
     password = request.form.get("password")
     repass = request.form.get("repass")
-    roomid = request.form.get("roomid")
-    roompass = request.form.get("roompass")
+    roomid = request.form.get("room_selection")
 
     if password != repass:
         flash("Password don't match")
         flash("alert-danger")
         return redirect(url_for("main.profile"))
 
-    if roomid != "":
-
-        if roomid == current_user.roomid:
-            flash("Already logged at room")
-            flash("alert-warning")
-            return redirect(url_for("main.profile"))
-
-        room = Room.query.filter_by(roomid=roomid).first()
-
-        if not room or not check_password_hash(room.password, roompass):
-            flash("Wrong room or room password")
-            flash("alert-danger")
-            return redirect(url_for("main.profile"))
-
     if password != "":
         current_user.password = generate_password_hash(password, method="pbkdf2:sha256")
 
     if roomid != current_user.roomid:
         current_user.roomid = roomid
+        Queue.query.filter_by(userid=current_user.id).delete()
 
-    Queue.query.filter_by(userid=current_user.id).delete()
     db.session.add(current_user)
     db.session.commit()
 
-    return render_template("profile.html", current_user=current_user)
+    return redirect(url_for("main.profile"))
 
 
 @main.route("/library")
@@ -298,13 +295,13 @@ def player():
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
-    roompass = os.urandom(24).hex()
+    roompass = os.urandom(12).hex()
     room.password = generate_password_hash(roompass, method="pbkdf2:sha256")
     db.session.commit()
 
     qrcode_data = (
         str(os.environ.get("KARATUBE_URL"))
-        + "/signup/"
+        + "/roomqrcode/"
         + str(current_user.roomid)
         + "/"
         + str(roompass)
@@ -321,10 +318,7 @@ def player():
     image_bytes = buffer.getvalue()
     signup_img = base64.b64encode(image_bytes).decode("utf-8")
 
-    qrcode_data = (
-        str(os.environ.get("KARATUBE_URL"))
-        + "/login"
-    )
+    qrcode_data = str(os.environ.get("KARATUBE_URL")) + "/login"
     # Create a QR code object with desired error correction level
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
     qr.add_data(qrcode_data)
@@ -336,7 +330,7 @@ def player():
     # Get image data as bytes
     image_bytes = buffer.getvalue()
     login_img = base64.b64encode(image_bytes).decode("utf-8")
-    
+
     config = Config.query.filter_by(id="CONFIG").first()
     return render_template(
         "player.html", player_config=config, signup_img=signup_img, login_img=login_img
@@ -415,7 +409,7 @@ def queueupdate():
             queue_next = Queue.query.filter_by(id=queue.id).first()
             if queue_next:
                 queue_next.status = "P"
-                #db.session.add(queue_next)
+                # db.session.add(queue_next)
                 db.session.commit()
                 break
     except:
@@ -575,3 +569,28 @@ def handle_volume_change():
     db.session.commit()
 
     return "", 204
+
+
+@main.route("/roomqrcode/<roomid>/<roomkey>")
+def roomqrcode(roomid, roomkey):
+
+    room = Room.query.filter_by(roomid=roomid).first()
+    if not room:
+        flash("Room not available.")
+        flash("alert-danger")
+        return redirect(url_for("main.index"))
+
+    if not check_password_hash(room.password, roomkey):
+        flash("Wrong key for room, scan room qrcode again.")
+        flash("alert-danger")
+        return redirect(url_for("main.index"))
+
+    if current_user.is_authenticated:
+        update_user = User.query.filter_by(id=current_user.id).first()
+        if update_user:
+            current_user.roomid = roomid
+            update_user.roomid = roomid
+            db.session.commit()
+            return redirect(url_for("main.profile"))
+
+    return redirect(url_for("auth.signup"), roomid=roomid, roomkey=roomkey)

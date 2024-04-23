@@ -8,7 +8,7 @@
     <br>
     <div class="alert alert-primary">
         Actual Room: {{ current_user.roomid }}
-    </div>
+    </div> 
     <br>    
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -18,22 +18,42 @@
     {% endif %}
     {% endwith %}
     <form action="/profile" method="POST">
-        <div class="mb-3">
-            <label for="roomid">Room:</label>
-            <input type="text" class="form-control" id="roomid" name="roomid">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-3 text-white">
+                    <label for="room_selection">Room:</label>
+                </div>
+                <div class="col-3 text-white">
+                    <select name="room_selection" id="room_selection">
+                        {% for roomid in rooms %}
+                        <option value="{{ roomid }}">{{ roomid }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 text-white">
+                    <p>* Regular users must scan qrcode in karatube screen to change room</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3 text-white">
+                    <label for="password">Password:</label>
+                </div>
+                <div class="col-9 text-white">
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="roompass">Room Password:</label>
-            <input type="password" class="form-control" id="roompass" name="roompass">
-        </div> 
-        <div class="mb-3">
-            <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" name="password">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-3 text-white">
+                    <label for="repass">Re-type Password:</label>
+                </div>
+                <div class="col-9 text-white">
+                    <input type="password" class="form-control" id="repass" name="repass">
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="repass">Re-type Password:</label>
-            <input type="password" class="form-control" id="repass" name="repass">
-        </div>
+        <br>
         <button class="btn btn-outline-primary">Update</button>
     </form>
 </div>

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+{% if current_user.roomadm == "X" %}
 <div class="container mt-3">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -10,12 +10,14 @@
     </div>
     {% endif %}
     {% endwith %}
+</div>
+<br>
+<div class="container mt-3">
     <h3 class="title">
-        Room {{ current_user.roomid }} control
+        <p class="text-primary">Control Room: {{ current_user.roomid }}</p>
     </h3>
 </div>
 <br>
-{% if current_user.roomadm == "X" %}
 <div class="container mt-3">
     <h3 class="fa fa-align-center" aria-hidden="true">Player Controls</h3>
     <div class="input-group">

@@ -8,20 +8,13 @@ body {
   font-size: 17px;
 }
 
-.video-container {
+#video {
   z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Scales video to fill container, maintaining aspect ratio */
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 #overlay-singing {
