@@ -13,23 +13,32 @@
         <div class="input-group">
             <label for="lastfm">LAST.FM API Key:&nbsp;&nbsp;</label>
             <input type="text" class="form-control" id="lastfm" name="lastfm" value="{{ config.lastfm }}">
-            <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">&nbsp;&nbsp;Get API Key</a>
-            
+            <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">&nbsp;&nbsp;Get API
+                Key</a>
+
         </div>
         <br>
         <div class="input-group">
             <label for="updateratio">Screen update sec:&nbsp;&nbsp;</label>
-            <input type="text" class="form-control" id="updateratio" name="updateratio" value="{{ config.updateratio }}">
+            <input type="text" class="form-control" id="updateratio" name="updateratio"
+                value="{{ config.updateratio }}">
         </div>
         <br>
         <div class="input-group">
             <label for="songint">Song Interval:&nbsp;&nbsp;</label>
             <input type="text" class="form-control" id="songint" name="songint" value="{{ config.songint }}">
         </div>
-        
+
         <br>
         <button class="btn btn-outline-primary">Update</button>
     </form>
-    
 </div>
+<br>
+<div class="container mt-3">
+    <a id="create_room" href="{{ url_for('main.createroom') }}">
+        <button type="button" class="btn btn-outline-primary">Create Room</button>
+    </a>
+</div>
+
+
 {% endblock %}

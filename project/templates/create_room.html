@@ -13,15 +13,16 @@
     <form method="POST" action="{{ url_for('main.createroom') }}">
         <div class="mb-3 mt-3">
             <label for="userid">Administrator:</label>
-            <input type="text" class="form-control" id="userid" name="userid" required>
+            <input list="userid" name="userid" required>
+            <datalist id="userid">
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.name }}</option>
+            {% endfor %}
+            </datalist>
         </div>
         <div class="mb-3">
             <label for="roomid">Room:</label>
             <input type="text" class="form-control" id="roomid" name="roomid" required>
-        </div>
-        <div class="mb-3">
-            <label for="roompass">Room Password:</label>
-            <input type="password" class="form-control" id="roompass" name="roompass" required>
         </div>
         <button type="submit" class="btn btn-outline-primary">Create</button>
     </form>

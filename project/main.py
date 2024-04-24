@@ -426,8 +426,10 @@ def createroom():
         flash("Must be administrator.")
         flash("alert-danger")
         return redirect(url_for("main.index"))
+    
+    users = User.query.all()
 
-    return render_template("create_room.html", current_user=current_user)
+    return render_template("create_room.html", current_user=current_user, users=users)
 
 
 @main.route("/createroom", methods=["POST"])
@@ -442,7 +444,7 @@ def createroom_post():
     # login code goes here
     userid = request.form.get("userid")
     roomid = request.form.get("roomid")
-    roompass = request.form.get("roompass")
+    roompass = os.urandom(12).hex()
 
     user = User.query.filter_by(id=userid).first()
     # check if the user actually exists
@@ -479,7 +481,7 @@ def createroom_post():
         flash("Fail to create Room.")
         flash("alert-danger")
 
-    return redirect(url_for("main.createroom"))
+    return redirect(url_for("main.configuration"))
 
 
 @main.route("/configuration")
