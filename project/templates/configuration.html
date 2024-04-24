@@ -3,12 +3,14 @@
 {% block content %}
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-<div class="alert {{ messages[1] }}">
-    {{ messages[0] }}
+<div class="container mt-3">
+    <div class="alert {{ messages[1] }}">
+        {{ messages[0] }}
+    </div>
 </div>
 {% endif %}
 {% endwith %}
-<div class="container border border-primary" >
+<div class="container border border-primary">
     <br>
     <form action="{{ url_for('main.configuration') }}" method="POST">
         <div class="input-group">
@@ -21,13 +23,14 @@
         <br>
         <div class="input-group">
             <label for="updateratio">Screen update sec:&nbsp;&nbsp;</label>
-            <input type="text" class="form-control" id="updateratio" name="updateratio"
-                value="{{ config.updateratio }}">
+            <input type="number" class="form-control" id="updateratio" name="updateratio" min="1" max="10"
+                value="{{ config.updateratio }}" required>
         </div>
         <br>
         <div class="input-group">
             <label for="songint">Song Interval:&nbsp;&nbsp;</label>
-            <input type="text" class="form-control" id="songint" name="songint" value="{{ config.songint }}">
+            <input type="number" class="form-control" id="songint" name="songint" min="1" max="60"
+                value="{{ config.songint }}" required>
         </div>
 
         <br>

@@ -11,13 +11,17 @@
   <script>
 
     var screenData;
+    var updateRatio = 1000
+    var songInterval = 10000
     var queueId = '';
 
     async function getLatestInfo() {
       $.ajax({
         url: "/screenupdate",
         success: function (data) {
-          screenData = data
+          screenData = data;
+          updateRatio = parseInt(screenData.update_ratio);
+          songInterval = parseInt(screenData.song_interval);
           if (screenData.song === '') {
             $("#overlay-now").hide();
             $("#overlay-singing").hide();
@@ -61,7 +65,7 @@
         error: function (jqXHR, textStatus, errorThrown) {
         }
       });
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, updateRatio));
       await getLatestInfo();
     }
 
@@ -87,7 +91,7 @@
           $("#overlay-song").text(screenData.song);
           $("#overlay-artist").text(screenData.artist);
 
-          await new Promise(resolve => setTimeout(resolve, 7000));
+          await new Promise(resolve => setTimeout(resolve, songInterval));
           await play_video();
         }
       }
@@ -110,7 +114,7 @@
 
     const intervalControl = setInterval(() => {
       exec_control();
-    }, 3000);
+    }, updateRatio);
 
   </script>
 </head>

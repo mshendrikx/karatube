@@ -377,6 +377,14 @@ def screenupdate():
     else:
         command = ""
         commvalue = ""
+        
+    config = Config.query.filter_by(id='CONFIG').first()
+    if config:
+        update_ratio = config.updateratio * 1000
+        song_interval = config.songint * 1000
+    else:
+        update_ratio = 1000
+        song_interval = 10000        
 
     return jsonify(
         {
@@ -389,6 +397,8 @@ def screenupdate():
             "queueid": player_data.queueid,
             "command": command,
             "commvalue": commvalue,
+            "update_ratio": update_ratio,
+            "song_interval": song_interval
         }
     )
 
@@ -426,7 +436,7 @@ def createroom():
         flash("Must be administrator.")
         flash("alert-danger")
         return redirect(url_for("main.index"))
-    
+
     users = User.query.all()
 
     return render_template("create_room.html", current_user=current_user, users=users)
