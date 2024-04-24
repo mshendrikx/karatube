@@ -7,16 +7,20 @@
     </h3>
     <br>
     <div class="alert alert-primary">
-        Actual Room: {{ current_user.roomid }}
-    </div> 
-    <br>    
+        You are in room: {{ current_user.roomid }}
+    </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
+    <br>
     <div class="alert {{ messages[1] }}">
         {{ messages[0] }}.
     </div>
     {% endif %}
     {% endwith %}
+    <br>
+</div>
+<div class="container border border-primary">
+    <br>
     <form action="/profile" method="POST">
         <div class="container-fluid">
             <div class="row">
@@ -56,5 +60,6 @@
         <br>
         <button class="btn btn-outline-primary">Update</button>
     </form>
+    <br>
 </div>
 {% endblock %}
