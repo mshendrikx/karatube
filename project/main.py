@@ -172,7 +172,7 @@ def youtubedl(artist, song, id, image, singer):
                 )
                 urlretrieve(image_url, file_name)
 
-                flash("Youtube video downloaded")
+                flash("Youtube video downloaded and added to queue")
                 flash("alert-success")
             else:
                 flash("Fail to download Youtube video")
