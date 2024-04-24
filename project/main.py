@@ -606,3 +606,25 @@ def roomqrcode(roomid, roomkey):
             return redirect(url_for("main.profile"))
 
     return redirect(url_for("auth.signup"), roomid=roomid, roomkey=roomkey)
+
+@main.route("/addroomadm", methods=["POST"])
+@login_required
+def addroomadm():
+
+    userid = request.get_json().get("userid")
+    roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=userid).first()
+    if roomadm:
+        flash("User alredy is an administrator.")
+        flash("alert-warning")
+    else:
+        roomadm = Roomadm(roomid=current_user.roomid, userid=userid)
+        db.session.add(roomadm)
+        db.session.commit()    
+        flash("User added as administrator.")
+        flash("alert-sucess")   
+    
+    return redirect(url_for("main.roomcontrol"))
+
+
+
+    return "", 204

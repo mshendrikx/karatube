@@ -53,9 +53,28 @@
         <button type="button" class="btn btn-primary">
             <img src="{{ url_for('static', filename='images/icon-volumedown.png') }}" height="48" width="48">
         </button>&nbsp;&nbsp;
-        <input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
+        <input type="range" id="volume-control" min="0" max="1" step="0.005" value="1">
     </div>
     <br>
+</div>
+<br>
+<div class="container border border-primary">
+    <h3 class="title">
+        <p class="text-primary">Administrators</p>
+    </h3>
+    <form method="POST" action="{{ url_for('main.addroomadm') }}">
+        <div class="mb-3 mt-3">
+            <label for="userid">Administrator:</label>
+            <input list="userid" name="userid" required>
+            <datalist id="userid">
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.name }}</option>
+                {% endfor %}
+            </datalist>
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Add Admin</button>
+    </form>
+
 </div>
 <script>
     const rangeElement = document.getElementById('volume-control');

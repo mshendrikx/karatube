@@ -71,17 +71,14 @@
 
     async function exec_control() {
       if (screenData.queueid === '') {
-        $("#splashImage").show();
         $("#overlay-presents").hide();
         $("#overlay-singer").hide();
         $("#overlay-music").hide();
         $("#overlay-song").hide();
         $("#overlay-artist").hide();
-        $("#video").hide();
       } else {
         if (queueId !== screenData.queueid) {
           queueId = screenData.queueid;
-          $("#splashImage").show();
           $("#overlay-presents").show();
           $("#overlay-singer").show();
           $("#overlay-music").show();
@@ -98,16 +95,14 @@
     }
 
     async function play_video() {
+      $("#video").attr("src", screenData.video_url);
+      $("#video")[0].load(); // Load the video
+      $("#video")[0].play(); // Start playback
       $("#overlay-presents").hide();
       $("#overlay-singer").hide();
       $("#overlay-music").hide();
       $("#overlay-song").hide();
       $("#overlay-artist").hide();
-      $("#splashImage").hide();
-      $("#video").attr("src", screenData.video_url);
-      $("#video").show();
-      $("#video")[0].load(); // Load the video
-      $("#video")[0].play(); // Start playback
     }
 
     getLatestInfo();
@@ -126,10 +121,8 @@
   <div id="overlay-music">Singing:</div>
   <div id="overlay-song"></div>
   <div id="overlay-artist"></div>
-  <img id="splashImage" src="{{ url_for('static', filename='images/karatube_background1.jpg') }}"
-    alt="Video Placeholder">
   <div class="video-container">
-    <video id="video" autoplay>
+    <video id="video" poster="{{ url_for('static', filename='images/karatube_background1.jpg') }}" autoplay>
       <source src="" type="video/mp4">
     </video>
   </div>
@@ -145,6 +138,8 @@
 
     video.addEventListener('ended', () => {
       // Fetch the next video URL from the server using AJAX
+      video.src = "";
+      video.pause();
       fetch('/queueupdate');
     });
   </script>

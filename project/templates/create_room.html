@@ -15,9 +15,9 @@
             <label for="userid">Administrator:</label>
             <input list="userid" name="userid" required>
             <datalist id="userid">
-            {% for user in users %}
-            <option value="{{ user.id }}">{{ user.name }}</option>
-            {% endfor %}
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.name }}</option>
+                {% endfor %}
             </datalist>
         </div>
         <div class="mb-3">

@@ -68,15 +68,6 @@ video {
   font-size: 20px;
 }
 
-#splashImage {
-  z-index: 3;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 #overlay-singer {
   z-index: 4;
   position: absolute;
