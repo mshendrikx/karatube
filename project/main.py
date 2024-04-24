@@ -377,14 +377,14 @@ def screenupdate():
     else:
         command = ""
         commvalue = ""
-        
-    config = Config.query.filter_by(id='CONFIG').first()
+
+    config = Config.query.filter_by(id="CONFIG").first()
     if config:
         update_ratio = config.updateratio * 1000
         song_interval = config.songint * 1000
     else:
         update_ratio = 1000
-        song_interval = 10000        
+        song_interval = 10000
 
     return jsonify(
         {
@@ -398,7 +398,7 @@ def screenupdate():
             "command": command,
             "commvalue": commvalue,
             "update_ratio": update_ratio,
-            "song_interval": song_interval
+            "song_interval": song_interval,
         }
     )
 
@@ -557,10 +557,26 @@ def setcommand(command):
 @login_required
 def roomcontrol():
 
-    if current_user.roomadm == "X":
-        room = Room.query.filter_by(roomid=current_user.roomid).first()
-        roomadms = Roomadm.query.filter_by(roomid=current_user.roomid).first()
-        users = User.query.all()
+    if current_user.roomadm != "X":
+        flash("User must be an administrator.")
+        flash("alert-warning")
+        return redirect(url_for("main.roomcontrol"))
+
+    room = Room.query.filter_by(roomid=current_user.roomid).first()
+    users_sel = User.query.all()
+
+    users = []
+    roomadms = []
+    for user in users_sel:
+        if user.id == current_user.id:
+            continue
+        roomadm = Roomadm.query.filter_by(
+            roomid=current_user.roomid, userid=user.id
+        ).first()
+        if roomadm:
+            roomadms.append(user)
+        else:
+            users.append(user)
 
     return render_template(
         "room.html",
@@ -607,11 +623,18 @@ def roomqrcode(roomid, roomkey):
 
     return redirect(url_for("auth.signup"), roomid=roomid, roomkey=roomkey)
 
+
 @main.route("/addroomadm", methods=["POST"])
 @login_required
 def addroomadm():
 
-    userid = request.get_json().get("userid")
+    userid = request.form.get("userid")
+    user = User.query.filter_by(id=userid).first()
+    if not user:
+        flash("User not exist in database.")
+        flash("alert-danger")
+        return redirect(url_for("main.roomcontrol"))
+
     roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=userid).first()
     if roomadm:
         flash("User alredy is an administrator.")
@@ -619,12 +642,24 @@ def addroomadm():
     else:
         roomadm = Roomadm(roomid=current_user.roomid, userid=userid)
         db.session.add(roomadm)
-        db.session.commit()    
+        db.session.commit()
         flash("User added as administrator.")
-        flash("alert-sucess")   
-    
+        flash("alert-success")
+
     return redirect(url_for("main.roomcontrol"))
 
 
+@main.route("/delroomadm/<userid>")
+@login_required
+def delroomadm(userid):
 
-    return "", 204
+    if userid == current_user.id:
+        flash("Current user can't be removed from administrator.")
+        flash("alert-warning")
+    else:
+        Roomadm.query.filter_by(roomid=current_user.roomid, userid=userid).delete()
+        db.session.commit()
+        flash("User remove from administrator.")
+        flash("alert-success")
+
+    return redirect(url_for("main.roomcontrol"))
