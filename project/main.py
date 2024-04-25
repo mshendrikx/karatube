@@ -661,3 +661,32 @@ def delroomadm(userid):
         flash("alert-success")
 
     return redirect(url_for("main.roomcontrol"))
+
+@main.route("/delroom", methods=["POST"])
+@login_required
+def delroom():
+
+    if current_user.admin == "":
+        flash("Must be administrator.")
+        flash("alert-danger")
+        return redirect(url_for("main.index"))
+
+    # login code goes here
+    roomid = request.form.get("delroomid")
+
+    room = Room.query.filter_by(roomid=roomid).delete()
+
+    if not room:
+        flash("Room not exists.")
+        flash("alert-danger")
+    else:
+        flash("Room deleted.")
+        flash("alert-success")
+        Roomadm.query.filter_by(roomid=roomid).delete()
+        Queue.query.filter_by(roomid=roomid).delete()
+        
+    db.session.commit()
+    
+    return redirect(
+            url_for("main.configuration")
+        )  

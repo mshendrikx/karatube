@@ -40,7 +40,6 @@
 <br>
 <div class="container border border-primary">
     <h3 class="fa fa-align-center" aria-hidden="true">Create Room</h3>
-    <br>
     <form method="POST" action="{{ url_for('main.createroom') }}">
         <div class="input-group">
             <input list="userid" name="userid" autocomplete="off" placeholder="Administrador" required>
@@ -48,11 +47,27 @@
                 {% for user in users %}
                 <option value="{{ user.id }}">{{ user.name }}</option>
                 {% endfor %}
-            </datalist>
-            <input type="text" class="form-control" id="roomid" name="roomid" autocomplete="off" placeholder="Room" required>
+            </datalist>&nbsp;&nbsp;
+            <input type="text" class="form-control" id="roomid" name="roomid" autocomplete="off" placeholder="Room"
+                required>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-outline-primary">Save</button>
         </div>
-        <br>
-        <button type="submit" class="btn btn-outline-primary">Save</button>
+    </form>
+    <br>
+</div>
+<br>
+<div class="container border border-primary">
+    <h3 class="fa fa-align-center" aria-hidden="true">Delete Room</h3>
+    <form method="POST" action="{{ url_for('main.delroom') }}">
+        <div class="input-group">
+            <input list="delroomid" name="delroomid" autocomplete="off" placeholder="Room" required>
+            <datalist id="delroomid">
+                {% for room in rooms %}
+                <option value="{{ room.roomid }}">{{ room.roomid }}</option>
+                {% endfor %}
+            </datalist>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-outline-primary">Delete</button>
+        </div>
     </form>
     <br>
 </div>
