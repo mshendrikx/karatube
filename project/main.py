@@ -690,3 +690,35 @@ def delroom():
     return redirect(
             url_for("main.configuration")
         )  
+    
+@main.route("/updateuser", methods=["POST"])
+@login_required
+def updateuser():
+
+    if current_user.admin == "":
+        flash("Must be administrator.")
+        flash("alert-danger")
+        return redirect(url_for("main.configuration"))
+    
+    userid = request.form.get("updateuser")
+    
+    user = User.query.filter_by(id=userid).first()
+    
+    if not user:
+        flash("User not exist is database.")
+        flash("alert-danger")
+        return redirect(url_for("main.configuration"))
+    
+    if 'Reset' in request.form['submit_type']:
+        user.password = generate_password_hash('K4r4tub3', method="pbkdf2:sha256")
+        
+    elif 'Delete' in request.form['submit_type']:
+        User.query.filter_by(id=userid).delete()
+        Roomadm.query.filter_by(id=userid).delete()
+        Queue.query.filter_by(id=userid).delete()
+
+    db.session.commit()
+    
+    return redirect(
+            url_for("main.configuration")
+        )  
