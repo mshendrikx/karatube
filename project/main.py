@@ -717,6 +717,12 @@ def updateuser():
         Roomadm.query.filter_by(id=userid).delete()
         Queue.query.filter_by(id=userid).delete()
 
+    elif 'Admin' in request.form['submit_type']:
+        if user.admin == "X":
+            user.admin == ""
+        else:
+            user.admin == "X"
+        
     db.session.commit()
     
     return redirect(
