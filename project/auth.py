@@ -60,21 +60,10 @@ def login_post():
     return redirect(url_for("main.profile"))
 
 
-@auth.route("/signup/<roomid>/<roomkey>")
-def signup(roomid, roomkey):
+@auth.route("/signup")
+def signup():
 
-    room = Room.query.filter_by(roomid=roomid).first()
-    if not room:
-        flash("Room not available.")
-        flash("alert-danger")
-        return redirect(url_for("main.index"))
-
-    if not check_password_hash(room.password, roomkey):
-        flash("Wrong key for room, scan qrcode again.")
-        flash("alert-danger")
-        return redirect(url_for("main.index"))
-
-    return render_template("signup.html", roomid=roomid, roomkey=roomkey)
+    return render_template("signup.html")
 
 
 @auth.route("/signup", methods=["POST"])

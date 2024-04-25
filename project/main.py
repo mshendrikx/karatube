@@ -619,7 +619,7 @@ def roomqrcode(roomid, roomkey):
             db.session.commit()
             return redirect(url_for("main.profile"))
 
-    return redirect(url_for("auth.signup"), roomid=roomid, roomkey=roomkey)
+    return render_template("signup.html", roomid=roomid, roomkey=roomkey)
 
 
 @main.route("/addroomadm", methods=["POST"])
@@ -698,9 +698,9 @@ def updateuser():
     if current_user.admin == "":
         flash("Must be administrator.")
         flash("alert-danger")
-        return redirect(url_for("main.configuration"))
+        return redirect(url_for("main.index"))
     
-    userid = request.form.get("updateuser")
+    userid = request.form.get("updateuserid")
     
     user = User.query.filter_by(id=userid).first()
     
@@ -709,21 +709,27 @@ def updateuser():
         flash("alert-danger")
         return redirect(url_for("main.configuration"))
     
-    if 'Reset' in request.form['submit_type']:
+    if request.form["action"] == "Reset":
         user.password = generate_password_hash('K4r4tub3', method="pbkdf2:sha256")
-        
-    elif 'Delete' in request.form['submit_type']:
+        flash("Password set to: K4r4tub3")
+        flash("alert-success")
+    elif request.form["action"] == "Delete":             
+        flash("User deleted from database.")
+        flash("alert-success")
         User.query.filter_by(id=userid).delete()
-        Roomadm.query.filter_by(id=userid).delete()
-        Queue.query.filter_by(id=userid).delete()
-
-    elif 'Admin' in request.form['submit_type']:
+        Roomadm.query.filter_by(userid=userid).delete()
+        Queue.query.filter_by(userid=userid).delete()
+    elif request.form["action"] == "Admin":  
         if user.admin == "X":
-            user.admin == ""
+            flash("Administrator role removed.")
+            flash("alert-success")            
+            user.admin = ""
         else:
-            user.admin == "X"
+            flash("User is set as administrator.")
+            flash("alert-success")
+            user.admin = "X"
         
-    db.session.commit()
+    db.session.commit()    
     
     return redirect(
             url_for("main.configuration")

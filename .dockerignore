@@ -8,3 +8,4 @@ project/static/songs/**
 project/static/thumbs/**
 passwords.txt
 app.sh
+debug.py
