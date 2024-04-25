@@ -14,19 +14,26 @@ class YoutubeVideos:
             "image": image,
         }
         
+def is_karaoke(title):
+    
+    return ('karaoke' in title.lower() or 'backtracking' in title.lower() or 'instrumental' in title.lower())
+
+        
 search_arg = search_arg = 'Iggy Pop & Kate Pierson Candy'
 
 search_term = search_arg.replace('&', ' ')
 search_term = search_term.replace('/', ' ')
 search_term = search_term.replace('.', ' ')
 search_term = search_term + ' karaoke'
-videos_search = VideosSearch(search_term, region='BR', language='pt')
+videos_search = VideosSearch(search_term, region='BR', language='pt-BR')
 video_list = []
 count = 0
-while count < 3:
+while count < 20:
     for video in videos_search.resultComponents: 
         try:   
             if video['type'] != 'video':
+                continue
+            if not is_karaoke(video['title']):
                 continue
             youtube_video = YoutubeVideos()
             youtube_video.id = video['id']
@@ -37,3 +44,5 @@ while count < 3:
             continue
     videos_search.next()
     count += 1
+    
+breakpoint
