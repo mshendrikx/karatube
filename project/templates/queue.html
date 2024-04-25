@@ -22,15 +22,18 @@
             </tr>
         </thead>
         <tbody>
-            {% for queue_item in queue %}
+            {% for queue_item in queue %}            
             <tr>
-                {% if current_user.roomadm == 'X' %}
                 <td>
-                    <a class="clickable-image" id="{{ queue_item.id }}" href="{{ url_for('main.delqueue', queueid=queue_item.id) }}">
+                    {% if queue_item.status == 'P' %}
+                    <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="24" width="24">
+                    {% elif current_user.roomadm == 'X' %}
+                    <a class="clickable-image" id="{{ queue_item.id }}"
+                        href="{{ url_for('main.delqueue', queueid=queue_item.id) }}">
                         <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
                     </a>
+                    {% endif %}
                 </td>
-                {% endif %}
                 <td>{{ queue_item.singer }}
                 </td>
                 <td>{{ queue_item.song }}</td>

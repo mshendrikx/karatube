@@ -11,6 +11,7 @@
 {% endif %}
 {% endwith %}
 <div class="container border border-primary">
+    <h3 class="fa fa-align-center" aria-hidden="true">Settings</h3>
     <br>
     <form action="{{ url_for('main.configuration') }}" method="POST">
         <div class="input-group">
@@ -18,7 +19,6 @@
             <input type="text" class="form-control" id="lastfm" name="lastfm" value="{{ config.lastfm }}">
             <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">&nbsp;&nbsp;Get API
                 Key</a>
-
         </div>
         <br>
         <div class="input-group">
@@ -32,18 +32,29 @@
             <input type="number" class="form-control" id="songint" name="songint" min="1" max="60"
                 value="{{ config.songint }}" required>
         </div>
-
         <br>
         <button class="btn btn-outline-primary">Update</button>
     </form>
     <br>
 </div>
 <br>
-<div class="container mt-3">
-    <a id="create_room" href="{{ url_for('main.createroom') }}">
-        <button type="button" class="btn btn-outline-primary">Create Room</button>
-    </a>
+<div class="container border border-primary">
+    <h3 class="fa fa-align-center" aria-hidden="true">Create Room</h3>
+    <br>
+    <form method="POST" action="{{ url_for('main.createroom') }}">
+        <div class="input-group">
+            <input list="userid" name="userid" autocomplete="off" placeholder="Administrador" required>
+            <datalist id="userid">
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.name }}</option>
+                {% endfor %}
+            </datalist>
+            <input type="text" class="form-control" id="roomid" name="roomid" autocomplete="off" placeholder="Room" required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-outline-primary">Save</button>
+    </form>
+    <br>
 </div>
-
 
 {% endblock %}

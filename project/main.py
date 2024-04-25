@@ -66,6 +66,7 @@ def profile_post():
 
     password = request.form.get("password")
     repass = request.form.get("repass")
+    name = request.form.get("name")
     roomid = request.form.get("room_selection")
 
     if password != repass:
@@ -79,6 +80,9 @@ def profile_post():
     if roomid != current_user.roomid:
         current_user.roomid = roomid
         Queue.query.filter_by(userid=current_user.id).delete()
+
+    if name != ":":
+        current_user.name = name
 
     db.session.add(current_user)
     db.session.commit()
@@ -428,23 +432,9 @@ def queueupdate():
     return jsonify({})
 
 
-@main.route("/createroom")
-@login_required
-def createroom():
-
-    if current_user.admin == "":
-        flash("Must be administrator.")
-        flash("alert-danger")
-        return redirect(url_for("main.index"))
-
-    users = User.query.all()
-
-    return render_template("create_room.html", current_user=current_user, users=users)
-
-
 @main.route("/createroom", methods=["POST"])
 @login_required
-def createroom_post():
+def createroom():
 
     if current_user.admin == "":
         flash("Must be administrator.")
@@ -505,8 +495,16 @@ def configuration():
 
     config = Config.query.filter_by(id="CONFIG").first()
 
+    users = User.query.all()
+
+    rooms = Room.query.all()
+
     return render_template(
-        "configuration.html", current_user=current_user, config=config
+        "configuration.html",
+        current_user=current_user,
+        config=config,
+        users=users,
+        rooms=rooms,
     )
 
 

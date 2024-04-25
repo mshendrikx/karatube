@@ -25,10 +25,10 @@ search_term = search_arg.replace('&', ' ')
 search_term = search_term.replace('/', ' ')
 search_term = search_term.replace('.', ' ')
 search_term = search_term + ' karaoke'
-videos_search = VideosSearch(search_term, region='BR', language='pt-BR')
+videos_search = VideosSearch(search_term, region='BR')
 video_list = []
 count = 0
-while count < 20:
+while count < 3:
     for video in videos_search.resultComponents: 
         try:   
             if video['type'] != 'video':
