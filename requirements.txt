@@ -8,3 +8,4 @@ requests
 musicbrainzngs
 qrcode
 Pillow
+youtube-search-python

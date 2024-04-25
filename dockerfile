@@ -18,5 +18,5 @@ COPY . .
 # Expose port 7003 for web traffic
 EXPOSE 7003
 
-# Start Apache2 in the foreground
+# Start pyhton app in the foreground
 CMD ["python3", "/app/app.py"]

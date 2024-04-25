@@ -4,6 +4,7 @@ import requests
 import re
 import os
 
+from youtubesearchpython import VideosSearch
 from pathlib import Path
 from .models import User, Song, Queue, Config
 from . import db
@@ -180,30 +181,37 @@ def musicbrainz_search(search_arg):
 
     return tracks
 
+def is_karaoke(title):
+    
+    return ('karaoke' in title.lower() or 'backtracking' in title.lower() or 'instrumental' in title.lower())
 
 def youtube_search(search_arg):
 
-    search_url = "https://www.youtube.com/results?search_query=karaoke " + search_arg
-    response = requests.get(search_url)
-    splited = response.text.split('{"videoRenderer":{"')
+    search_term = search_arg.replace('&', ' ')
+    search_term = search_term.replace('/', ' ')
+    search_term = search_term.replace('.', ' ')
+    search_term = search_term + ' karaoke'
+    videos_search = VideosSearch(search_term, region='BR', language='pt')
     video_list = []
-    for video_data in splited:
-        try:
-            video_id = re.findall(r'videoId":"(.*?)","thumbnail', video_data)[0]
-            aux = video_data.replace('{"thumbnails":[{"url":"', "zz_thumbs")
-            aux = aux.replace("?sqp", "zz_thumbd")
-            thumbnail = re.findall(r"zz_thumbs(.*?)zz_thumbd", aux)[0]
-            aux = video_data.replace('"title":{"runs":[{"text":"', "zz_thumbs")
-            aux = aux.replace('"}],"accessibility":', "zz_thumbd")
-            description = re.findall(r"zz_thumbs(.*?)zz_thumbd", aux)[0]
-            youtube_video = YoutubeVideos()
-            youtube_video.id = video_id
-            youtube_video.thumb = thumbnail
-            youtube_video.description = description
-            video_list.append(youtube_video)
-        except:
-            continue
 
+    count = 0
+    while count < 3:
+        for video in videos_search.resultComponents: 
+            try:   
+                if video['type'] != 'video':
+                    continue
+                if not is_karaoke(video['title']):
+                    continue
+                youtube_video = YoutubeVideos()
+                youtube_video.id = video['id']
+                youtube_video.thumb = video['thumbnails'][0]['url'].split("?")[0]
+                youtube_video.description = video['title']
+                video_list.append(youtube_video)
+            except:
+                continue
+        videos_search.next()
+        count += 1
+    
     return video_list
 
 
