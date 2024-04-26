@@ -1,10 +1,10 @@
-# Use Ubuntu 20.04 base image
+# Use Ubuntu 22.04 base image
 FROM ubuntu:22.04
 
 # Update package lists
 RUN apt-get update
 
-# Install Apache2 web server
+# Install software
 RUN apt-get install -y python3-pip nano
 
 WORKDIR /app
