@@ -50,7 +50,7 @@
                     </select>
                 </div>
                 <div class="col-6 text-white">
-                    <p>* Regular users must scan qrcode in karatube screen to change room</p>
+                    <p>* Regular users must scan qrcode in karatube player screen to change room</p>
                 </div>
             </div>
         </div>
@@ -59,11 +59,12 @@
     </form>
     <br>
     <form action="/changeroom" method="POST">
+        <h2 class="title">Read room qrcode</h2>
+        <div class="mb-3" id="reader"></div>
         <input type="hidden" class="form-control" id="roomid" name="roomid" value="" required>
         <input type="hidden" class="form-control" id="roompass" name="roompass" value="" required>
         <button hidden class="btn btn-outline-primary" id="changeroom"></button>
     </form>
-    <div class="mb-3" id="reader"></div>
 </div>
 <script>
     const html5QrCode = new Html5Qrcode("reader");
@@ -83,7 +84,7 @@
         });
         changeroom.click();
     };
-    const config = { fps: 10, qrbox: { width: 150, height: 150 } };
+    const config = { fps: 10, qrbox: { width: 300, height: 300 } };
     // If you want to prefer back camera
     html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
 

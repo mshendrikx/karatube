@@ -737,12 +737,15 @@ def changeroom_post():
     
     room = Room.query.filter_by(roomid=roomid).first()
     
-    if not room or not check_password_hash(room.password, roompass):
+    if roomid == current_user.roomid:
+        flash("User alredy in room")
+        flash("alert-warning")       
+    elif not room or not check_password_hash(room.password, roompass):
         flash("Wrong room or room password")
         flash("alert-danger")
     else:
-        flash("User room are changed")
-        flash("alert-danger")
+        flash("User room changed")
+        flash("alert-success")
         current_user.roomid = roomid
         db.session.commit()
 
