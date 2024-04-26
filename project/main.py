@@ -569,8 +569,7 @@ def roomcontrol():
         ).first()
         if roomadm:
             roomadms.append(user)
-        else:
-            users.append(user)
+        users.append(user)
 
     return render_template(
         "room.html",
@@ -618,27 +617,50 @@ def roomqrcode(roomid, roomkey):
     return render_template("signup.html", roomid=roomid, roomkey=roomkey)
 
 
-@main.route("/addroomadm", methods=["POST"])
+@main.route("/addroom", methods=["POST"])
 @login_required
-def addroomadm():
+def addroom():
 
     userid = request.form.get("userid")
     user = User.query.filter_by(id=userid).first()
+
     if not user:
         flash("User not exist in database.")
         flash("alert-danger")
         return redirect(url_for("main.roomcontrol"))
+    
+    user.roomid = current_user.roomid
+     
+    if request.form["action"] == "Admin":
+        roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=user.id)
+        if roomadm:
+            flash("User alredy in room.")
+            flash("alert-warning")         
+        else:
+            flash("User added to room.")
+            flash("alert-success")            
+            new_admin = Roomadm(roomid=current_user.roomid, userid=user.id)
+            db.session.add(new_admin)
 
-    roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=userid).first()
-    if roomadm:
-        flash("User alredy is an administrator.")
+    db.session.commit()
+
+    return redirect(url_for("main.roomcontrol"))
+
+@main.route("/delroomuser/<userid>")
+@login_required
+def delroomuser(userid):
+
+    if userid == current_user.id:
+        flash("Current user can't be removed from room.")
         flash("alert-warning")
     else:
-        roomadm = Roomadm(roomid=current_user.roomid, userid=userid)
-        db.session.add(roomadm)
-        db.session.commit()
-        flash("User added as administrator.")
-        flash("alert-success")
+        user = User.query.filter_by(id=userid).first()
+        if user:
+            Queue.query.filter_by(userid=user.id).delete()
+            user.roomid = ""            
+            db.session.commit()
+            flash("User removed from room.")
+            flash("alert-success")
 
     return redirect(url_for("main.roomcontrol"))
 

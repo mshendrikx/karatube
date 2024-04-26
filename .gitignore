@@ -9,3 +9,5 @@ project/static/thumbs/**
 passwords.txt
 app.sh
 debug.py
+test.py
+test2.py

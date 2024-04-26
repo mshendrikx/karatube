@@ -9,7 +9,6 @@
 </div>
 <br>
 <div class="container border border-primary">
-    <br>
     <h3 class="fa fa-align-center" aria-hidden="true">Player Controls</h3>
     <br>
     <div class="input-group">
@@ -49,31 +48,68 @@
 </div>
 <br>
 <div class="container border border-primary">
-    <h3 class="fa fa-align-center" aria-hidden="true">Administrators</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <td></td>
-                <td>Nome</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for roomadmin in roomadms %}
-            <tr>
-                <td>
-                    <a class="clickable-image" id="{{ roomadmin.id }}"
-                        href="{{ url_for('main.delroomadm', userid=roomadmin.id) }}">
-                        <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
-                    </a>
-                </td>
-                <td>
-                    {{ roomadmin.name }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <form method="POST" action="/addroomadm">
+    <br>
+    <div class="container border border-primary">        
+        <h3 class="fa fa-align-center" aria-hidden="true">Users</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                {% if user.roomid == current_user.roomid %}
+                <tr>
+                    <td>
+                        {% if user.id != current_user.id %}
+                        <a class="clickable-image" id="{{ user.id }}"
+                            href="{{ url_for('main.delroomuser', userid=user.id) }}">
+                            <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24"
+                                width="24">
+                        </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ user.name }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="container border border-primary">
+        <h3 class="fa fa-align-center" aria-hidden="true">Administrators</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Name</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for roomadmin in roomadms %}
+                <tr>
+                    <td>
+                        <a class="clickable-image" id="{{ roomadmin.id }}"
+                            href="{{ url_for('main.delroomadm', userid=roomadmin.id) }}">
+                            <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24"
+                                width="24">
+                        </a>
+                    </td>
+                    <td>
+                        {{ roomadmin.name }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <form method="POST" action="/addroom">
         <div class="input-group">
             <input list="userid" name="userid" id="useridInput" autocomplete="off" required>
             <datalist id="userid">
@@ -82,8 +118,9 @@
                 <option value="{{ user.id }}">{{ user.name }}</option>
                 {% endif %}
                 {% endfor %}
-            </datalist>
-            <button type="submit" class="btn btn-outline-primary">Add</button>
+            </datalist>&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="btn btn-outline-primary" name="action" value="User">&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="btn btn-outline-primary" name="action" value="Admin">
         </div>
     </form>
     <br>

@@ -24,25 +24,13 @@ video {
   object-fit: cover; /* Scales video to fill container, maintaining aspect ratio */
 }
 
-#overlay-singing {
+#overlay-now {
   z-index: 2;
   position: absolute;
   text-align: left;
   top: 0;
   left: 1%;
   background-color: rgba(0, 0, 0, 0.8);
-  color: rgb(238, 234, 6);
-  font-size: 20px;
-}
-
-#overlay-now {
-  z-index: 2;
-  position: absolute;
-  text-align: left;
-  top: 0;
-  left: 7%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: rgb(255, 255, 255);
   font-size: 20px;
 }
 
@@ -53,18 +41,6 @@ video {
   bottom: 0;
   left: 1%;
   background-color: rgba(0, 0, 0, 0.8);
-  color: rgb(38, 250, 119);
-  font-size: 20px;
-}
-
-#overlay-queued {
-  z-index: 2;
-  position: absolute;
-  text-align: left;
-  bottom: 0;
-  left: 7%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: rgb(255, 255, 255);
   font-size: 20px;
 }
 
@@ -122,16 +98,25 @@ video {
   bottom: 0;
 }
 
-#signup-qrcode {
+.signup-container {
+  text-align: center;
   z-index: 5;
-  position: fixed;
-  right: 0;
-  bottom: 0;
-}
-
-#login-qrcode {
-  z-index: 5;
-  position: fixed;
   right: 0;
   top: 0;
+  position: fixed;
+}
+
+.login-container {
+  text-align: center;
+  z-index: 5;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+}
+
+.qrcode-label {
+  display: block;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.9);
+  font-size: 14px
 }

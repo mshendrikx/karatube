@@ -4,6 +4,8 @@
 <head>
   <title>KaraTube</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="shortcut icon" href="{{ url_for('static', filename='images/karatube_logo1.jpg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
@@ -24,19 +26,15 @@
           songInterval = parseInt(screenData.song_interval);
           if (screenData.song === '') {
             $("#overlay-now").hide();
-            $("#overlay-singing").hide();
           } else {
-            $("#overlay-now").text(screenData.singer + ' - ' + screenData.song);
+            $("#now-song").text(screenData.singer + ' - ' + screenData.song);
             $("#overlay-now").show();
-            $("#overlay-singing").show();
           }
           if (screenData.next_song === '') {
             $("#overlay-next").hide();
-            $("#overlay-queued").hide();
           } else {
-            $("#overlay-queued").text(screenData.next_singer + ' - ' + screenData.next_song);
+            $("#next-song").text(screenData.next_singer + ' - ' + screenData.next_song);
             $("#overlay-next").show();
-            $("#overlay-queued").show();
           }
           if (screenData.command !== "") {
             var karaokeVideo = document.getElementById("video");
@@ -111,6 +109,32 @@
       exec_control();
     }, updateRatio);
 
+    // Screen size control
+    function getWindowResolution() {
+      // Access the window's inner width and height properties
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      // Return an object containing the resolution details
+      return {
+        width: width,
+        height: height
+      };
+    }
+
+    // Add an event listener for window resize
+    window.onresize = function () {
+      var size
+      const resolution = getWindowResolution();
+      size = Math.trunc(resolution.height * 0.15)
+      $("#signup-qrcode").attr("width", size);
+      $("#signup-qrcode").attr("height", size);
+      $("#login-qrcode").attr("width", size);
+      $("#login-qrcode").attr("height", size);
+    };
+
+    // Call the function initially to capture the starting resolution
+    getWindowResolution();  
   </script>
 </head>
 
@@ -126,13 +150,26 @@
       <source src="" type="video/mp4">
     </video>
   </div>
-  <div id="overlay-singing"> Now: </div>
-  <div id="overlay-now"></div>
-  <div id="overlay-next"> Next: </div>
-  <div id="overlay-queued"></div>
-  <img id="signup-qrcode" src="data:image/png;base64,{{ signup_img }}" width="96" height="96">
-  <img id="login-qrcode" src="data:image/png;base64,{{ login_img }}" width="96" height="96">
-
+  <div id="overlay-now">
+    <div class="input-group">
+      <p class="text-warning">Now:</p>&nbsp;&nbsp;
+      <p class="text-white" id="now-song"></p>
+    </div>
+  </div>
+  <div id="overlay-next">
+    <div class="input-group">
+      <p class="text-warning">Next:</p>&nbsp;&nbsp;
+      <p class="text-white" id="next-song"></p>
+    </div>
+  </div>
+  <div class="signup-container">
+    <img id="signup-qrcode" src="data:image/png;base64,{{ signup_img }}" width="96" height="96">
+    <span class="qrcode-label">Room</span >
+  </div>
+  <div class="login-container">
+    <img id="login-qrcode" src="data:image/png;base64,{{ login_img }}" width="96" height="96">
+    <span class="qrcode-label">Host</span>
+  </div>
   <script>
     const video = document.getElementById("video");
 
