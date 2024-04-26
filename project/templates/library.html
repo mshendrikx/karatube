@@ -6,13 +6,6 @@
 
 {% block content %}
 <div class="container mt-3">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert {{ messages[1] }}">
-        {{ messages[0] }}.
-    </div>
-    {% endif %}
-    {% endwith %}
     <form action="/library" method="POST">
         <div class="input-group">
             <label for="user_selection">Singer:&nbsp;&nbsp;</label>

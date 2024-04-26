@@ -5,13 +5,6 @@
 {% endblock %}
 {% block content %}
 <div class="container mt-3">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert alert-danger">
-        {{ messages[0] }}.
-    </div>
-    {% endif %}
-    {% endwith %}
     <form action="/signup" method="POST">
         <div class="mb-3 mt-3">
             <label for="username">User:</label>
@@ -42,7 +35,8 @@
 </div>
 <script>
 
-    function onScanSuccess(decodedText, decodedResult) {
+    const html5QrCode = new Html5Qrcode("reader");
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         // Handle on success condition with the decoded text or result.
         let roomid = document.getElementById('roomid');
         let roompass = document.getElementById('roompass');
@@ -51,11 +45,16 @@
         let parts = decodedText.split(separator);
         roomid.value = parts[0]
         roompass.value = parts[1]
+        html5QrCode.stop().then((ignore) => {
+            // QR Code scanning is stopped.
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
         signup.click();
-    }
+    };
+    const config = { fps: 10, qrbox: { width: 150, height: 150 } };
+    // If you want to prefer back camera
+    html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
 
-    var html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", { fps: 10, qrbox: 200 });
-    html5QrcodeScanner.render(onScanSuccess);
 </script>
 {% endblock %}

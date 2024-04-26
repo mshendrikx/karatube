@@ -63,6 +63,17 @@
         </div>
     </nav>
     <main>
+        <div class="container mt-3">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <br>
+            <div class="alert {{ messages[1] }}">
+                {{ messages[0] }}.
+            </div>
+            <br>
+            {% endif %}
+            {% endwith %}
+        </div>
         {% block content %}{% endblock %}
     </main>
 </body>

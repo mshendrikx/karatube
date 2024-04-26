@@ -3,13 +3,7 @@
 {% block content %}
 
 <div class="container mt-3">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert {{ messages[1] }}">
-        {{ messages[0] }}.
-    </div>
-    {% endif %}
-    {% endwith %}
+    <h3 class="fa fa-align-center" aria-hidden="true">Room: {{ current_user.roomid }}</h3>
     <table class="table">
         <thead>
             <tr>

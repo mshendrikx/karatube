@@ -3,16 +3,6 @@
 {% block content %}
 {% if current_user.roomadm == "X" %}
 <div class="container mt-3">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert {{ messages[1] }}">
-        {{ messages[0] }}
-    </div>
-    {% endif %}
-    {% endwith %}
-</div>
-<br>
-<div class="container mt-3">
     <h3 class="title">
         <p class="text-primary">Room: {{ current_user.roomid }}</p>
     </h3>

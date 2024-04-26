@@ -2,13 +2,6 @@
 
 {% block content %}
 <div class="container mt-3">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert {{ messages[1] }}">
-        {{ messages[0] }}.
-    </div>
-    {% endif %}
-    {% endwith %}
     {% if user.name %}
     <h3 class="title">
         Hello, {{ current_user.name }} !

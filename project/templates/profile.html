@@ -9,15 +9,6 @@
     <div class="alert alert-primary">
         You are in room: {{ current_user.roomid }}
     </div>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <br>
-    <div class="alert {{ messages[1] }}">
-        {{ messages[0] }}.
-    </div>
-    {% endif %}
-    {% endwith %}
-    <br>
 </div>
 <div class="container border border-primary">
     <br>
@@ -67,5 +58,34 @@
         <button class="btn btn-outline-primary">Update</button>
     </form>
     <br>
+    <form action="/changeroom" method="POST">
+        <input type="hidden" class="form-control" id="roomid" name="roomid" value="" required>
+        <input type="hidden" class="form-control" id="roompass" name="roompass" value="" required>
+        <button hidden class="btn btn-outline-primary" id="changeroom"></button>
+    </form>
+    <div class="mb-3" id="reader"></div>
 </div>
+<script>
+    const html5QrCode = new Html5Qrcode("reader");
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        // Handle on success condition with the decoded text or result.
+        let roomid = document.getElementById('roomid');
+        let roompass = document.getElementById('roompass');
+        let changeroom = document.getElementById("changeroom");
+        let separator = "§";
+        let parts = decodedText.split(separator);
+        roomid.value = parts[0]
+        roompass.value = parts[1]
+        html5QrCode.stop().then((ignore) => {
+            // QR Code scanning is stopped.
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
+        changeroom.click();
+    };
+    const config = { fps: 10, qrbox: { width: 150, height: 150 } };
+    // If you want to prefer back camera
+    html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+
+</script>
 {% endblock %}
