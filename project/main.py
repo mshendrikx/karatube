@@ -50,12 +50,12 @@ def profile():
     rooms = []
     rooms.append(current_user.roomid)
     if current_user.admin == "X":
-        roomadm_sel = Roomadm.query
+        room_sel = Room.query
     else:
-        roomadm_sel = Roomadm.query.filter_by(userid=current_user.id)
-    for roomadm in roomadm_sel:
-        if roomadm.roomid != current_user.roomid:
-            rooms.append(roomadm.roomid)
+        room_sel = Roomadm.query.filter_by(userid=current_user.id)
+    for room in room_sel:
+        if room.roomid != current_user.roomid:
+            rooms.append(room.roomid)
 
     return render_template("profile.html", current_user=current_user, rooms=rooms)
 
@@ -285,13 +285,14 @@ def delqueue(queueid):
 @login_required
 def player():
 
-    roomadm = Roomadm.query.filter_by(
-        roomid=current_user.roomid, userid=current_user.id
-    ).first()
-    if not roomadm:
-        flash("User is not room admin.")
-        flash("alert-danger")
-        return redirect(url_for("main.index"))
+    if current_user.admin != "X":
+        roomadm = Roomadm.query.filter_by(
+            roomid=current_user.roomid, userid=current_user.id
+        ).first()
+        if not roomadm:
+            flash("User is not room admin.")
+            flash("alert-danger")
+            return redirect(url_for("main.index"))
 
     room = Room.query.filter_by(roomid=current_user.roomid).first()
     if not room:
