@@ -114,6 +114,11 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
+    message = 'User ' + str(userid) + ' created, please login'
+
+    flash(message)
+    flash("alert-success")
+
     return redirect(url_for("auth.login"))
 
 

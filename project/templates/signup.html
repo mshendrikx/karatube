@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-
+{% block headscript %}
+<!-- Include the html5-qrcode library -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+{% endblock %}
 {% block content %}
 <div class="container mt-3">
     {% with messages = get_flashed_messages() %}
@@ -26,13 +29,34 @@
             <label for="name">Name:</label>
             <input type="text" class="form-control" id="name" name="name" required>
         </div>
+        <!-- <div style="width: 500px" id="reader"></div> -->
+        <div class="mb-3" id="reader"></div>
         <div class="mb-3">
-            <input type="hidden" class="form-control" id="roomid" name="roomid" value="{{ roomid }}"  required>
+            <input type="hidden" class="form-control" id="roomid" name="roomid" value="" required>
         </div>
         <div class="mb-3">
-            <input type="hidden" class="form-control" id="roompass" name="roompass"  value="{{ roomkey }}" required>
+            <input type="hidden" class="form-control" id="roompass" name="roompass" value="" required>
         </div>
-        <button class="btn btn-outline-primary">Sign Up</button>
+        <button hidden class="btn btn-outline-primary" id="signup">Sign Up</button>
     </form>
 </div>
+<script>
+
+    function onScanSuccess(decodedText, decodedResult) {
+        // Handle on success condition with the decoded text or result.
+        let roomid = document.getElementById('roomid');
+        let roompass = document.getElementById('roompass');
+        let signup = document.getElementById("signup");
+        let separator = "§";
+        let parts = decodedText.split(separator);
+        roomid.value = parts[0]
+        roompass.value = parts[1]
+        html5QrcodeScanner.clear();
+        signup.click();
+    }
+
+    var html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 10, qrbox: 150 });
+    html5QrcodeScanner.render(onScanSuccess);
+</script>
 {% endblock %}

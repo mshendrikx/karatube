@@ -303,13 +303,7 @@ def player():
     room.password = generate_password_hash(roompass, method="pbkdf2:sha256")
     db.session.commit()
 
-    qrcode_data = (
-        str(os.environ.get("KARATUBE_URL"))
-        + "/roomqrcode/"
-        + str(current_user.roomid)
-        + "/"
-        + str(roompass)
-    )
+    qrcode_data = str(current_user.roomid) + "§" + str(roompass)
     # Create a QR code object with desired error correction level
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
     qr.add_data(qrcode_data)
@@ -322,7 +316,8 @@ def player():
     image_bytes = buffer.getvalue()
     signup_img = base64.b64encode(image_bytes).decode("utf-8")
 
-    qrcode_data = str(os.environ.get("KARATUBE_URL")) + "/login"
+    # qrcode_data = str(os.environ.get("KARATUBE_URL")) + "/login"
+    qrcode_data = str(os.environ.get("KARATUBE_URL"))
     # Create a QR code object with desired error correction level
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
     qr.add_data(qrcode_data)
@@ -662,6 +657,7 @@ def delroomadm(userid):
 
     return redirect(url_for("main.roomcontrol"))
 
+
 @main.route("/delroom", methods=["POST"])
 @login_required
 def delroom():
@@ -684,13 +680,12 @@ def delroom():
         flash("alert-success")
         Roomadm.query.filter_by(roomid=roomid).delete()
         Queue.query.filter_by(roomid=roomid).delete()
-        
+
     db.session.commit()
-    
-    return redirect(
-            url_for("main.configuration")
-        )  
-    
+
+    return redirect(url_for("main.configuration"))
+
+
 @main.route("/updateuser", methods=["POST"])
 @login_required
 def updateuser():
@@ -699,38 +694,36 @@ def updateuser():
         flash("Must be administrator.")
         flash("alert-danger")
         return redirect(url_for("main.index"))
-    
+
     userid = request.form.get("updateuserid")
-    
+
     user = User.query.filter_by(id=userid).first()
-    
+
     if not user:
         flash("User not exist is database.")
         flash("alert-danger")
         return redirect(url_for("main.configuration"))
-    
+
     if request.form["action"] == "Reset":
-        user.password = generate_password_hash('K4r4tub3', method="pbkdf2:sha256")
+        user.password = generate_password_hash("K4r4tub3", method="pbkdf2:sha256")
         flash("Password set to: K4r4tub3")
         flash("alert-success")
-    elif request.form["action"] == "Delete":             
+    elif request.form["action"] == "Delete":
         flash("User deleted from database.")
         flash("alert-success")
         User.query.filter_by(id=userid).delete()
         Roomadm.query.filter_by(userid=userid).delete()
         Queue.query.filter_by(userid=userid).delete()
-    elif request.form["action"] == "Admin":  
+    elif request.form["action"] == "Admin":
         if user.admin == "X":
             flash("Administrator role removed.")
-            flash("alert-success")            
+            flash("alert-success")
             user.admin = ""
         else:
             flash("User is set as administrator.")
             flash("alert-success")
             user.admin = "X"
-        
-    db.session.commit()    
-    
-    return redirect(
-            url_for("main.configuration")
-        )  
+
+    db.session.commit()
+
+    return redirect(url_for("main.configuration"))
