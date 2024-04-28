@@ -1,4 +1,4 @@
-import urllib.request
+import requests
 
 class YoutubeVideos:
     id = ""
@@ -28,10 +28,14 @@ search_term = search_term + ' karaoke'
 
 url = 'https://www.youtube.com.br/results?search_query=' + search_term
 
-url = url.replace(' ', '+')
+# Replace with your proxy details
+proxies = {
+    'http': 'http://your_proxy_ip:3128',
+    'https': 'https://your_proxy_ip:port'
+}
 
-result = urllib.request.urlopen(url)
+# Use the requests library with proxies
+response = requests.get(url, proxies=proxies)
 
-result = result.read().decode()
 
 breakpoint

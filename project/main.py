@@ -90,9 +90,9 @@ def profile_post():
     return redirect(url_for("main.profile"))
 
 
-@main.route("/library")
+@main.route("/musics")
 @login_required
-def library():
+def musics():
     song_list = Song.query.order_by("artist", "name")
     user_sel = []
     user_sel.append(current_user)
@@ -102,13 +102,13 @@ def library():
             user_sel.append(user)
 
     return render_template(
-        "library.html", songs=song_list, user_sel=user_sel, current_user=current_user
+        "musics.html", songs=song_list, user_sel=user_sel, current_user=current_user
     )
 
 
-@main.route("/library", methods=["POST"])
+@main.route("/musics", methods=["POST"])
 @login_required
-def library_post():
+def musics_post():
 
     search_string = request.form.get("search_string")
     singer_user = request.form.get("user_selection")
@@ -121,7 +121,7 @@ def library_post():
     if musics == None:
         flash("No music found in database")
         flash("alert-warning")
-        return redirect(url_for("main.library"))
+        return redirect(url_for("main.musics"))
     else:
         return render_template("musicdb.html", musics=musics, singer_user=singer_user)
 
@@ -216,7 +216,7 @@ def addqueue(youtubeid, userid):
         flash("Fail to add song to queue")
         flash("alert-danger")
 
-    return redirect(url_for("main.library"))
+    return redirect(url_for("main.musics"))
 
 
 @main.route("/delsong/<youtubeid>")
@@ -239,7 +239,7 @@ def delsong(youtubeid):
         flash("Only admin can delete song")
         flash("alert-danger")
 
-    return redirect(url_for("main.library"))
+    return redirect(url_for("main.musics"))
 
 
 @main.route("/miniplayer/<youtubeid>")
