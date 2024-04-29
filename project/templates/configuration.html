@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container border border-primary">
+<div class="container border">
     <h3 class="fa fa-align-center" aria-hidden="true">Settings</h3>
     <form action="{{ url_for('main.configuration') }}" method="POST">
         <div class="input-group">
@@ -25,7 +25,7 @@
     <br>
 </div>
 <br>
-<div class="container border border-primary">
+<div class="container border">
     <h3 class="fa fa-align-center" aria-hidden="true">Create Room</h3>
     <form method="POST" action="{{ url_for('main.createroom') }}">
         <div class="input-group">
@@ -43,7 +43,7 @@
     <br>
 </div>
 <br>
-<div class="container border border-primary">
+<div class="container border">
     <h3 class="fa fa-align-center" aria-hidden="true">Delete Room</h3>
     <form method="POST" action="{{ url_for('main.delroom') }}">
         <div class="input-group">
@@ -59,7 +59,7 @@
     <br>
 </div>
 <br>
-<div class="container border border-primary">
+<div class="container border">
     <h3 class="fa fa-align-center" aria-hidden="true">User</h3>
     <form method="POST" action="{{ url_for('main.updateuser') }}">
         <div class="input-group">
