@@ -68,12 +68,19 @@ def profile_post():
     repass = request.form.get("repass")
     name = request.form.get("name")
     roomid = request.form.get("room_selection")
+    email = request.form.get("email")
+    mobile = request.form.get("mobile")
 
     if password != repass:
         flash("Password don't match")
         flash("alert-danger")
         return redirect(url_for("main.profile"))
 
+    if '@' not in email:
+        flash("Enter valid E-mail")
+        flash("alert-danger")
+        return redirect(url_for("main.profile"))
+            
     if password != "":
         current_user.password = generate_password_hash(password, method="pbkdf2:sha256")
 
@@ -81,8 +88,11 @@ def profile_post():
         current_user.roomid = roomid
         Queue.query.filter_by(userid=current_user.id).delete()
 
-    if name != ":":
+    if name != "":
         current_user.name = name
+        
+    current_user.email = email
+    current_user.mobile = mobile        
 
     db.session.add(current_user)
     db.session.commit()

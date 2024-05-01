@@ -9,3 +9,4 @@ musicbrainzngs
 qrcode
 Pillow
 youtube-search-python
+mailersend

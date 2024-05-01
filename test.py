@@ -1,48 +1,38 @@
-from youtubesearchpython import VideosSearch
+from mailersend import emails
 
-class YoutubeVideos:
-    id = ""
-    thumb = ""
-    description = ""
+# Initialize the MailerSend client with your API key
+mailer = emails.NewEmail('mlsn.094d41e56139cd0ee0319e031a5f0b05ac7dfc5add91762caea5a8752262817d')
 
-    def get_display_data(self):
-        image = self.thumb.split("/")[5]
-        return {
-            "id": self.id,
-            "thumb": self.thumb,
-            "description": self.description,
-            "image": image,
-        }
-        
-def is_karaoke(title):
-    
-    return ('karaoke' in title.lower() or 'backtracking' in title.lower() or 'instrumental' in title.lower())
+# Define email details
+mail_body = {}
+mail_from = {
+    "name": "Karatube",
+    "email": "karatube@hendrikx.com.br",
+}
+recipients = [
+    {
+        "name": "Mauricio",
+        "email": "mauricio.servatius@gmail.com",
+    }
+]
+reply_to = [
+    {
+        "name": "Mauricioe",
+        "email": "mauricio.servatius@gmail.com",
+    }
+]
 
-        
-search_arg = search_arg = 'Iggy Pop & Kate Pierson Candy'
+# Set email properties
+mailer.set_mail_from(mail_from, mail_body)
+mailer.set_mail_to(recipients, mail_body)
+mailer.set_subject("Hello!", mail_body)
+mailer.set_html_content("Hello, this is an example email from MailerSend", mail_body)
+mailer.set_plaintext_content("Hello, this is an example email from MailerSend", mail_body)
+mailer.set_reply_to(reply_to, mail_body)
 
-search_term = search_arg.replace('&', ' ')
-search_term = search_term.replace('/', ' ')
-search_term = search_term.replace('.', ' ')
-search_term = search_term + ' karaoke'
-videos_search = VideosSearch(search_term, region='BR')
-video_list = []
-count = 0
-while count < 3:
-    for video in videos_search.resultComponents: 
-        try:   
-            if video['type'] != 'video':
-                continue
-            if not is_karaoke(video['title']):
-                continue
-            youtube_video = YoutubeVideos()
-            youtube_video.id = video['id']
-            youtube_video.thumb = video['thumbnails'][0]['url'].split("?")[0]
-            youtube_video.description = video['title']
-            video_list.append(youtube_video)
-        except:
-            continue
-    videos_search.next()
-    count += 1
-    
+# Send the email
+mailer.send(mail_body)
+
+print(mailer)
+
 breakpoint
