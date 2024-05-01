@@ -9,4 +9,7 @@ musicbrainzngs
 qrcode
 Pillow
 youtube-search-python
-mailersend
+google-auth 
+google-auth-httplib2 
+google-auth-oauthlib 
+google-api-python-client

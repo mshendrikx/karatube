@@ -1,38 +1,28 @@
-from mailersend import emails
+import os
+import pickle
+import google.auth
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 
-# Initialize the MailerSend client with your API key
-mailer = emails.NewEmail('mlsn.094d41e56139cd0ee0319e031a5f0b05ac7dfc5add91762caea5a8752262817d')
+creds = None
+if os.path.exists('token.pickle'):
+    with open('token.pickle', 'rb') as token:
+        creds = pickle.load(token)
+if not creds or not creds.valid:
+    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', ['https://www.googleapis.com/auth/gmail.compose'])
+    creds = flow.run_local_server(port=0)
+    with open('token.pickle', 'wb') as token:
+        pickle.dump(creds, token)
 
-# Define email details
-mail_body = {}
-mail_from = {
-    "name": "Karatube",
-    "email": "karatube@hendrikx.com.br",
+service = build('gmail', 'v1', credentials=creds)
+
+message = {
+    'raw': 'base64-encoded email content'
 }
-recipients = [
-    {
-        "name": "Mauricio",
-        "email": "mauricio.servatius@gmail.com",
-    }
-]
-reply_to = [
-    {
-        "name": "Mauricioe",
-        "email": "mauricio.servatius@gmail.com",
-    }
-]
 
-# Set email properties
-mailer.set_mail_from(mail_from, mail_body)
-mailer.set_mail_to(recipients, mail_body)
-mailer.set_subject("Hello!", mail_body)
-mailer.set_html_content("Hello, this is an example email from MailerSend", mail_body)
-mailer.set_plaintext_content("Hello, this is an example email from MailerSend", mail_body)
-mailer.set_reply_to(reply_to, mail_body)
-
-# Send the email
-mailer.send(mail_body)
-
-print(mailer)
-
-breakpoint
+try:
+    message = service.users().messages().send(userId='me', body=message).execute()
+    print(f"Message sent! Message ID: {message['id']}")
+except Exception as e:
+    print(f"Error sending message: {e}")
