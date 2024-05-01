@@ -74,6 +74,8 @@ def signup_post():
     password = request.form.get("password")
     repass = request.form.get("repass")
     name = request.form.get("name")
+    email = request.form.get("email")
+    mobile = request.form.get("mobile")
     roomid = request.form.get("roomid")
     roompass = request.form.get("roompass")
 
@@ -99,6 +101,11 @@ def signup_post():
         flash("User already exists")
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
+    
+    if '@' not in email:
+        flash("Enter valid E-mail")
+        flash("alert-danger")
+        return redirect(url_for("auth.signup"))       
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(
@@ -107,6 +114,8 @@ def signup_post():
         roomid=roomid,
         password=generate_password_hash(password, method="pbkdf2:sha256"),
         roomadm="",
+        email=email,
+        mobile=mobile,
         admin="",
     )
 

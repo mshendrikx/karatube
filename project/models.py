@@ -9,6 +9,8 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(1000))
     roomadm = db.Column(db.String(1))
     admin = db.Column(db.String(1))
+    email = db.Column(db.String(100))
+    mobile = db.Column(db.String(30))
 
 
 class Song(db.Model):
