@@ -1,7 +1,6 @@
 import musicbrainzngs
 import subprocess
 import requests
-import re
 import os
 
 from youtubesearchpython import VideosSearch

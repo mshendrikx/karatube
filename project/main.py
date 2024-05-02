@@ -3,7 +3,6 @@ import qrcode
 import io
 import base64
 
-from PIL import Image
 from urllib.request import urlretrieve
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash

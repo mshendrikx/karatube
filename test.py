@@ -1,28 +1,32 @@
+from mailjet_rest import Client
 import os
-import pickle
-import google.auth
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
 
-creds = None
-if os.path.exists('token.pickle'):
-    with open('token.pickle', 'rb') as token:
-        creds = pickle.load(token)
-if not creds or not creds.valid:
-    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', ['https://www.googleapis.com/auth/gmail.compose'])
-    creds = flow.run_local_server(port=0)
-    with open('token.pickle', 'wb') as token:
-        pickle.dump(creds, token)
+api_key = 'c847b4f2ee15b0ac5ae31d7d0943e4d0'
+api_secret = '23bffef98a23819a8e50a040aacd1092'
 
-service = build('gmail', 'v1', credentials=creds)
+#api_key = '49421fab95c47aac60a502b82cb36e3a'
+#api_secret = '504c74f9068d61b20e8d910b15222e49'
 
-message = {
-    'raw': 'base64-encoded email content'
+mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+data = {
+  'Messages': [
+    {
+      "From": {
+        "Email": "karatubebr@gmail.com",
+        "Name": "Karatube"
+      },
+      "To": [
+        {
+          "Email": "mauricio.servatius@gmail.com",
+          "Name": "Maurício"
+        }
+      ],
+      "Subject": "My first Mailjet Email!",
+      "TextPart": "Greetings from Mailjet!",
+      "HTMLPart": "<h3>Dear passenger 1, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!</h3><br />May the delivery force be with you!"
+    }
+  ]
 }
-
-try:
-    message = service.users().messages().send(userId='me', body=message).execute()
-    print(f"Message sent! Message ID: {message['id']}")
-except Exception as e:
-    print(f"Error sending message: {e}")
+result = mailjet.send.create(data=data)
+print (result.status_code)
+print (result.json())
