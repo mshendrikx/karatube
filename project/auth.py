@@ -91,6 +91,24 @@ def signup_post():
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
+    if "@" not in email:
+        flash("Enter valid E-mail")
+        flash("alert-danger")
+        return redirect(url_for("auth.signup"))
+
+    user = User.query.filter_by(
+        email=email
+    ).first()  # if this returns a user, then the email already exists in database
+
+    if (
+        user
+    ):  # if a user is found, we want to redirect back to signup page so user can try again
+        flash("E-mali already registred")
+        flash("alert-danger")
+        return redirect(url_for("auth.signup"))
+
+    user = None
+
     user = User.query.filter_by(
         id=userid
     ).first()  # if this returns a user, then the email already exists in database
@@ -101,11 +119,6 @@ def signup_post():
         flash("User already exists")
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
-    
-    if '@' not in email:
-        flash("Enter valid E-mail")
-        flash("alert-danger")
-        return redirect(url_for("auth.signup"))       
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(
@@ -123,7 +136,7 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    message = 'User ' + str(userid) + ' created, please login'
+    message = "User " + str(userid) + " created, please login"
 
     flash(message)
     flash("alert-success")
