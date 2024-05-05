@@ -327,19 +327,10 @@ def recover_email(user, password):
     
     # Example usage with a custom sender name
     sender_name = "KaraTube"
-    sender_email = "karatube@hendrikx.com.br"
+    sender_email = os.environ['KARATUBE_EMAIL']
     recipient_email = user.email
-    subject = "KaraTube Login Data"
-    text_content = 'User: ' + str(user.id) + '\n' + 'Pass: ' + str(password)
-#    html_content = '<html><body>'
-#    html_content += '</body></html>'
-#    html_content = """
-#    <html>
-#      <body>
-#        <p>This is an <b>HTML</b> email sent from Python.</p>
-#      </body>
-#    </html>
-#    """  # Optional HTML content
-#
-    send_email(sender_name, sender_email, recipient_email, subject, text_content)
+    subject = "KaraTube Login"
+    text_content = 'User: ' + str(user.id) + '\n' + 'Password: ' + str(password)
+
+    return send_email(sender_name, sender_email, recipient_email, subject, text_content)
 
