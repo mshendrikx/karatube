@@ -176,7 +176,7 @@ def recoverlogin_post():
         flash("E-mail not exist in database.")
         flash("alert-danger")
     else:
-        password = os.urandom(8).hex()
+        password = os.urandom(5).hex()
         if recover_email(user, password):
             user.password = generate_password_hash(password, method="pbkdf2:sha256")
             db.session.commit()
