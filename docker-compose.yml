@@ -1,7 +1,5 @@
-version: '3.3'
-
 networks:
-  mauricio:
+  karatube:
 
 services:
   karatube:
@@ -15,5 +13,5 @@ services:
     ports:
       - 7003:7003
     networks:
-      - mauricio
+      - karatube
     restart: unless-stopped

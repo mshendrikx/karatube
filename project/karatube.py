@@ -2,7 +2,10 @@ import musicbrainzngs
 import subprocess
 import requests
 import os
+import smtplib
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch
 from pathlib import Path
 from .models import User, Song, Queue, Config
@@ -281,3 +284,62 @@ def check_video(youtubeid):
         return True
     else:
         return False
+
+def create_message(sender_name, sender_email, recipient, subject, text_content, html_content=None):
+    message = MIMEMultipart("alternative")
+    message["From"] = sender_name + " <" + sender_email + ">"  # Set sender name and email
+    message["To"] = recipient
+    message["Subject"] = subject
+
+    # Add plain text part
+    part1 = MIMEText(text_content, "plain")
+    message.attach(part1)
+
+    # Add HTML part (optional)
+    if html_content:
+        part2 = MIMEText(html_content, "html")
+        message.attach(part2)
+
+    return message
+
+def send_email(sender_name, sender_email, recipient, subject, text_content, html_content=None, smtp_server="localhost", smtp_port=25):
+    message = create_message(sender_name, sender_email, recipient, subject, text_content, html_content)
+
+    try:
+        # Connect to the SMTP server (modify server/port as needed)
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            # Start TLS encryption if required by Postfix configuration
+            if server.has_extn("STARTTLS"):
+                server.starttls()
+
+            # Authenticate if required (check Postfix configuration)
+            if server.has_extn("AUTH"):
+                # Replace with your credentials
+                server.login("your_username", "your_password")
+
+            server.sendmail(sender_email, recipient, message.as_string())
+            
+            return True
+    except:
+        return False            
+
+def recover_email(user, password):
+    
+    # Example usage with a custom sender name
+    sender_name = "KaraTube"
+    sender_email = "karatube@hendrikx.com.br"
+    recipient_email = user.email
+    subject = "KaraTube Login Data"
+    text_content = 'User: ' + str(user.id) + '\n' + 'Pass: ' + str(password)
+#    html_content = '<html><body>'
+#    html_content += '</body></html>'
+#    html_content = """
+#    <html>
+#      <body>
+#        <p>This is an <b>HTML</b> email sent from Python.</p>
+#      </body>
+#    </html>
+#    """  # Optional HTML content
+#
+    send_email(sender_name, sender_email, recipient_email, subject, text_content)
+

@@ -321,7 +321,7 @@ def player():
     qrcodeimg = qr.make_image(fill_color="black", back_color="white")
     # Create an in-memory file-like object
     buffer = io.BytesIO()
-    qrcodeimg.save(buffer, format="PNG")
+    qrcodeimg.save(buffer)
     # Get image data as bytes
     image_bytes = buffer.getvalue()
     signup_img = base64.b64encode(image_bytes).decode("utf-8")
@@ -335,7 +335,7 @@ def player():
     qrcodeimg = qr.make_image(fill_color="black", back_color="white")
     # Create an in-memory file-like object
     buffer = io.BytesIO()
-    qrcodeimg.save(buffer, format="PNG")
+    qrcodeimg.save(buffer)
     # Get image data as bytes
     image_bytes = buffer.getvalue()
     login_img = base64.b64encode(image_bytes).decode("utf-8")
