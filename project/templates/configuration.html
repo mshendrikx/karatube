@@ -6,8 +6,8 @@
     <form action="{{ url_for('main.configuration') }}" method="POST">
         <div class="input-group">
             <label for="lastfm">LAST.FM API Key:&nbsp;&nbsp;</label>
-            <input type="text" class="form-control" id="lastfm" name="lastfm" value="{{ config.lastfm }}">
-            <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">&nbsp;&nbsp;Get API
+            <input type="text" class="form-control" id="lastfm" name="lastfm" value="{{ config.lastfm }}">&nbsp;&nbsp;
+            <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">Get API
                 Key</a>
         </div>
         <div class="input-group">

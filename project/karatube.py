@@ -302,7 +302,7 @@ def create_message(sender_name, sender_email, recipient, subject, text_content, 
 
     return message
 
-def send_email(sender_name, sender_email, recipient, subject, text_content, html_content=None, smtp_server="localhost", smtp_port=25):
+def send_email(sender_name, sender_email, recipient, subject, text_content, html_content=None, smtp_server="89.117.74.15", smtp_port=25):
     message = create_message(sender_name, sender_email, recipient, subject, text_content, html_content)
 
     try:
