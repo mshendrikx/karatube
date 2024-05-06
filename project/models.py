@@ -11,7 +11,6 @@ class User(UserMixin, db.Model):
     admin = db.Column(db.String(1))
     email = db.Column(db.String(100))
     mobile = db.Column(db.String(30))
-    recover = db.Column(db.String(1))
 
 
 class Song(db.Model):

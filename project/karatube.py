@@ -88,12 +88,13 @@ def video_delete(videoid):
     rc = subprocess.call(cmd)
     if rc != 0:
         rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
-    
+
     filename = APP_PATH + THUMBS_DIR + str(videoid) + ".jpg"
     cmd = ["rm", filename]
     rc = subprocess.call(cmd)
-    
+
     return True
+
 
 def queue_get(roomid):
 
@@ -175,7 +176,7 @@ def musicbrainz_search(search_arg):
         result = musicbrainzngs.search_recordings(query=search_arg)
         for record in result["recording-list"]:
             music_data = MusicData()
-            music_data.song = record["title"] 
+            music_data.song = record["title"]
             music_data.artist = record["artist-credit-phrase"]
             tracks.append(music_data)
     except:
@@ -183,37 +184,43 @@ def musicbrainz_search(search_arg):
 
     return tracks
 
+
 def is_karaoke(title):
-    
-    return ('karaoke' in title.lower() or 'backtracking' in title.lower() or 'instrumental' in title.lower())
+
+    return (
+        "karaoke" in title.lower()
+        or "backtracking" in title.lower()
+        or "instrumental" in title.lower()
+    )
+
 
 def youtube_search(search_arg):
 
-    search_term = search_arg.replace('&', ' ')
-    search_term = search_term.replace('/', ' ')
-    search_term = search_term.replace('.', ' ')
-    search_term = search_term + ' karaoke'
-    videos_search = VideosSearch(search_term, region='BR', language='pt')
+    search_term = search_arg.replace("&", " ")
+    search_term = search_term.replace("/", " ")
+    search_term = search_term.replace(".", " ")
+    search_term = search_term + " karaoke"
+    videos_search = VideosSearch(search_term, region="BR", language="pt")
     video_list = []
 
     count = 0
     while count < 3:
-        for video in videos_search.resultComponents: 
-            try:   
-                if video['type'] != 'video':
+        for video in videos_search.resultComponents:
+            try:
+                if video["type"] != "video":
                     continue
-                if not is_karaoke(video['title']):
+                if not is_karaoke(video["title"]):
                     continue
                 youtube_video = YoutubeVideos()
-                youtube_video.id = video['id']
-                youtube_video.thumb = video['thumbnails'][0]['url'].split("?")[0]
-                youtube_video.description = video['title']
+                youtube_video.id = video["id"]
+                youtube_video.thumb = video["thumbnails"][0]["url"].split("?")[0]
+                youtube_video.description = video["title"]
                 video_list.append(youtube_video)
             except:
                 continue
         videos_search.next()
         count += 1
-    
+
     return video_list
 
 
@@ -285,9 +292,14 @@ def check_video(youtubeid):
     else:
         return False
 
-def create_message(sender_name, sender_email, recipient, subject, text_content, html_content=None):
+
+def create_message(
+    sender_name, sender_email, recipient, subject, text_content, html_content=None
+):
     message = MIMEMultipart("alternative")
-    message["From"] = sender_name + " <" + sender_email + ">"  # Set sender name and email
+    message["From"] = (
+        sender_name + " <" + sender_email + ">"
+    )  # Set sender name and email
     message["To"] = recipient
     message["Subject"] = subject
 
@@ -302,8 +314,20 @@ def create_message(sender_name, sender_email, recipient, subject, text_content, 
 
     return message
 
-def send_email(sender_name, sender_email, recipient, subject, text_content, html_content=None, smtp_server="89.117.74.15", smtp_port=25):
-    message = create_message(sender_name, sender_email, recipient, subject, text_content, html_content)
+
+def send_email(
+    sender_name,
+    sender_email,
+    recipient,
+    subject,
+    text_content,
+    html_content=None,
+    smtp_server="localhost",
+    smtp_port=25,
+):
+    message = create_message(
+        sender_name, sender_email, recipient, subject, text_content, html_content
+    )
 
     try:
         # Connect to the SMTP server (modify server/port as needed)
@@ -318,19 +342,27 @@ def send_email(sender_name, sender_email, recipient, subject, text_content, html
                 server.login("your_username", "your_password")
 
             server.sendmail(sender_email, recipient, message.as_string())
-            
+
             return True
     except:
-        return False            
+        return False
+
 
 def recover_email(user, password):
-    
+
     # Example usage with a custom sender name
     sender_name = "KaraTube"
-    sender_email = os.environ['KARATUBE_EMAIL']
+    sender_email = os.environ["KARATUBE_EMAIL"]
     recipient_email = user.email
     subject = "KaraTube Login"
-    text_content = 'User: ' + str(user.id) + '\n' + 'Password: ' + str(password)
+    text_content = "User: " + str(user.id) + "\n" + "Password: " + str(password)
 
-    return send_email(sender_name, sender_email, recipient_email, subject, text_content)
-
+    return send_email(
+        sender_name=sender_name,
+        sender_email=sender_email,
+        recipient=recipient_email,
+        subject=subject,
+        text_content=text_content,
+        smtp_server=os.environ["SMTP_SERVER"],
+        smtp_port=os.environ["SMTP_PORT"],
+    )
