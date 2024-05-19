@@ -188,7 +188,8 @@ def musicbrainz_search(search_arg):
 def is_karaoke(title):
 
     return (
-        "karaoke" in title.lower()
+        "karaok" in title.lower()
+        or "videok" in title.lower()
         or "backtracking" in title.lower()
         or "instrumental" in title.lower()
     )
@@ -204,7 +205,7 @@ def youtube_search(search_arg):
     video_list = []
 
     count = 0
-    while count < 3:
+    while count < 5:
         for video in videos_search.resultComponents:
             try:
                 if video["type"] != "video":

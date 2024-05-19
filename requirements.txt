@@ -1,6 +1,7 @@
 flask
 flask-login
 flask-sqlalchemy
+Flask-Babel
 yt-dlp
 mysql-connector
 pymysql
