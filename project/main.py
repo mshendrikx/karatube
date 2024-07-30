@@ -20,6 +20,7 @@ from .karatube import (
     queue_get,
     check_video,
     musicbrainz_search,
+    update_yt_dlp,
 )
 
 
@@ -171,10 +172,19 @@ def youtubedl(artist, song, id, image, singer):
             if youtube_download(id):
                 result = True
             else:
-                video_delete(id)
-                Song.query.filter_by(youtubeid=id).delete()
-                db.session.commit()
-                result = False
+                yt_dlp_update = False
+                if update_yt_dlp():
+                    yt_dlp_update = True
+                    
+                if yt_dlp_update == True:
+                    if youtube_download(id):
+                        result = True
+                    else:
+                        video_delete(id)
+                        Song.query.filter_by(youtubeid=id).delete()
+                        db.session.commit()                
+                        result = False
+                        
             if result == True:
                 image_url = "https://i.ytimg.com/vi/" + str(id) + "/" + image
                 file_name = (

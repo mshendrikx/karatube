@@ -367,3 +367,10 @@ def recover_email(user, password):
         smtp_server=os.environ["SMTP_SERVER"],
         smtp_port=os.environ["SMTP_PORT"],
     )
+
+def update_yt_dlp():
+    try:
+        subprocess.run(["pip3", "install", "--upgrade", "yt-dlp"], check=True)
+        return True
+    except subprocess.CalledProcessError as e:
+        return False
