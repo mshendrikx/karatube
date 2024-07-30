@@ -197,9 +197,10 @@ def is_karaoke(title):
 
 def youtube_search(search_arg):
 
-    search_term = search_arg.replace("&", " ")
-    search_term = search_term.replace("/", " ")
-    search_term = search_term.replace(".", " ")
+    replaces = ["&", "/", "."]
+    
+    for replace in replaces:
+        search_term = search_arg.replace(replace, " ")
     search_term = search_term + " karaoke"
     videos_search = VideosSearch(search_term, region="BR", language="pt")
     video_list = []
