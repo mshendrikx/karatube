@@ -10,3 +10,5 @@ musicbrainzngs
 qrcode
 youtube-search-python
 pytz
+pytube
+pytubefix

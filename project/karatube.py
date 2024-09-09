@@ -3,7 +3,10 @@ import subprocess
 import requests
 import os
 import smtplib
+import re
 
+from pytubefix import YouTube 
+#from pytube import cipher
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch
@@ -15,6 +18,7 @@ APP_PATH = str(Path(__file__).parent.absolute())
 YT_BASE_URL = "https://www.youtube.com/watch?v="
 SONGS_DIR = "/static/songs/"
 THUMBS_DIR = "/static/thumbs/"
+TOKEN_DIR = "/token/"
 
 musicbrainzngs.set_useragent(
     "python-musicbrainzngs-example",
@@ -22,14 +26,12 @@ musicbrainzngs.set_useragent(
     "https://github.com/alastair/python-musicbrainzngs/",
 )
 
-
 class PlayerData:
     singer = ""
     song = ""
     next_singer = ""
     next_song = ""
     video_url = ""
-
 
 class SongQueue:
     id = 0
@@ -41,14 +43,12 @@ class SongQueue:
     song = ""
     status = ""
 
-
 class MusicData:
     artist = ""
     song = ""
 
     def get_display_data(self):
         return {"artist": self.artist, "song": self.song}
-
 
 class YoutubeVideos:
     id = ""
@@ -67,19 +67,28 @@ class YoutubeVideos:
 
 def youtube_download(videoid):
 
+##    filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
+##    download_url = YT_BASE_URL + str(videoid)
+##    cmd = ["yt-dlp", "-f", "18", "-o", filename, download_url]
+##
+##    rc = subprocess.call(cmd)
+##    if rc != 0:
+##        rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
+##    if rc == 0:
+##        return True
+##    else:
+##        return False
+
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
     download_url = YT_BASE_URL + str(videoid)
-    cmd = ["yt-dlp", "-f", "18", "-o", filename, download_url]
-
-    rc = subprocess.call(cmd)
-    if rc != 0:
-        rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
-    if rc == 0:
+    token_file = APP_PATH + TOKEN_DIR + 'po_token'
+    try:
+        YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
         return True
-    else:
+    except Exception as error:
+        print(error)
         return False
-
-
+        
 def video_delete(videoid):
 
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
