@@ -3,8 +3,11 @@ import subprocess
 import requests
 import os
 import smtplib
+import socks
+import socket
 import re
 
+from fp.fp import FreeProxy
 from pytubefix import YouTube 
 #from pytube import cipher
 from email.mime.multipart import MIMEMultipart
@@ -67,23 +70,17 @@ class YoutubeVideos:
 
 def youtube_download(videoid):
 
-##    filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
-##    download_url = YT_BASE_URL + str(videoid)
-##    cmd = ["yt-dlp", "-f", "18", "-o", filename, download_url]
-##
-##    rc = subprocess.call(cmd)
-##    if rc != 0:
-##        rc = subprocess.call(cmd)  # retry once. Seems like this can be flaky
-##    if rc == 0:
-##        return True
-##    else:
-##        return False
-
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
     download_url = YT_BASE_URL + str(videoid)
     token_file = APP_PATH + TOKEN_DIR + 'po_token'
     try:
+        #proxy = FreeProxy(https=True).get()
+        #proxy = proxy.split('//')[1]
+        #proxy = proxy.split(':')
+        #socks.set_default_proxy(socks.HTTP, proxy[0], int(proxy[1]))
+        #socket.socket = socks.socksocket
         YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
+        #YouTube(download_url).streams.first().download(filename=filename)
         return True
     except Exception as error:
         print(error)
