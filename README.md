@@ -1,2 +1,2 @@
 # KaraTube
-Karaoke using Youtube videos
+Karaoke using Youtube videos. Download
