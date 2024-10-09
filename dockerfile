@@ -1,11 +1,8 @@
 # Use Ubuntu 22.04 base image
 FROM ubuntu:22.04
 
-# Update package lists
-RUN apt-get update
-
-# Install software
-RUN apt-get install -y python3-pip nano apt-transport-https curl 
+# Install packages
+RUN apt-get update && apt-get install -y python3-pip apt-transport-https nano curl
 
 WORKDIR /app
 
