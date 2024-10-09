@@ -3,13 +3,13 @@ import subprocess
 import requests
 import os
 import smtplib
-import socks
-import socket
-import re
+#import socks
+#import socket
+#import re
 
-from fp.fp import FreeProxy
+#from fp.fp import FreeProxy
 from pytubefix import YouTube, helpers
-from requests.adapters import HTTPAdapter
+#from requests.adapters import HTTPAdapter
 #from pytube import cipher
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

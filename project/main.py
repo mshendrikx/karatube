@@ -350,7 +350,6 @@ def player():
         "player.html", player_config=config, signup_img=signup_img, login_img=login_img
     )
 
-
 @main.route("/screenupdate")
 @login_required
 def screenupdate():

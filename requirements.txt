@@ -13,3 +13,4 @@ pytubefix
 free-proxy
 PySocks
 pysocket
+Pillow
