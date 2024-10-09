@@ -8,7 +8,8 @@ import socket
 import re
 
 from fp.fp import FreeProxy
-from pytubefix import YouTube 
+from pytubefix import YouTube, helpers
+from requests.adapters import HTTPAdapter
 #from pytube import cipher
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -72,18 +73,17 @@ def youtube_download(videoid):
 
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
     download_url = YT_BASE_URL + str(videoid)
-    token_file = APP_PATH + TOKEN_DIR + 'po_token'
+    #token_file = APP_PATH + TOKEN_DIR + 'po_token'
     try:
-        #proxy = FreeProxy(https=True).get()
-        #proxy = proxy.split('//')[1]
-        #proxy = proxy.split(':')
-        #socks.set_default_proxy(socks.HTTP, proxy[0], int(proxy[1]))
-        #socket.socket = socks.socksocket
-        YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
-        #YouTube(download_url).streams.first().download(filename=filename)
+        #proxy_handler = {
+        #    "socks5": "89.117.74.15:9050"
+        #}
+        #helpers.install_proxy(proxy_handler)
+        YouTube(download_url).streams.first().download(filename=filename)
+        #YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
         return True
     except Exception as error:
-        print(error)
+        print(error)   
         return False
         
 def video_delete(videoid):

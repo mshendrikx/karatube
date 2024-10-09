@@ -12,3 +12,4 @@ debug.py
 test.py
 test2.py
 credentials.json
+build.sh

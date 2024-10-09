@@ -5,9 +5,7 @@ FROM ubuntu:22.04
 RUN apt-get update
 
 # Install software
-RUN apt-get install -y python3-pip nano tor apt-transport-https curl privoxy
-
-RUN  echo "forward-socks5 / localhost:9050 ." >> /etc/privoxy/config
+RUN apt-get install -y python3-pip nano apt-transport-https curl 
 
 WORKDIR /app
 

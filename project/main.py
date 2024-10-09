@@ -169,7 +169,8 @@ def youtubedl(artist, song, id, image, singer):
             result = False
 
         if result == True:
-            if youtube_download(id):
+            downloaded = youtube_download(id)
+            if downloaded == True:
                 result = True
             else:
                 video_delete(id)
@@ -190,7 +191,9 @@ def youtubedl(artist, song, id, image, singer):
                 flash("Youtube video downloaded and added to queue")
                 flash("alert-success")
             else:
-                flash("Fail to download Youtube video")
+                #flash_message = "Fail to download Youtube video - " + downloaded
+                flash_message = "Fail to download Youtube video - "
+                flash(flash_message)
                 flash("alert-danger")
 
     return redirect(url_for("main.addqueue", youtubeid=id, userid=singer))
