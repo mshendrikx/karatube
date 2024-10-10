@@ -116,7 +116,14 @@ def queue_get(roomid):
         if queue_item.status == "P":
             status_int = 0
         elif queue_item.status == "D":
-            status_int = 2
+            if check_video(youtubeid=queue_item.youtubeid):
+                queue_item.status = ""
+                song = Song.query.filter_by(youtubeid=queue_item.youtubeid)
+                song.downloaded = 1
+                db.session.commit()
+                status_int = 1
+            else:
+                status_int = 2
         else:
             status_int = 1
 
