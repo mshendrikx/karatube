@@ -652,7 +652,7 @@ def addroom():
     user.roomid = current_user.roomid
      
     if request.form["action"] == "Admin":
-        roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=user.id)
+        roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=user.id).first()
         if roomadm:
             flash("User alredy in room.")
             flash("alert-warning")         
