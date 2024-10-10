@@ -424,7 +424,7 @@ def queueupdate():
 
     try:
         for queue in queue_list:
-            if queue.status == "P":
+            if queue.status != "":
                 continue
             queue_next = Queue.query.filter_by(id=queue.id).first()
             if queue_next:
