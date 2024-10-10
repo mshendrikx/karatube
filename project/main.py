@@ -150,6 +150,7 @@ def youtube(artist, song, singer):
     search_arg = artist + " " + song
     youtube_videos = youtube_search(search_arg)
     videos = [video.get_display_data() for video in youtube_videos]
+    song.replace("?", "")
 
     return render_template(
         "youtube.html", videos=videos, artist=artist, song=song, singer=singer
