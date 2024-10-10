@@ -104,6 +104,14 @@ def profile_post():
 @login_required
 def musics():
     song_list = Song.query.order_by("artist", "name")
+    songs_check = song_list.filter_by(downloaded=0)
+    for song_check in songs_check:
+        if check_video(youtubeid=song_check.youtubeid):
+             song_check.downloaded = 1
+             queue = Queue.query.filter_by(youtubeid=song_check.youtubeid)
+             for queue_item in queue:
+                queue_item.status = ""
+             db.session.commit()
     user_sel = []
     user_sel.append(current_user)
     user_list = User.query.filter_by(roomid=current_user.roomid)
@@ -356,6 +364,8 @@ def screenupdate():
         player_data = PlayerData()
         queue = queue_get(roomid=current_user.roomid)
         for queue_item in queue:
+            if queue_item.status == "D":
+                continue
             if first:
                 player_data.singer = queue_item.singer
                 player_data.song = queue_item.song
