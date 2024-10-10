@@ -364,20 +364,20 @@ def screenupdate():
         player_data = PlayerData()
         queue = queue_get(roomid=current_user.roomid)
         for queue_item in queue:
-            if queue_item.status == "D":
-                continue
+
             if first:
-                player_data.singer = queue_item.singer
-                player_data.song = queue_item.song
-                player_data.artist = queue_item.artist
-                player_data.video_url = (
-                    "/static/songs/" + str(queue_item.youtubeid) + ".mp4"
-                )
-                player_data.queueid = str(queue_item.id)
-                if queue_item.status == "":
-                    queue_update = Queue.query.filter_by(id=queue_item.id).first()
-                    queue_update.status = "P"
-                    db.session.commit()
+                if queue_item.status != "D":                
+                    player_data.singer = queue_item.singer
+                    player_data.song = queue_item.song
+                    player_data.artist = queue_item.artist
+                    player_data.video_url = (
+                        "/static/songs/" + str(queue_item.youtubeid) + ".mp4"
+                    )
+                    player_data.queueid = str(queue_item.id)
+                    if queue_item.status == "":
+                        queue_update = Queue.query.filter_by(id=queue_item.id).first()
+                        queue_update.status = "P"
+                        db.session.commit()
                 first = False
             else:
                 player_data.next_singer = queue_item.singer
