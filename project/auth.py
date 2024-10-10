@@ -47,7 +47,7 @@ def login_post():
     if user.admin == "X":
         user.roomadm = "X"
     else:
-        roomadm = Roomadm.query.filter_by(roomid=room.roomid, userid=user.id).first
+        roomadm = Roomadm.query.filter_by(roomid=room.roomid, userid=user.id).first()
         try:
             if roomadm.roomid == user.roomid:
                 user.roomadm = "X"

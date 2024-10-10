@@ -49,7 +49,8 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.player') }}">Player</a>
-                    </li> {% endif %}
+                    </li> 
+                    {% endif %}
                     {% if current_user.admin == 'X' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.configuration') }}">Configuration</a>
