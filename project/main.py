@@ -213,7 +213,15 @@ def addqueue(youtubeid, userid):
                         flash("There is no video file, download again")
                         flash("alert-danger")
                     else:
-                        flash("Video is set to download, wait and add to queue later")
+                        new_queue = Queue(
+                            roomid=current_user.roomid,
+                            userid=userid,
+                            youtubeid=youtubeid,
+                            status="D",
+                        )
+                        db.session.add(new_queue)
+                        db.session.commit()
+                        flash("Downloading video, wait finish")
                         flash("alert-warning")                        
     except:
         flash("Fail to add song to queue")
