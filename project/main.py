@@ -161,7 +161,7 @@ def youtubedl(artist, song, id, image, singer):
         flash("alert-warning")
     else:
         try:
-            new_song = Song(youtubeid=id, name=song, artist=artist)
+            new_song = Song(youtubeid=id, name=song, artist=artist, downloaded=0)
             db.session.add(new_song)
             db.session.commit()
             result = True
@@ -169,32 +169,15 @@ def youtubedl(artist, song, id, image, singer):
             result = False
 
         if result == True:
-            downloaded = youtube_download(id)
-            if downloaded == True:
-                result = True
-            else:
-                video_delete(id)
-                Song.query.filter_by(youtubeid=id).delete()
-                db.session.commit()                
-                result = False
 
-            if result == True:
-                image_url = "https://i.ytimg.com/vi/" + str(id) + "/" + image
-                file_name = (
-                    str(Path(__file__).parent.absolute())
-                    + "/static/thumbs/"
-                    + str(id)
-                    + ".jpg"
-                )
-                urlretrieve(image_url, file_name)
-
-                flash("Youtube video downloaded and added to queue")
-                flash("alert-success")
-            else:
-                #flash_message = "Fail to download Youtube video - " + downloaded
-                flash_message = "Fail to download Youtube video - "
-                flash(flash_message)
-                flash("alert-danger")
+            image_url = "https://i.ytimg.com/vi/" + str(id) + "/" + image
+            file_name = (
+                str(Path(__file__).parent.absolute())
+                + "/static/thumbs/"
+                + str(id)
+                + ".jpg"
+            )
+            urlretrieve(image_url, file_name)
 
     return redirect(url_for("main.addqueue", youtubeid=id, userid=singer))
 
@@ -222,10 +205,16 @@ def addqueue(youtubeid, userid):
                 flash("Song added to queue")
                 flash("alert-success")
             else:
-                Song.query.filter_by(youtubeid=youtubeid).delete()
-                db.session.commit()
-                flash("There is no video file, download again")
-                flash("alert-danger")
+                add_song = Song.query.filter_by(youtubeid=youtubeid).first()
+                if add_song:
+                    if add_song.downloaded == 1:
+                        add_song.delete()
+                        db.session.commit()
+                        flash("There is no video file, download again")
+                        flash("alert-danger")
+                    else:
+                        flash("Video is set to download, wait and add to queue later")
+                        flash("alert-warning")                        
     except:
         flash("Fail to add song to queue")
         flash("alert-danger")

@@ -38,10 +38,12 @@
             {% for song in songs %}
             <tr>
                 <td>
+                    {% if song.downloaded == 1 %}
                     <a class="clickable-image" id="{{ song.youtubeid }}"
                         href="{{ url_for('main.addqueue', youtubeid=song.youtubeid, userid=current_user.id) }}">
                         <img src="{{ url_for('static', filename='images/icon-addlist.png') }}" height="24" width="24">
                     </a>
+                    {% endif %}
                 </td>
                 <td>
                     <a href="{{ url_for('main.miniplayer', youtubeid=song.youtubeid) }}">

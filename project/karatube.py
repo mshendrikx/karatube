@@ -73,7 +73,6 @@ def youtube_download(videoid):
 
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
     download_url = YT_BASE_URL + str(videoid)
-    #token_file = APP_PATH + TOKEN_DIR + 'po_token'
     try:
         #proxy_handler = {
         #    "socks5": "89.117.74.15:9050"

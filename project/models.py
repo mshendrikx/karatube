@@ -17,6 +17,7 @@ class Song(db.Model):
     youtubeid = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100))
     artist = db.Column(db.String(100))
+    downloaded = db.Column(db.Integer)
 
 
 class Room(db.Model):
