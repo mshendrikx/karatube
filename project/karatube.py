@@ -115,6 +115,8 @@ def queue_get(roomid):
             counter[queue_item.userid] = 1
         if queue_item.status == "P":
             status_int = 0
+        elif queue_item.status == "D":
+            status_int = 2
         else:
             status_int = 1
 
