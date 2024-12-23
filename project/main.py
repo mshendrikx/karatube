@@ -326,7 +326,9 @@ def player():
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
-    roompass = os.urandom(12).hex()
+    roompass = os.environ.get("ROOM_PASS")
+    if roompass == None:
+        roompass = os.urandom(12).hex()
     room.password = generate_password_hash(roompass, method="pbkdf2:sha256")
     db.session.commit()
 
@@ -809,3 +811,43 @@ def changeroom_post():
         db.session.commit()
 
     return redirect(url_for("main.profile"))
+
+@main.route("/barcode")
+@login_required
+def barcode():
+
+    roompass = os.environ.get("ROOM_PASS")
+    if roompass == None:
+        flash("Dinamically barcode is not suported.")
+        flash("alert-danger")
+
+    qrcode_data = str(current_user.roomid) + "§" + str(roompass)
+    # Create a QR code object with desired error correction level
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+    qr.add_data(qrcode_data)
+    qr.make(fit=True)
+    qrcodeimg = qr.make_image(fill_color="black", back_color="white")
+    # Create an in-memory file-like object
+    buffer = io.BytesIO()
+    qrcodeimg.save(buffer)
+    # Get image data as bytes
+    image_bytes = buffer.getvalue()
+    signup_img = base64.b64encode(image_bytes).decode("utf-8")
+
+    # qrcode_data = str(os.environ.get("KARATUBE_URL")) + "/login"
+    qrcode_data = str(os.environ.get("KARATUBE_URL"))
+    # Create a QR code object with desired error correction level
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
+    qr.add_data(qrcode_data)
+    qr.make(fit=True)
+    qrcodeimg = qr.make_image(fill_color="black", back_color="white")
+    # Create an in-memory file-like object
+    buffer = io.BytesIO()
+    qrcodeimg.save(buffer)
+    # Get image data as bytes
+    image_bytes = buffer.getvalue()
+    login_img = base64.b64encode(image_bytes).decode("utf-8")
+
+    return render_template(
+        "barcode.html", signup_img=signup_img, login_img=login_img
+    )
