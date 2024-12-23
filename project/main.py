@@ -34,6 +34,7 @@ class PlayerData:
     artist = ""
     queueid = ""
 
+LOCK_QUEUE = False
 
 main = Blueprint("main", __name__)
 
@@ -196,6 +197,13 @@ def youtubedl(artist, song, id, image, singer):
 @login_required
 def addqueue(youtubeid, userid):
 
+    global LOCK_QUEUE
+
+    while LOCK_QUEUE == True:
+        time.sleep(1)
+
+    LOCK_QUEUE = True
+
     try:
         queue_check = Queue.query.filter_by(
             userid=current_user.id, youtubeid=youtubeid, roomid=current_user.roomid
@@ -231,6 +239,8 @@ def addqueue(youtubeid, userid):
     except:
         flash("Fail to add song to queue")
         flash("alert-danger")
+
+    LOCK_QUEUE = False
 
     return redirect(url_for("main.musics"))
 

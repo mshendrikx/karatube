@@ -135,15 +135,6 @@ def queue_add(roomid, userid, youtubeid, status):
             counter[queue_item.userid] = 1
         if queue_item.status == "P":
             status_int = 0
-        elif queue_item.status == "D":
-            if check_video(youtubeid=queue_item.youtubeid):
-                queue_item.status = ""
-                song = Song.query.filter_by(youtubeid=queue_item.youtubeid)
-                song.downloaded = 1
-                db.session.commit()
-                status_int = 1
-            else:
-                status_int = 2
         else:
             status_int = 1
 
@@ -181,7 +172,7 @@ def queue_get(roomid):
         elif queue_item.status == "D":
             if check_video(youtubeid=queue_item.youtubeid):
                 queue_item.status = ""
-                song = Song.query.filter_by(youtubeid=queue_item.youtubeid)
+                song = Song.query.filter_by(youtubeid=queue_item.youtubeid).first()
                 song.downloaded = 1
                 db.session.commit()
                 status_int = 1
@@ -199,8 +190,6 @@ def queue_get(roomid):
     queue_array = []
 
     for queue_item in reorder_array:
-        # if queue_item.status_int == 0:
-        #    continue
         try:
             user = User.query.filter_by(id=queue_item[0].userid).first()
             song = Song.query.filter_by(youtubeid=queue_item[0].youtubeid).first()
