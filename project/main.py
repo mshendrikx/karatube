@@ -25,9 +25,6 @@ from .karatube import (
     update_yt_dlp,
 )
 
-BLOCK_QUEUE = False
-
-
 class PlayerData:
     singer = ""
     song = ""
@@ -199,11 +196,6 @@ def youtubedl(artist, song, id, image, singer):
 @login_required
 def addqueue(youtubeid, userid):
 
-    while BLOCK_QUEUE == True:
-        time.sleep(1)
-
-    BLOCK_QUEUE = True
-
     try:
         queue_check = Queue.query.filter_by(
             userid=current_user.id, youtubeid=youtubeid, roomid=current_user.roomid
@@ -213,7 +205,7 @@ def addqueue(youtubeid, userid):
             flash("alert-warning")
         else:
             if check_video(youtubeid=youtubeid):
-                if queue_add(current_user.roomid, current_user.id, youtubeid, ""):
+                if queue_add(current_user.roomid, userid, youtubeid, ""):
                     flash("Song added to queue")
                     flash("alert-success")
                 else:
@@ -229,7 +221,7 @@ def addqueue(youtubeid, userid):
                         flash("alert-danger")
                     else:
                         if queue_add(
-                            current_user.roomid, current_user.id, youtubeid, "D"
+                            current_user.roomid, userid, youtubeid, "D"
                         ):
                             flash("Downloading video, wait finish")
                             flash("alert-warning")
@@ -239,8 +231,6 @@ def addqueue(youtubeid, userid):
     except:
         flash("Fail to add song to queue")
         flash("alert-danger")
-
-    BLOCK_QUEUE = False
 
     return redirect(url_for("main.musics"))
 
