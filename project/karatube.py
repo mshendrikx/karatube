@@ -3,14 +3,16 @@ import subprocess
 import requests
 import os
 import smtplib
-#import socks
-#import socket
-#import re
 
-#from fp.fp import FreeProxy
+# import socks
+# import socket
+# import re
+
+# from fp.fp import FreeProxy
 from pytubefix import YouTube, helpers
-#from requests.adapters import HTTPAdapter
-#from pytube import cipher
+
+# from requests.adapters import HTTPAdapter
+# from pytube import cipher
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch
@@ -30,12 +32,14 @@ musicbrainzngs.set_useragent(
     "https://github.com/alastair/python-musicbrainzngs/",
 )
 
+
 class PlayerData:
     singer = ""
     song = ""
     next_singer = ""
     next_song = ""
     video_url = ""
+
 
 class SongQueue:
     id = 0
@@ -47,12 +51,14 @@ class SongQueue:
     song = ""
     status = ""
 
+
 class MusicData:
     artist = ""
     song = ""
 
     def get_display_data(self):
         return {"artist": self.artist, "song": self.song}
+
 
 class YoutubeVideos:
     id = ""
@@ -74,17 +80,18 @@ def youtube_download(videoid):
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
     download_url = YT_BASE_URL + str(videoid)
     try:
-        #proxy_handler = {
+        # proxy_handler = {
         #    "socks5": "89.117.74.15:9050"
-        #}
-        #helpers.install_proxy(proxy_handler)
+        # }
+        # helpers.install_proxy(proxy_handler)
         YouTube(download_url).streams.first().download(filename=filename)
-        #YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
+        # YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
         return True
     except Exception as error:
-        print(error)   
+        print(error)
         return False
-        
+
+
 def video_delete(videoid):
 
     filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
@@ -97,6 +104,62 @@ def video_delete(videoid):
     filename = APP_PATH + THUMBS_DIR + str(videoid) + ".jpg"
     cmd = ["rm", filename]
     rc = subprocess.call(cmd)
+
+    return True
+
+
+def queue_add(roomid, userid, youtubeid, status):
+
+    try:
+        new_queue = Queue(
+            roomid=roomid,
+            userid=userid,
+            youtubeid=youtubeid,
+            status=status,
+            order=999999,
+        )
+        db.session.add(new_queue)
+        db.session.commit()
+    except:
+        return False
+
+    reorder_array = []
+    counter = {}
+
+    queue = Queue.query.filter_by(roomid=roomid).order_by(Queue.order)
+
+    for queue_item in queue:
+        if queue_item.userid in counter:
+            counter[queue_item.userid] += 1
+        else:
+            counter[queue_item.userid] = 1
+        if queue_item.status == "P":
+            status_int = 0
+        elif queue_item.status == "D":
+            if check_video(youtubeid=queue_item.youtubeid):
+                queue_item.status = ""
+                song = Song.query.filter_by(youtubeid=queue_item.youtubeid)
+                song.downloaded = 1
+                db.session.commit()
+                status_int = 1
+            else:
+                status_int = 2
+        else:
+            status_int = 1
+
+        reorder_array.append(
+            [queue_item, status_int, counter[queue_item.userid], queue_item.order]
+        )
+
+    reorder_array.sort(key=lambda x: (x[1], x[2], x[3]))
+
+    counter = 1
+    for reorder_item in reorder_array:
+        queue_item = reorder_item[0]
+        queue_item.order = counter
+        counter += 1
+
+    db.session.commit()
 
     return True
 
@@ -128,7 +191,7 @@ def queue_get(roomid):
             status_int = 1
 
         reorder_array.append(
-            [queue_item, status_int, counter[queue_item.userid], queue_item.id]
+            [queue_item, status_int, counter[queue_item.userid], queue_item.order]
         )
 
     reorder_array.sort(key=lambda x: (x[1], x[2], x[3]))
@@ -212,7 +275,7 @@ def is_karaoke(title):
 def youtube_search(search_arg):
 
     replaces = ["&", "/", ".", ";", ",", ":", "?"]
-    
+
     for replace in replaces:
         search_term = search_arg.replace(replace, " ")
     search_term = search_term + " karaoke"
@@ -382,6 +445,7 @@ def recover_email(user, password):
         smtp_server=os.environ["SMTP_SERVER"],
         smtp_port=os.environ["SMTP_PORT"],
     )
+
 
 def update_yt_dlp():
     try:

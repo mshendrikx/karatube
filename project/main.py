@@ -2,6 +2,7 @@ import os
 import qrcode
 import io
 import base64
+import time
 
 from urllib.request import urlretrieve
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
@@ -17,11 +18,14 @@ from .karatube import (
     youtube_search,
     youtube_download,
     video_delete,
+    queue_add,
     queue_get,
     check_video,
     musicbrainz_search,
     update_yt_dlp,
 )
+
+BLOCK_QUEUE = False
 
 
 class PlayerData:
@@ -76,11 +80,11 @@ def profile_post():
         flash("alert-danger")
         return redirect(url_for("main.profile"))
 
-    if '@' not in email:
+    if "@" not in email:
         flash("Enter valid E-mail")
         flash("alert-danger")
         return redirect(url_for("main.profile"))
-            
+
     if password != "":
         current_user.password = generate_password_hash(password, method="pbkdf2:sha256")
 
@@ -90,9 +94,9 @@ def profile_post():
 
     if name != "":
         current_user.name = name
-        
+
     current_user.email = email
-    current_user.mobile = mobile        
+    current_user.mobile = mobile
 
     db.session.add(current_user)
     db.session.commit()
@@ -107,11 +111,11 @@ def musics():
     songs_check = song_list.filter_by(downloaded=0)
     for song_check in songs_check:
         if check_video(youtubeid=song_check.youtubeid):
-             song_check.downloaded = 1
-             queue = Queue.query.filter_by(youtubeid=song_check.youtubeid)
-             for queue_item in queue:
+            song_check.downloaded = 1
+            queue = Queue.query.filter_by(youtubeid=song_check.youtubeid)
+            for queue_item in queue:
                 queue_item.status = ""
-             db.session.commit()
+            db.session.commit()
     user_sel = []
     user_sel.append(current_user)
     user_list = User.query.filter_by(roomid=current_user.roomid)
@@ -194,6 +198,12 @@ def youtubedl(artist, song, id, image, singer):
 @main.route("/addqueue/<youtubeid>/<userid>")
 @login_required
 def addqueue(youtubeid, userid):
+
+    while BLOCK_QUEUE == True:
+        time.sleep(1)
+
+    BLOCK_QUEUE = True
+
     try:
         queue_check = Queue.query.filter_by(
             userid=current_user.id, youtubeid=youtubeid, roomid=current_user.roomid
@@ -203,16 +213,12 @@ def addqueue(youtubeid, userid):
             flash("alert-warning")
         else:
             if check_video(youtubeid=youtubeid):
-                new_queue = Queue(
-                    roomid=current_user.roomid,
-                    userid=userid,
-                    youtubeid=youtubeid,
-                    status="",
-                )
-                db.session.add(new_queue)
-                db.session.commit()
-                flash("Song added to queue")
-                flash("alert-success")
+                if queue_add(current_user.roomid, current_user.id, youtubeid, ""):
+                    flash("Song added to queue")
+                    flash("alert-success")
+                else:
+                    flash("Fail to add song to queue")
+                    flash("alert-danger")
             else:
                 add_song = Song.query.filter_by(youtubeid=youtubeid).first()
                 if add_song:
@@ -222,19 +228,19 @@ def addqueue(youtubeid, userid):
                         flash("There is no video file, download again")
                         flash("alert-danger")
                     else:
-                        new_queue = Queue(
-                            roomid=current_user.roomid,
-                            userid=userid,
-                            youtubeid=youtubeid,
-                            status="D",
-                        )
-                        db.session.add(new_queue)
-                        db.session.commit()
-                        flash("Downloading video, wait finish")
-                        flash("alert-warning")                        
+                        if queue_add(
+                            current_user.roomid, current_user.id, youtubeid, "D"
+                        ):
+                            flash("Downloading video, wait finish")
+                            flash("alert-warning")
+                        else:
+                            flash("Fail to add song to queue")
+                            flash("alert-danger")
     except:
         flash("Fail to add song to queue")
         flash("alert-danger")
+
+    BLOCK_QUEUE = False
 
     return redirect(url_for("main.musics"))
 
@@ -356,6 +362,7 @@ def player():
         "player.html", player_config=config, signup_img=signup_img, login_img=login_img
     )
 
+
 @main.route("/screenupdate")
 @login_required
 def screenupdate():
@@ -367,7 +374,7 @@ def screenupdate():
         for queue_item in queue:
 
             if first:
-                if queue_item.status != "D":                
+                if queue_item.status != "D":
                     player_data.singer = queue_item.singer
                     player_data.song = queue_item.song
                     player_data.artist = queue_item.artist
@@ -649,23 +656,26 @@ def addroom():
         flash("User not exist in database.")
         flash("alert-danger")
         return redirect(url_for("main.roomcontrol"))
-    
+
     user.roomid = current_user.roomid
-     
+
     if request.form["action"] == "Admin":
-        roomadm = Roomadm.query.filter_by(roomid=current_user.roomid, userid=user.id).first()
+        roomadm = Roomadm.query.filter_by(
+            roomid=current_user.roomid, userid=user.id
+        ).first()
         if roomadm:
             flash("User alredy in room.")
-            flash("alert-warning")         
+            flash("alert-warning")
         else:
             flash("User added to room.")
-            flash("alert-success")            
+            flash("alert-success")
             new_admin = Roomadm(roomid=current_user.roomid, userid=user.id)
             db.session.add(new_admin)
 
     db.session.commit()
 
     return redirect(url_for("main.roomcontrol"))
+
 
 @main.route("/delroomuser/<userid>")
 @login_required
@@ -678,7 +688,7 @@ def delroomuser(userid):
         user = User.query.filter_by(id=userid).first()
         if user:
             Queue.query.filter_by(userid=user.id).delete()
-            user.roomid = ""            
+            user.roomid = ""
             db.session.commit()
             flash("User removed from room.")
             flash("alert-success")
@@ -772,18 +782,19 @@ def updateuser():
 
     return redirect(url_for("main.configuration"))
 
+
 @main.route("/changeroom", methods=["POST"])
 @login_required
 def changeroom_post():
 
     roomid = request.form.get("roomid")
     roompass = request.form.get("roompass")
-    
+
     room = Room.query.filter_by(roomid=roomid).first()
-    
+
     if roomid == current_user.roomid:
         flash("User alredy in room")
-        flash("alert-warning")       
+        flash("alert-warning")
     elif not room or not check_password_hash(room.password, roompass):
         flash("Wrong room or room password")
         flash("alert-danger")

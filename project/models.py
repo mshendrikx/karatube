@@ -31,6 +31,7 @@ class Queue(db.Model):
     userid = db.Column(db.String(100))
     youtubeid = db.Column(db.String(100))
     status = db.Column(db.String(1))
+    order = db.Column(db.Integer)
 
 
 class Roomadm(db.Model):
