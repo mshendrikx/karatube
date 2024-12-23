@@ -14,3 +14,4 @@ free-proxy
 PySocks
 pysocket
 Pillow
+httpx==0.27.2
