@@ -596,8 +596,11 @@ def roomcontrol():
             roomid=current_user.roomid, userid=user.id
         ).first()
         if roomadm:
+            user.roomadm = 'X'
             roomadms.append(user)
-        users.append(user)
+        else:            
+            user.roomadm = ''
+            users.append(user)
 
     return render_template(
         "room.html",
@@ -605,6 +608,7 @@ def roomcontrol():
         room=room,
         roomadms=roomadms,
         users=users,
+        users_sel=users_sel,
     )
 
 

@@ -113,10 +113,8 @@
         <div class="input-group">
             <input list="userid" name="userid" id="useridInput" autocomplete="off" required>
             <datalist id="userid">
-                {% for user in users %}
-                {% if user.roomadm != "X" %}
+                {% for user in users_sel %}
                 <option value="{{ user.id }}">{{ user.name }}</option>
-                {% endif %}
                 {% endfor %}
             </datalist>&nbsp;&nbsp;&nbsp;
             <input type="submit" class="btn btn-outline-primary" name="action" value="User">&nbsp;&nbsp;&nbsp;
