@@ -174,7 +174,7 @@ def queue_get(roomid):
                 queue_item.status = ""
                 song = Song.query.filter_by(youtubeid=queue_item.youtubeid).first()
                 song.downloaded = 1
-                db.session.commit()
+                db.session.commit() 
                 status_int = 1
             else:
                 status_int = 2
