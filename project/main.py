@@ -25,6 +25,7 @@ from .karatube import (
     update_yt_dlp,
 )
 
+
 class PlayerData:
     singer = ""
     song = ""
@@ -33,6 +34,7 @@ class PlayerData:
     video_url = ""
     artist = ""
     queueid = ""
+
 
 LOCK_QUEUE = False
 
@@ -228,9 +230,7 @@ def addqueue(youtubeid, userid):
                         flash("There is no video file, download again")
                         flash("alert-danger")
                     else:
-                        if queue_add(
-                            current_user.roomid, userid, youtubeid, "D"
-                        ):
+                        if queue_add(current_user.roomid, userid, youtubeid, "D"):
                             flash("Downloading video, wait finish")
                             flash("alert-warning")
                         else:
@@ -344,7 +344,6 @@ def player():
     # Get image data as bytes
     image_bytes = buffer.getvalue()
     signup_img = base64.b64encode(image_bytes).decode("utf-8")
-
     # qrcode_data = str(os.environ.get("KARATUBE_URL")) + "/login"
     qrcode_data = str(os.environ.get("KARATUBE_URL"))
     # Create a QR code object with desired error correction level
@@ -361,7 +360,11 @@ def player():
 
     config = Config.query.filter_by(id="CONFIG").first()
     return render_template(
-        "player.html", player_config=config, signup_img=signup_img, login_img=login_img
+        "player.html",
+        player_config=config,
+        signup_img=signup_img,
+        login_img=login_img,
+        room=room,
     )
 
 
@@ -496,6 +499,7 @@ def createroom():
         new_room = Room(
             roomid=roomid,
             password=generate_password_hash(roompass, method="pbkdf2:sha256"),
+            barcode=1,
         )
         db.session.add(new_room)
         new_roomadm = Roomadm(roomid=roomid, userid=userid)
@@ -570,8 +574,16 @@ def configuration_post():
 def setcommand(command):
 
     if current_user.roomadm == "X":
-        control = Controls(roomid=current_user.roomid, command=command, commvalue="")
-        db.session.add(control)
+        if command == 'qrcode':
+            room = Room.query.filter_by(roomid=current_user.roomid).first()
+            if room:
+                if room.barcode == 1:
+                    room.barcode = 0
+                else:
+                    room.barcode = 1                    
+        else:
+            control = Controls(roomid=current_user.roomid, command=command, commvalue="")        
+            db.session.add(control)
         db.session.commit()
 
     return redirect(url_for("main.roomcontrol"))
@@ -598,10 +610,10 @@ def roomcontrol():
             roomid=current_user.roomid, userid=user.id
         ).first()
         if roomadm:
-            user.roomadm = 'X'
+            user.roomadm = "X"
             roomadms.append(user)
-        else:            
-            user.roomadm = ''
+        else:
+            user.roomadm = ""
             users.append(user)
 
     return render_template(
@@ -812,6 +824,7 @@ def changeroom_post():
 
     return redirect(url_for("main.profile"))
 
+
 @main.route("/barcode")
 @login_required
 def barcode():
@@ -848,6 +861,4 @@ def barcode():
     image_bytes = buffer.getvalue()
     login_img = base64.b64encode(image_bytes).decode("utf-8")
 
-    return render_template(
-        "barcode.html", signup_img=signup_img, login_img=login_img
-    )
+    return render_template("barcode.html", signup_img=signup_img, login_img=login_img)

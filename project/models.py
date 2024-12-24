@@ -23,6 +23,7 @@ class Song(db.Model):
 class Room(db.Model):
     roomid = db.Column(db.String(100), primary_key=True)
     password = db.Column(db.String(1000))
+    barcode = db.Column(db.Integer)
 
 
 class Queue(db.Model):
