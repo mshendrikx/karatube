@@ -860,5 +860,14 @@ def barcode():
     # Get image data as bytes
     image_bytes = buffer.getvalue()
     login_img = base64.b64encode(image_bytes).decode("utf-8")
+    
+    queue = queue_get(roomid=current_user.roomid)
+    counter = 0
+    for queue_item in queue:
+        if queue_item == "P":
+            queue_item.order = 0
+        else:
+            counter += 1
+            queue_item.order = counter
 
-    return render_template("barcode.html", signup_img=signup_img, login_img=login_img)
+    return render_template("barcode.html", signup_img=signup_img, login_img=login_img, queue=queue)
