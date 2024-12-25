@@ -289,21 +289,21 @@ def queue():
 @login_required
 def delqueue(queueid):
 
-    if current_user.roomadm == "X":
-        del_queue = Queue.query.filter_by(id=queueid).delete()
-        db.session.commit()
+    queue = Queue.query.filter_by(id=queueid).first()
 
-        if del_queue:
+    if queue:
+        if current_user.roomadm == "X" or current_user.id == queue.userid:
+            queue.delete()
+            db.session.commit()
             flash("Queue deleted")
             flash("alert-success")
         else:
-            flash("Fail to delete queue")
+            flash("Only room admin can delete queue")
             flash("alert-danger")
-
     else:
-        flash("Only room admin can delete queue")
+        flash("Fail to delete queue")
         flash("alert-danger")
-
+                
     return redirect(url_for("main.queue"))
 
 

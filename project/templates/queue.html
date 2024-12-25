@@ -22,7 +22,7 @@
                 <td>
                     {% if queue_item.status == 'P' %}
                     <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="24" width="24">
-                    {% elif current_user.roomadm == 'X' %}
+                    {% elif current_user.roomadm == 'X' or current_user.id == queue_item.userid %}
                     <a class="clickable-image" id="{{ queue_item.id }}"
                         href="{{ url_for('main.delqueue', queueid=queue_item.id) }}">
                         <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
