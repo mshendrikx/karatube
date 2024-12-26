@@ -46,6 +46,7 @@
     </div>
     <br>
 </div>
+<br>
 <div class="container border">
     <h3 class="fa fa-align-center" aria-hidden="true">Config</h3>
     <br>
@@ -69,7 +70,18 @@
         </form>
     </div>
     <br>
+    <form method="POST" action="{{ url_for('main.setcommand', command='songint') }}">
+        <div class="input-group">
+            <label for="songint">Song Interval:&nbsp;&nbsp;</label>
+            <input type="number" class="form-control" id="songint" name="songint" min="1" max="60"
+                value="{{ room.songint }}" required>
+            <button class="btn btn-outline-primary">Update</button>
+        </div>
+    </form>
+
+    <br>
 </div>
+<br>
 <div class="container border">
     <br>
     <div class="container border">

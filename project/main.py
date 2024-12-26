@@ -414,9 +414,13 @@ def screenupdate():
     config = Config.query.filter_by(id="CONFIG").first()
     if config:
         update_ratio = config.updateratio * 1000
-        song_interval = config.songint * 1000
     else:
         update_ratio = 1000
+        
+    room = Room.query.filter_by(roomid=current_user.roomid)
+    if room:
+        song_interval = room.songint * 1000
+    else:
         song_interval = 10000
 
     return jsonify(
@@ -582,7 +586,12 @@ def setcommand(command):
                 if room.barcode == 1:
                     room.barcode = 0
                 else:
-                    room.barcode = 1                    
+                    room.barcode = 1   
+        elif command == 'songint':
+            songint = int(request.form.get("songint"))
+            room = Room.query.filter_by(roomid=current_user.roomid).first()
+            if room:
+                room.songint = songint                             
         else:
             control = Controls(roomid=current_user.roomid, command=command, commvalue="")        
             db.session.add(control)

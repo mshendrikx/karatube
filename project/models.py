@@ -24,6 +24,7 @@ class Room(db.Model):
     roomid = db.Column(db.String(100), primary_key=True)
     password = db.Column(db.String(1000))
     barcode = db.Column(db.Integer)
+    songint = db.Column(db.Integer)
 
 
 class Queue(db.Model):
@@ -45,7 +46,6 @@ class Config(db.Model):
     library = db.Column(db.String(1))
     lastfm = db.Column(db.String(100))
     updateratio = db.Column(db.Integer)
-    songint = db.Column(db.Integer)
 
 
 class Controls(db.Model):

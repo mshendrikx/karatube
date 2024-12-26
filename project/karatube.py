@@ -174,7 +174,7 @@ def queue_get(roomid):
                 queue_item.status = ""
                 song = Song.query.filter_by(youtubeid=queue_item.youtubeid).first()
                 song.downloaded = 1
-                db.session.commit() 
+                db.session.commit()
                 status_int = 1
             else:
                 status_int = 2
@@ -211,24 +211,36 @@ def queue_get(roomid):
 
 def lastfm_search(search_arg, lastfm_pass):
 
+    artists = {}
+    tracks = []
+
     url = (
         "https://ws.audioscrobbler.com/2.0/?method=track.search&track="
         + search_arg
         + "&api_key="
         + lastfm_pass
-        + "&limit=20&format=json"
+        + "&limit=50&format=json"
     )
     try:
         response = requests.get(url)
         if response.status_code != 200:
             return response.status_code
         data = response.json()
-        tracks = []
+
         for results in data["results"]["trackmatches"]["track"]:
-            music_data = MusicData()
-            music_data.artist = results["artist"]
-            music_data.song = results["name"]
-            tracks.append(music_data)
+            artist = results["artist"].title()
+            if not artist in artists:
+                artists[artist] = []
+            title = results["name"].title()
+            if not title in artists[artist]:
+                artists[artist].append(title)
+
+        for artist in artists:
+            for song in artists[artist]:
+                music_data = MusicData()
+                music_data.song = song
+                music_data.artist = artist
+                tracks.append(music_data)
     except:
         return None
 
@@ -238,23 +250,25 @@ def lastfm_search(search_arg, lastfm_pass):
 def musicbrainz_search(search_arg):
 
     try:
-        index = search_arg.index('-')
+        index = search_arg.index("-")
         artist_query = search_arg[:index]
-        song_query = search_arg[index + 1:]
-        
+        song_query = search_arg[index + 1 :]
+
     except:
         artist_query = None
         song_query = None
-        
+
     tracks = []
     artists = {}
-    
+
     try:
         if artist_query != None and song_query != None:
-            result = musicbrainzngs.search_recordings(query=search_arg, artist=artist_query, recording=song_query ,limit=100)
+            result = musicbrainzngs.search_recordings(
+                query=search_arg, artist=artist_query, recording=song_query, limit=100
+            )
         else:
             result = musicbrainzngs.search_recordings(query=search_arg, limit=100)
-            
+
         for record in result["recording-list"]:
             score = int(record["ext:score"])
             if score < 50:
