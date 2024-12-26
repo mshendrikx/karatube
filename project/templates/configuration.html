@@ -39,14 +39,14 @@
     <h3 class="fa fa-align-center" aria-hidden="true">Create Room</h3>
     <form method="POST" action="{{ url_for('main.createroom') }}">
         <div class="input-group">
+            <input type="text" class="form-control" id="roomid" name="roomid" autocomplete="off" placeholder="Room"
+                required>&nbsp;&nbsp;
             <input list="userid" name="userid" autocomplete="off" placeholder="Administrador" required>
             <datalist id="userid">
                 {% for user in users %}
                 <option value="{{ user.id }}">{{ user.name }}</option>
                 {% endfor %}
             </datalist>&nbsp;&nbsp;
-            <input type="text" class="form-control" id="roomid" name="roomid" autocomplete="off" placeholder="Room"
-                required>&nbsp;&nbsp;
             <button type="submit" class="btn btn-outline-primary">Save</button>
         </div>
     </form>
