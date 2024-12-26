@@ -293,7 +293,7 @@ def delqueue(queueid):
 
     if queue:
         if current_user.roomadm == "X" or current_user.id == queue.userid:
-            queue.delete()
+            Queue.query.filter_by(id=queueid).delete()
             db.session.commit()
             flash("Queue deleted")
             flash("alert-success")
