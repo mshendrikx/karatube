@@ -17,6 +17,10 @@
     var songInterval = 10000
     var queueId = '';
 
+    function refreshPage() {
+      location.reload();
+    }
+    
     async function getLatestInfo() {
       $.ajax({
         url: "/screenupdate",
@@ -58,6 +62,9 @@
             if (screenData.command === "vol") {
               karaokeVideo.volume = screenData.commvalue;
             }
+            if (screenData.command === "refresh") {
+              refreshPage();
+            }            
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
