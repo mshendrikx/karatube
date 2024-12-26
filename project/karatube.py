@@ -237,11 +237,24 @@ def lastfm_search(search_arg, lastfm_pass):
 
 def musicbrainz_search(search_arg):
 
+    try:
+        index = search_arg.index('-')
+        artist_query = search_arg[:index]
+        song_query = search_arg[index + 1:]
+        
+    except:
+        artist_query = None
+        song_query = None
+        
     tracks = []
     artists = {}
     
     try:
-        result = musicbrainzngs.search_recordings(query=search_arg, limit=100)
+        if artist_query != None and song_query != None:
+            result = musicbrainzngs.search_recordings(query=search_arg, artist=artist_query, recording=song_query ,limit=100)
+        else:
+            result = musicbrainzngs.search_recordings(query=search_arg, limit=100)
+            
         for record in result["recording-list"]:
             score = int(record["ext:score"])
             if score < 50:

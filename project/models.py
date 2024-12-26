@@ -42,6 +42,7 @@ class Roomadm(db.Model):
 
 class Config(db.Model):
     id = db.Column(db.String(6), primary_key=True)
+    library = db.Column(db.String(1))
     lastfm = db.Column(db.String(100))
     updateratio = db.Column(db.Integer)
     songint = db.Column(db.Integer)

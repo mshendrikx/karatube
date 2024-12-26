@@ -5,6 +5,18 @@
     <h3 class="fa fa-align-center" aria-hidden="true">Settings</h3>
     <form action="{{ url_for('main.configuration') }}" method="POST">
         <div class="input-group">
+            <label for="song_library">Song Library:&nbsp;&nbsp;</label>
+            <select name="song_library" id="song_library">
+                {% if config.library == "0" %}
+                <option value="0" selected>MusicBrainz</option>
+                <option value="1">Last.fm</option>
+                {% else %}
+                <option value="0">MusicBrainz</option>
+                <option value="1" selected>Last.fm</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="input-group">
             <label for="lastfm">LAST.FM API Key:&nbsp;&nbsp;</label>
             <input type="text" class="form-control" id="lastfm" name="lastfm" value="{{ config.lastfm }}">&nbsp;&nbsp;
             <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">Get API

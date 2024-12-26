@@ -134,9 +134,9 @@ def musics_post():
 
     search_string = request.form.get("search_string")
     singer_user = request.form.get("user_selection")
-    lastfm_pass = get_lastfm_pass()
-    if lastfm_pass != "":
-        musics = lastfm_search(search_string, lastfm_pass=lastfm_pass)
+    config = Config.query.first()
+    if config.library == "1":
+        musics = lastfm_search(search_string, lastfm_pass=config.lastfm)
     else:
         musics = musicbrainz_search(search_string)
 
@@ -547,10 +547,12 @@ def configuration_post():
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
+    song_library = request.form.get("song_library")
     lastfm = request.form.get("lastfm")
     updateratio = request.form.get("updateratio")
     songint = request.form.get("songint")
     config = Config.query.filter_by(id="CONFIG").first()
+    config.library = song_library
     config.lastfm = lastfm
     config.updateratio = int(updateratio)
     if config.updateratio == 0:
