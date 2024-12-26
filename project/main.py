@@ -554,16 +554,12 @@ def configuration_post():
     song_library = request.form.get("song_library")
     lastfm = request.form.get("lastfm")
     updateratio = request.form.get("updateratio")
-    songint = request.form.get("songint")
     config = Config.query.filter_by(id="CONFIG").first()
     config.library = song_library
     config.lastfm = lastfm
     config.updateratio = int(updateratio)
     if config.updateratio == 0:
         config.updateratio = 1
-    config.songint = int(songint)
-    if config.songint == 0:
-        config.songint = 10
     db.session.add(config)
     db.session.commit()
 
@@ -589,6 +585,8 @@ def setcommand(command):
                     room.barcode = 1   
         elif command == 'songint':
             songint = int(request.form.get("songint"))
+            if songint == 0:
+                songint = 10
             room = Room.query.filter_by(roomid=current_user.roomid).first()
             if room:
                 room.songint = songint                             
