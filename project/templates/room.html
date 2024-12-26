@@ -45,6 +45,10 @@
         <input type="range" id="volume-control" min="0" max="1" step="0.01" value="1">
     </div>
     <br>
+</div>
+<div class="container border">
+    <h3 class="fa fa-align-center" aria-hidden="true">Config</h3>
+    <br>
     <div class="input-group">
         <form method="POST" action="{{ url_for('main.setcommand', command='qrcode') }}">
             <button type="submit" class="btn btn-primary">
@@ -56,11 +60,16 @@
                     width="48">
                 {% endif %}
             </button>
+        </form>&nbsp;&nbsp;
+        <form method="POST" action="{{ url_for('main.setcommand', command='refresh') }}">
+            <button type="submit" class="btn btn-primary">
+                <img src="{{ url_for('static', filename='images/icon-refresh.png') }}" alt="Button image" height="48"
+                    width="48">
+            </button>
         </form>
     </div>
     <br>
 </div>
-<br>
 <div class="container border">
     <br>
     <div class="container border">
