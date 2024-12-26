@@ -16,17 +16,20 @@
                 {% endif %}
             </select>
         </div>
+        <br>
         <div class="input-group">
             <label for="lastfm">LAST.FM API Key:&nbsp;&nbsp;</label>
             <input type="text" class="form-control" id="lastfm" name="lastfm" value="{{ config.lastfm }}">&nbsp;&nbsp;
             <a href="https://www.last.fm/login?next=%2Fapi%2Faccounts%3F_pjax%3D%2523content">Get API
                 Key</a>
         </div>
+        <br>
         <div class="input-group">
             <label for="updateratio">Screen update sec:&nbsp;&nbsp;</label>
             <input type="number" class="form-control" id="updateratio" name="updateratio" min="1" max="10"
                 value="{{ config.updateratio }}" required>
         </div>
+        <br>
         <button class="btn btn-outline-primary">Update</button>
     </form>
     <br>
