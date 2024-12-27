@@ -1,7 +1,7 @@
 import os
 
-from flask import Flask
-from flask_babel import Babel
+from flask import Flask, g
+from flask_babel import Babel, gettext as _
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
@@ -9,6 +9,8 @@ from werkzeug.security import generate_password_hash
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 babel = Babel()
+
+base_dir = os.path.abspath(os.path.dirname(__file__))
 
 def create_app():
     app = Flask(__name__)
