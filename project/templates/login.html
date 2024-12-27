@@ -4,23 +4,23 @@
 <div class="container mt-3">
     <form method="POST" action="/login">
         <div class="mb-3 mt-3">
-            <label for="userid">User / E-mail:</label>
+            <label for="userid">{{ _('User / E-mail:') }}</label>
             <input type="text" class="form-control" id="userid" name="userid" required>
         </div>
         <div class="mb-3">
-            <label for="password">Password:</label>
+            <label for="password">{{ _('Password:') }}</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
         <div class="mb-3">
             <label class="checkbox">
                 <input type="checkbox" name="remember" checked>
-                Remember me
+                {{ _('Remember me') }}
             </label>
         </div>
         <button type="submit" class="btn btn-outline-primary">Login</button>
     </form>
     <br>
-    <a href="{{ url_for('auth.recoverlogin') }}">Recover login data</a>
+    <a href="{{ url_for('auth.recoverlogin') }}">{{ _('Recover login data') }}</a>
 </div>
 
 {% endblock %}

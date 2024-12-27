@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ g.locale }}">
 
 <head>
     <title>KaraTube</title>
@@ -27,40 +27,40 @@
                 <ul class="navbar-nav">
                     {% if not current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">{{ _('Login') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth.signup') }}">Signup</a>
+                        <a class="nav-link" href="{{ url_for('auth.signup') }}">{{ _('Signup') }}</a>
                     </li>
                     {% endif %}
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.musics') }}">Musics</a>
+                        <a class="nav-link" href="{{ url_for('main.musics') }}">{{ _('Musics') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.queue') }}">Queue</a>
+                        <a class="nav-link" href="{{ url_for('main.queue') }}">{{ _('Queue') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a>
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">{{ _('Profile') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.barcode') }}">Barcode</a>
+                        <a class="nav-link" href="{{ url_for('main.barcode') }}">{{ _('Barcode') }}</a>
                     </li>
                     {% if current_user.roomadm == 'X' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.roomcontrol') }}">Room</a>
+                        <a class="nav-link" href="{{ url_for('main.roomcontrol') }}">{{ _('Room') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.player') }}">Player</a>
-                    </li> 
+                        <a class="nav-link" href="{{ url_for('main.player') }}">{{ _('Player') }}</a>
+                    </li>
                     {% endif %}
                     {% if current_user.admin == 'X' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.configuration') }}">Configuration</a>
+                        <a class="nav-link" href="{{ url_for('main.configuration') }}">{{ _('Configuration') }}</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">{{ _('Logout') }}</a>
                     </li>
                     {% endif %}
                 </ul>

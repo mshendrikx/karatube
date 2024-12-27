@@ -8,7 +8,7 @@
 <div class="container mt-3">
     <form action="/musics" method="POST">
         <div class="input-group">
-            <label for="user_selection">Singer:&nbsp;&nbsp;</label>
+            <label for="user_selection">{{ _('Singer:') }}&nbsp;&nbsp;</label>
             <select name="user_selection" id="user_selection">
                 {% for user in user_sel %}
                 <option value="{{ user.id }}">{{ user.name }}</option>
@@ -19,7 +19,7 @@
         <div class="input-group">
             <input type="text" class="form-control" id="search_string" placeholder="Artist - Music" name="search_string"
                 required>
-            <button type="submit" class="btn btn-outline-primary">Search Youtube</button>
+            <button type="submit" class="btn btn-outline-primary">{{ _('Search Youtube') }}</button>
         </div>
     </form>
     <br>
@@ -27,8 +27,8 @@
         <thead>
             <tr>
                 <td></td>
-                <td>Preview</td>
-                <td>Music</td>
+                <td>{{ _('Preview') }}</td>
+                <td>{{ _('Music') }}</td>
                 {% if current_user.admin == "X" %}
                 <td></td>
                 {% endif %}

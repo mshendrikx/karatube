@@ -4,12 +4,12 @@
 {% if current_user.roomadm == "X" %}
 <div class="container mt-3">
     <h3 class="title">
-        <p class="text-primary">Room: {{ current_user.roomid }}</p>
+        <p class="text-primary">{{ _('Room:') }} {{ current_user.roomid }}</p>
     </h3>
 </div>
 <br>
 <div class="container border">
-    <h3 class="fa fa-align-center" aria-hidden="true">Player Controls</h3>
+    <h3 class="fa fa-align-center" aria-hidden="true">{{ _('Player Controls') }}</h3>
     <br>
     <div class="input-group">
         <form method="POST" action="{{ url_for('main.setcommand', command='prev') }}">
@@ -48,7 +48,7 @@
 </div>
 <br>
 <div class="container border">
-    <h3 class="fa fa-align-center" aria-hidden="true">Config</h3>
+    <h3 class="fa fa-align-center" aria-hidden="true">{{ _('Config') }}</h3>
     <br>
     <div class="input-group">
         <form method="POST" action="{{ url_for('main.setcommand', command='qrcode') }}">
@@ -72,10 +72,10 @@
     <br>
     <form method="POST" action="{{ url_for('main.setcommand', command='songint') }}">
         <div class="input-group">
-            <label for="songint">Song Interval:&nbsp;&nbsp;</label>
+            <label for="songint">{{ _('Song Interval:') }}&nbsp;&nbsp;</label>
             <input type="number" class="form-control" id="songint" name="songint" min="1" max="60"
                 value="{{ room.songint }}" required>
-            <button class="btn btn-outline-primary">Update</button>
+            <button class="btn btn-outline-primary">{{ _('Update') }}</button>
         </div>
     </form>
 
@@ -85,12 +85,12 @@
 <div class="container border">
     <br>
     <div class="container border">
-        <h3 class="fa fa-align-center" aria-hidden="true">Users</h3>
+        <h3 class="fa fa-align-center" aria-hidden="true">{{ _('Users') }}</h3>
         <table class="table">
             <thead>
                 <tr>
                     <td></td>
-                    <td>Name</td>
+                    <td>{{ _('Name') }}</td>
                 </tr>
             </thead>
             <tbody>
@@ -117,12 +117,12 @@
     </div>
     <br>
     <div class="container border">
-        <h3 class="fa fa-align-center" aria-hidden="true">Administrators</h3>
+        <h3 class="fa fa-align-center" aria-hidden="true">{{ _('Administrators') }}</h3>
         <table class="table">
             <thead>
                 <tr>
                     <td></td>
-                    <td>Name</td>
+                    <td>{{ _('Name') }}</td>
                 </tr>
             </thead>
             <tbody>

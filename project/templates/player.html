@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ g.locale }}">
 
 <head>
   <title>KaraTube</title>
@@ -149,7 +149,7 @@
 
   <div id="overlay-presents"></div>
   <div id="overlay-singer"></div>
-  <div id="overlay-music">Singing:</div>
+  <div id="overlay-music">{{ _('Singing:') }}</div>
   <div id="overlay-song"></div>
   <div id="overlay-artist"></div>
   <div class="video-container">
@@ -159,24 +159,24 @@
   </div>
   <div id="overlay-now">
     <div class="input-group">
-      <p class="text-warning">Now:</p>&nbsp;&nbsp;
+      <p class="text-warning">{{ _('Now:') }}</p>&nbsp;&nbsp;
       <p class="text-white" id="now-song"></p>
     </div>
   </div>
   <div id="overlay-next">
     <div class="input-group">
-      <p class="text-warning">Next:</p>&nbsp;&nbsp;
+      <p class="text-warning">{{ _('Next:') }}</p>&nbsp;&nbsp;
       <p class="text-white" id="next-song"></p>
     </div>
   </div>
   {% if room.barcode == 1 %}
   <div class="signup-container">
     <img id="signup-qrcode" src="data:image/png;base64,{{ signup_img }}" width="96" height="96">
-    <span class="qrcode-label">Room</span >
+    <span class="qrcode-label">{{ _('Room') }}</span >
   </div>
   <div class="login-container">
     <img id="login-qrcode" src="data:image/png;base64,{{ login_img }}" width="96" height="96">
-    <span class="qrcode-label">Host</span>
+    <span class="qrcode-label">{{ _('Host') }}</span>
   </div>
   {% endif %}
   <script>

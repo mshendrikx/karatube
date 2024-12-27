@@ -4,11 +4,11 @@
 <div class="container mt-3">
     {% if user.name %}
     <h3 class="title">
-        Hello, {{ current_user.name }} !
+        {{ _('Hello,') }} {{ current_user.name }} !
     </h3>
     {% else %}
     <h3 class="title">
-        Login first !
+        {{ _('Login first !') }}
     </h3>
     {% endif %}
 </div>

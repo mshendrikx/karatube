@@ -4,7 +4,9 @@ import requests
 import os
 import smtplib
 
+from flask import request
 from flask_babel import gettext as _
+from flask_login import current_user
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch
@@ -430,8 +432,8 @@ def recover_email(user, password):
     sender_name = "KaraTube"
     sender_email = os.environ["KARATUBE_EMAIL"]
     recipient_email = user.email
-    subject = "KaraTube Login"
-    text_content = "User: " + str(user.id) + "\n" + "Password: " + str(password)
+    subject = _('KaraTube Login')
+    text_content = _('User:') + " " + str(user.id) + "\n" + _('Password:') + " " + str(password)
 
     return send_email(
         sender_name=sender_name,
@@ -442,3 +444,17 @@ def recover_email(user, password):
         smtp_server=os.environ["SMTP_SERVER"],
         smtp_port=os.environ["SMTP_PORT"],
     )
+
+def get_locale():
+    
+    # Get language from current user
+    if current_user.is_authenticated == True:
+        lang = current_user.language
+    # Try to get the locale from the URL parameter 'lang'
+    elif request.args.get('lang'):
+        lang = request.args.get('lang')
+    else:
+        lang = request.accept_languages.best_match(['en', 'pt'])
+
+    # If no 'lang' parameter, use the Accept-Languages header
+    return lang

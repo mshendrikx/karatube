@@ -47,6 +47,7 @@ def create_app():
                 password=generate_password_hash("admin", method="pbkdf2:sha256"),
                 roomadm="X",
                 admin="X",
+                language="en",
             )
             db.session.add(new_user)
             db.session.commit()
