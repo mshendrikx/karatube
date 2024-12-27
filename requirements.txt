@@ -9,9 +9,5 @@ musicbrainzngs
 qrcode
 youtube-search-python
 pytz
-pytubefix
-free-proxy
-PySocks
-pysocket
 Pillow
 httpx==0.27.2

@@ -4,25 +4,24 @@ import io
 import base64
 import time
 
+from flask_babel import gettext as _
 from urllib.request import urlretrieve
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from pathlib import Path
 from . import db
+from . import babel
 
 from .models import User, Room, Song, Queue, Roomadm, Config, Controls
 from .karatube import (
     lastfm_search,
-    get_lastfm_pass,
     youtube_search,
-    youtube_download,
     video_delete,
     queue_add,
     queue_get,
     check_video,
     musicbrainz_search,
-    update_yt_dlp,
 )
 
 
@@ -40,6 +39,12 @@ LOCK_QUEUE = {}
 
 main = Blueprint("main", __name__)
 
+@babel.localeselector
+def get_locale():
+
+    lang = 'en_US'
+    if lang:
+        return lang
 
 @main.route("/")
 def index():
@@ -440,7 +445,7 @@ def screenupdate():
     else:
         update_ratio = 1000
         
-    room = Room.query.filter_by(roomid=current_user.roomid)
+    room = Room.query.filter_by(roomid=current_user.roomid).first()
     if room:
         song_interval = room.songint * 1000
     else:

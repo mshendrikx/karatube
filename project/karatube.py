@@ -4,20 +4,12 @@ import requests
 import os
 import smtplib
 
-# import socks
-# import socket
-# import re
-
-# from fp.fp import FreeProxy
-from pytubefix import YouTube, helpers
-
-# from requests.adapters import HTTPAdapter
-# from pytube import cipher
+from flask_babel import gettext as _
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch
 from pathlib import Path
-from .models import User, Song, Queue, Config
+from .models import User, Song, Queue
 from . import db
 
 APP_PATH = str(Path(__file__).parent.absolute())
@@ -73,23 +65,6 @@ class YoutubeVideos:
             "description": self.description,
             "image": image,
         }
-
-
-def youtube_download(videoid):
-
-    filename = APP_PATH + SONGS_DIR + str(videoid) + ".mp4"
-    download_url = YT_BASE_URL + str(videoid)
-    try:
-        # proxy_handler = {
-        #    "socks5": "89.117.74.15:9050"
-        # }
-        # helpers.install_proxy(proxy_handler)
-        YouTube(download_url).streams.first().download(filename=filename)
-        # YouTube(download_url, allow_oauth_cache=True ,use_po_token=True, token_file=token_file).streams.first().download(filename=filename)
-        return True
-    except Exception as error:
-        print(error)
-        return False
 
 
 def video_delete(videoid):
@@ -385,15 +360,6 @@ def get_player_data(page_load, current_user, updatedb):
     return player_data
 
 
-def get_lastfm_pass():
-
-    config = Config.query.filter_by(id="CONFIG").first()
-    if config:
-        return str(config.lastfm)
-    else:
-        return ""
-
-
 def check_video(youtubeid):
 
     video_file = APP_PATH + SONGS_DIR + str(youtubeid) + ".mp4"
@@ -476,11 +442,3 @@ def recover_email(user, password):
         smtp_server=os.environ["SMTP_SERVER"],
         smtp_port=os.environ["SMTP_PORT"],
     )
-
-
-def update_yt_dlp():
-    try:
-        subprocess.run(["pip3", "install", "--upgrade", "yt-dlp"], check=True)
-        return True
-    except subprocess.CalledProcessError as e:
-        return False
