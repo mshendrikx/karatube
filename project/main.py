@@ -305,15 +305,17 @@ def delqueue(queueid):
             order = queue.order
             userid = queue.userid
             roomid = queue.roomid
+            status = queue.status
             Queue.query.filter_by(id=queueid).delete()
             db.session.commit()
-            user_queue = Queue.query.filter_by(roomid=roomid, userid=userid)
-            for user_song in user_queue:
-                if user_song.order > order:
-                    order_aux = user_song.order
-                    user_song.order = order
-                    order = order_aux
-            db.session.commit()
+            if status != 'P':
+                user_queue = Queue.query.filter_by(roomid=roomid, userid=userid).order_by(Queue.order)
+                for user_song in user_queue:
+                    if user_song.order > order:
+                        order_aux = user_song.order
+                        user_song.order = order
+                        order = order_aux
+                db.session.commit()
             flash("Queue deleted")
             flash("alert-success")
         else:
