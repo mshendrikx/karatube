@@ -298,7 +298,6 @@ def delqueue(queueid):
         while LOCK_QUEUE[current_user.roomid] == True:
             time.sleep(1)
     
- ################################################   
     queue = Queue.query.filter_by(id=queueid).first()
 
     if queue:
