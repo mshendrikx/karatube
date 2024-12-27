@@ -36,7 +36,7 @@ class PlayerData:
     queueid = ""
 
 
-LOCK_QUEUE = False
+LOCK_QUEUE = {}
 
 main = Blueprint("main", __name__)
 
@@ -201,10 +201,11 @@ def addqueue(youtubeid, userid):
 
     global LOCK_QUEUE
 
-    while LOCK_QUEUE == True:
-        time.sleep(1)
-
-    LOCK_QUEUE = True
+    if not current_user.roomid in LOCK_QUEUE:
+        LOCK_QUEUE[current_user.roomid] = True
+    else:
+        while LOCK_QUEUE[current_user.roomid] == True:
+            time.sleep(1)
 
     try:
         queue_check = Queue.query.filter_by(
@@ -240,7 +241,7 @@ def addqueue(youtubeid, userid):
         flash("Fail to add song to queue")
         flash("alert-danger")
 
-    LOCK_QUEUE = False
+    LOCK_QUEUE[current_user.roomid] = False
 
     return redirect(url_for("main.musics"))
 
@@ -289,11 +290,30 @@ def queue():
 @login_required
 def delqueue(queueid):
 
+    global LOCK_QUEUE
+
+    if not current_user.roomid in LOCK_QUEUE:
+        LOCK_QUEUE[current_user.roomid] = True
+    else:
+        while LOCK_QUEUE[current_user.roomid] == True:
+            time.sleep(1)
+    
+ ################################################   
     queue = Queue.query.filter_by(id=queueid).first()
 
     if queue:
         if current_user.roomadm == "X" or current_user.id == queue.userid:
+            order = queue.order
+            userid = queue.userid
+            roomid = queue.roomid
             Queue.query.filter_by(id=queueid).delete()
+            db.session.commit()
+            user_queue = Queue.query.filter_by(roomid=roomid, userid=userid)
+            for user_song in user_queue:
+                if user_song.order > order:
+                    order_aux = user_song.order
+                    user_song.order = order
+                    order = order_aux
             db.session.commit()
             flash("Queue deleted")
             flash("alert-success")
@@ -303,7 +323,9 @@ def delqueue(queueid):
     else:
         flash("Fail to delete queue")
         flash("alert-danger")
-                
+
+    LOCK_QUEUE[current_user.roomid] = False
+    
     return redirect(url_for("main.queue"))
 
 
