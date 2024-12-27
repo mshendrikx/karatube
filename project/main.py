@@ -42,9 +42,7 @@ main = Blueprint("main", __name__)
 @babel.localeselector
 def get_locale():
 
-    lang = 'en_US'
-    if lang:
-        return lang
+    return request.accept_languages.best_match(['en', 'pt'])
 
 @main.route("/")
 def index():

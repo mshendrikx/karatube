@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
-
+babel = Babel()
 
 def create_app():
     app = Flask(__name__)
@@ -16,15 +16,15 @@ def create_app():
     mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
     mariadb_host = os.environ.get("MYSQL_HOST")
 
-    app.config['BABEL_DEFAULT_LOCALE'] = 'en_US'  # Default language
+    app.config['BABEL_DEFAULT_LOCALE'] = 'en'  # Default language
     app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
     app.config["SECRET_KEY"] = os.urandom(24).hex()
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/karatube"
     )
 
-    babel = Babel(app)
     db.init_app(app)
+    babel.init_app(app)
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
