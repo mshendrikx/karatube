@@ -12,6 +12,18 @@ babel = Babel()
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
+def get_locale():
+    # Get language from current user
+    if current_user.is_authenticated == True:
+        lang = current_user.language
+    # Try to get the locale from the URL parameter 'lang'
+    elif request.args.get("lang"):
+        lang = request.args.get("lang")
+    else:
+        lang = request.accept_languages.best_match(["en", "pt"])
+    # If no 'lang' parameter, use the Accept-Languages header
+    return lang
+
 
 def create_app():
     app = Flask(__name__)
@@ -25,20 +37,6 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/karatube"
     )
-
-    def get_locale():
-
-        # Get language from current user
-        if current_user.is_authenticated == True:
-            lang = current_user.language
-        # Try to get the locale from the URL parameter 'lang'
-        elif request.args.get("lang"):
-            lang = request.args.get("lang")
-        else:
-            lang = request.accept_languages.best_match(["en", "pt"])
-
-        # If no 'lang' parameter, use the Accept-Languages header
-        return lang
 
     db.init_app(app)
     babel.init_app(app, locale_selector=get_locale)

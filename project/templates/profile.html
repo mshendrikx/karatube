@@ -59,6 +59,18 @@
             </div>
             <div class="row">
                 <div class="col-3 text-white">
+                    <label for="lang_selection">{{ _('Language:') }}</label>
+                </div>
+                <div class="col-3 text-white">
+                    <select name="lang_selection" id="lang_selection" required>
+                        <option value="en">English</option>
+                        <option value="pt">Português</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-3 text-white">
                     <label for="room_selection">{{ _('Room:') }}</label>
                 </div>
                 <div class="col-3 text-white">
@@ -78,7 +90,8 @@
     </form>
     <br>
     <form action="/changeroom" method="POST">
-        <p>* {{ _('Regular users must scan QR code in KaraTube player screen to change room or ask a room admin to add him.') }}</p>
+        <p>* {{ _('Regular users must scan QR code in KaraTube player screen to change room or ask a room admin to add
+            him.') }}</p>
         <div class="mb-3" id="reader"></div>
         <input type="hidden" class="form-control" id="roomid" name="roomid" value="" required>
         <input type="hidden" class="form-control" id="roompass" name="roompass" value="" required>

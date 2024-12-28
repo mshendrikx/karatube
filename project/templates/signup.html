@@ -27,6 +27,13 @@
             <label for="repass">{{ _('Re-type Password:') }}</label>
             <input type="password" class="form-control" id="repass" name="repass" required>
         </div>
+        <div class="mb-3">
+            <label for="lang_selection">{{ _('language:') }}</label>
+            <select name="lang_selection" id="lang_selection" required>
+                <option value="en">English</option>
+                <option value="pt">Português</option>
+            </select>
+        </div>
         <div class="mb-3" id="reader"></div>
         <div class="mb-3">
             <input type="hidden" class="form-control" id="roomid" name="roomid" value="" required>

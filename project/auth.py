@@ -90,6 +90,7 @@ def signup_post():
     mobile = request.form.get("mobile")
     roomid = request.form.get("roomid")
     roompass = request.form.get("roompass")
+    language = request.form.get("lang_selection")
 
     if password != repass:
         flash(_("Password dont match"))
@@ -142,6 +143,7 @@ def signup_post():
         email=email,
         mobile=mobile,
         admin="",
+        language=language,
     )
 
     # add the new user to the database
