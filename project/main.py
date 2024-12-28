@@ -4,13 +4,22 @@ import io
 import base64
 import time
 
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, g
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    flash,
+    redirect,
+    url_for,
+    jsonify,
+    g,
+)
 from flask_babel import gettext as _
 from urllib.request import urlretrieve
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from pathlib import Path
-from flask import g 
+from flask import g
 from . import db
 
 
@@ -41,9 +50,11 @@ LOCK_QUEUE = {}
 
 main = Blueprint("main", __name__)
 
+
 @main.before_request
 def before_request():
     g.locale = get_locale()
+
 
 @main.route("/")
 def index():
@@ -81,12 +92,12 @@ def profile_post():
     language = request.form.get("lang_selection")
 
     if password != repass:
-        flash(_('Password do not match'))
+        flash(_("Password do not match"))
         flash("alert-danger")
         return redirect(url_for("main.profile"))
 
     if "@" not in email:
-        flash(_('Enter valid E-mail'))
+        flash(_("Enter valid E-mail"))
         flash("alert-danger")
         return redirect(url_for("main.profile"))
 
@@ -147,7 +158,7 @@ def musics_post():
         musics = musicbrainz_search(search_string)
 
     if musics == None:
-        flash(_('No music found in database'))
+        flash(_("No music found in database"))
         flash("alert-warning")
         return redirect(url_for("main.musics"))
     else:
@@ -176,7 +187,7 @@ def youtubedl(artist, song, id, image, singer):
     song_exists = Song.query.filter_by(youtubeid=id).first()
 
     if song_exists:
-        flash(_('Youtube video alredy downloaded'))
+        flash(_("Youtube video alredy downloaded"))
         flash("alert-warning")
     else:
         try:
@@ -218,15 +229,15 @@ def addqueue(youtubeid, userid):
             userid=current_user.id, youtubeid=youtubeid, roomid=current_user.roomid
         ).first()
         if queue_check:
-            flash(_('Song alredy in queue'))
+            flash(_("Song alredy in queue"))
             flash("alert-warning")
         else:
             if check_video(youtubeid=youtubeid):
                 if queue_add(current_user.roomid, userid, youtubeid, ""):
-                    flash(_('Song added to queue'))
+                    flash(_("Song added to queue"))
                     flash("alert-success")
                 else:
-                    flash(_('Fail to add song to queue'))
+                    flash(_("Fail to add song to queue"))
                     flash("alert-danger")
             else:
                 add_song = Song.query.filter_by(youtubeid=youtubeid).first()
@@ -234,17 +245,17 @@ def addqueue(youtubeid, userid):
                     if add_song.downloaded == 1:
                         add_song.delete()
                         db.session.commit()
-                        flash(_('There is no video file, download again'))
+                        flash(_("There is no video file, download again"))
                         flash("alert-danger")
                     else:
                         if queue_add(current_user.roomid, userid, youtubeid, "D"):
-                            flash(_('Downloading video, wait finish'))
+                            flash(_("Downloading video, wait finish"))
                             flash("alert-warning")
                         else:
-                            flash(_('Fail to add song to queue'))
+                            flash(_("Fail to add song to queue"))
                             flash("alert-danger")
     except:
-        flash(_('Fail to add song to queue'))
+        flash(_("Fail to add song to queue"))
         flash("alert-danger")
 
     LOCK_QUEUE[current_user.roomid] = False
@@ -263,13 +274,13 @@ def delsong(youtubeid):
             if del_song:
                 Queue.query.filter_by(youtubeid=youtubeid).delete()
                 db.session.commit()
-                flash(_('Song deleted'))
+                flash(_("Song deleted"))
                 flash("alert-success")
         else:
-            flash(_('Song delete fails'))
+            flash(_("Song delete fails"))
             flash("alert-danger")
     else:
-        flash(_('Only admin can delete song'))
+        flash(_("Only admin can delete song"))
         flash("alert-danger")
 
     return redirect(url_for("main.musics"))
@@ -303,7 +314,7 @@ def delqueue(queueid):
     else:
         while LOCK_QUEUE[current_user.roomid] == True:
             time.sleep(1)
-    
+
     queue = Queue.query.filter_by(id=queueid).first()
 
     if queue:
@@ -314,25 +325,27 @@ def delqueue(queueid):
             status = queue.status
             Queue.query.filter_by(id=queueid).delete()
             db.session.commit()
-            if status != 'P':
-                user_queue = Queue.query.filter_by(roomid=roomid, userid=userid).order_by(Queue.order)
+            if status != "P":
+                user_queue = Queue.query.filter_by(
+                    roomid=roomid, userid=userid
+                ).order_by(Queue.order)
                 for user_song in user_queue:
                     if user_song.order > order:
                         order_aux = user_song.order
                         user_song.order = order
                         order = order_aux
                 db.session.commit()
-            flash(_('Queue deleted'))
+            flash(_("Queue deleted"))
             flash("alert-success")
         else:
-            flash(_('Only room admin can delete queue'))
+            flash(_("Only room admin can delete queue"))
             flash("alert-danger")
     else:
-        flash(_('Fail to delete queue'))
+        flash(_("Fail to delete queue"))
         flash("alert-danger")
 
     LOCK_QUEUE[current_user.roomid] = False
-    
+
     return redirect(url_for("main.queue"))
 
 
@@ -345,13 +358,13 @@ def player():
             roomid=current_user.roomid, userid=current_user.id
         ).first()
         if not roomadm:
-            flash(_('User is not room admin.'))
+            flash(_("User is not room admin."))
             flash("alert-danger")
             return redirect(url_for("main.index"))
 
     room = Room.query.filter_by(roomid=current_user.roomid).first()
     if not room:
-        flash(_('Room is not in database.'))
+        flash(_("Room is not in database."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -445,7 +458,7 @@ def screenupdate():
         update_ratio = config.updateratio * 1000
     else:
         update_ratio = 1000
-        
+
     room = Room.query.filter_by(roomid=current_user.roomid).first()
     if room:
         song_interval = room.songint * 1000
@@ -499,7 +512,7 @@ def queueupdate():
 def createroom():
 
     if current_user.admin == "":
-        flash(_('Must be administrator.'))
+        flash(_("Must be administrator."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -512,7 +525,7 @@ def createroom():
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user:
-        flash(_('No user in DB.'))
+        flash(_("No user in DB."))
         flash("alert-danger")
         return redirect(
             url_for("main.createroom")
@@ -522,7 +535,7 @@ def createroom():
     # check if the room actually exists
     # take the room-supplied password, hash it, and compare it to the hashed password in the database
     if room:
-        flash(_('Room alredy exists.'))
+        flash(_("Room alredy exists."))
         flash("alert-danger")
         return redirect(
             url_for("main.createroom")
@@ -538,10 +551,10 @@ def createroom():
         new_roomadm = Roomadm(roomid=roomid, userid=userid)
         db.session.add(new_roomadm)
         db.session.commit()
-        flash(_('Room created.'))
+        flash(_("Room created."))
         flash("alert-success")
     except:
-        flash(_('Fail to create Room.'))
+        flash(_("Fail to create Room."))
         flash("alert-danger")
 
     return redirect(url_for("main.configuration"))
@@ -552,7 +565,7 @@ def createroom():
 def configuration():
 
     if current_user.admin == "":
-        flash(_('Must be administrator.'))
+        flash(_("Must be administrator."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -576,7 +589,7 @@ def configuration():
 def configuration_post():
 
     if current_user.admin == "":
-        flash(_('Must be administrator.'))
+        flash(_("Must be administrator."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -592,7 +605,7 @@ def configuration_post():
     db.session.add(config)
     db.session.commit()
 
-    flash(_('Configuration updated.'))
+    flash(_("Configuration updated."))
     flash("alert-success")
 
     return render_template(
@@ -605,22 +618,24 @@ def configuration_post():
 def setcommand(command):
 
     if current_user.roomadm == "X":
-        if command == 'qrcode':
+        if command == "qrcode":
             room = Room.query.filter_by(roomid=current_user.roomid).first()
             if room:
                 if room.barcode == 1:
                     room.barcode = 0
                 else:
-                    room.barcode = 1   
-        elif command == 'songint':
+                    room.barcode = 1
+        elif command == "songint":
             songint = int(request.form.get("songint"))
             if songint == 0:
                 songint = 10
             room = Room.query.filter_by(roomid=current_user.roomid).first()
             if room:
-                room.songint = songint                             
+                room.songint = songint
         else:
-            control = Controls(roomid=current_user.roomid, command=command, commvalue="")        
+            control = Controls(
+                roomid=current_user.roomid, command=command, commvalue=""
+            )
             db.session.add(control)
         db.session.commit()
 
@@ -632,7 +647,7 @@ def setcommand(command):
 def roomcontrol():
 
     if current_user.roomadm != "X":
-        flash(_('User must be an administrator.'))
+        flash(_("User must be an administrator."))
         flash("alert-warning")
         return redirect(url_for("main.roomcontrol"))
 
@@ -681,12 +696,12 @@ def roomqrcode(roomid, roomkey):
 
     room = Room.query.filter_by(roomid=roomid).first()
     if not room:
-        flash(_('Room not available.'))
+        flash(_("Room not available."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
     if not check_password_hash(room.password, roomkey):
-        flash(_('Wrong key for room, scan room qrcode again.'))
+        flash(_("Wrong key for room, scan room qrcode again."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -709,7 +724,7 @@ def addroom():
     user = User.query.filter_by(id=userid).first()
 
     if not user:
-        flash(_('User not exist in database.'))
+        flash(_("User not exist in database."))
         flash("alert-danger")
         return redirect(url_for("main.roomcontrol"))
 
@@ -720,10 +735,10 @@ def addroom():
             roomid=current_user.roomid, userid=user.id
         ).first()
         if roomadm:
-            flash(_('User alredy in room.'))
+            flash(_("User alredy in room."))
             flash("alert-warning")
         else:
-            flash(_('User added to room.'))
+            flash(_("User added to room."))
             flash("alert-success")
             new_admin = Roomadm(roomid=current_user.roomid, userid=user.id)
             db.session.add(new_admin)
@@ -738,7 +753,7 @@ def addroom():
 def delroomuser(userid):
 
     if userid == current_user.id:
-        flash(_('Current user can not be removed from room.'))
+        flash(_("Current user can not be removed from room."))
         flash("alert-warning")
     else:
         user = User.query.filter_by(id=userid).first()
@@ -746,7 +761,7 @@ def delroomuser(userid):
             Queue.query.filter_by(userid=user.id).delete()
             user.roomid = ""
             db.session.commit()
-            flash(_('User removed from room.'))
+            flash(_("User removed from room."))
             flash("alert-success")
 
     return redirect(url_for("main.roomcontrol"))
@@ -757,12 +772,12 @@ def delroomuser(userid):
 def delroomadm(userid):
 
     if userid == current_user.id:
-        flash(_('Current user can not be removed from administrator.'))
+        flash(_("Current user can not be removed from administrator."))
         flash("alert-warning")
     else:
         Roomadm.query.filter_by(roomid=current_user.roomid, userid=userid).delete()
         db.session.commit()
-        flash(_('User remove from administrator.'))
+        flash(_("User remove from administrator."))
         flash("alert-success")
 
     return redirect(url_for("main.roomcontrol"))
@@ -773,7 +788,7 @@ def delroomadm(userid):
 def delroom():
 
     if current_user.admin == "":
-        flash(_('Must be administrator.'))
+        flash(_("Must be administrator."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -783,10 +798,10 @@ def delroom():
     room = Room.query.filter_by(roomid=roomid).delete()
 
     if not room:
-        flash(_('Room not exists.'))
+        flash(_("Room not exists."))
         flash("alert-danger")
     else:
-        flash(_('Room deleted.'))
+        flash(_("Room deleted."))
         flash("alert-success")
         Roomadm.query.filter_by(roomid=roomid).delete()
         Queue.query.filter_by(roomid=roomid).delete()
@@ -801,7 +816,7 @@ def delroom():
 def updateuser():
 
     if current_user.admin == "":
-        flash(_('Must be administrator.'))
+        flash(_("Must be administrator."))
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
@@ -810,27 +825,27 @@ def updateuser():
     user = User.query.filter_by(id=userid).first()
 
     if not user:
-        flash(_('User not exist is database.'))
+        flash(_("User not exist is database."))
         flash("alert-danger")
         return redirect(url_for("main.configuration"))
 
     if request.form["action"] == "Reset":
         user.password = generate_password_hash("K4r4tub3", method="pbkdf2:sha256")
-        flash(_('Password set to: K4r4tub3'))
+        flash(_("Password set to: K4r4tub3"))
         flash("alert-success")
     elif request.form["action"] == "Delete":
-        flash(_('User deleted from database.'))
+        flash(_("User deleted from database."))
         flash("alert-success")
         User.query.filter_by(id=userid).delete()
         Roomadm.query.filter_by(userid=userid).delete()
         Queue.query.filter_by(userid=userid).delete()
     elif request.form["action"] == "Admin":
         if user.admin == "X":
-            flash(_('Administrator role removed.'))
+            flash(_("Administrator role removed."))
             flash("alert-success")
             user.admin = ""
         else:
-            flash(_('User is set as administrator.'))
+            flash(_("User is set as administrator."))
             flash("alert-success")
             user.admin = "X"
 
@@ -849,13 +864,13 @@ def changeroom_post():
     room = Room.query.filter_by(roomid=roomid).first()
 
     if roomid == current_user.roomid:
-        flash(_('User alredy in room'))
+        flash(_("User alredy in room"))
         flash("alert-warning")
     elif not room or not check_password_hash(room.password, roompass):
-        flash(_('Wrong room or room password'))
+        flash(_("Wrong room or room password"))
         flash("alert-danger")
     else:
-        flash(_('User room changed'))
+        flash(_("User room changed"))
         flash("alert-success")
         current_user.roomid = roomid
         db.session.commit()
@@ -869,7 +884,7 @@ def barcode():
 
     roompass = os.environ.get("ROOM_PASS")
     if roompass == None:
-        flash(_('Dinamically barcode is not suported.'))
+        flash(_("Dinamically barcode is not suported."))
         flash("alert-danger")
 
     qrcode_data = str(current_user.roomid) + "§" + str(roompass)
@@ -898,7 +913,7 @@ def barcode():
     # Get image data as bytes
     image_bytes = buffer.getvalue()
     login_img = base64.b64encode(image_bytes).decode("utf-8")
-    
+
     queue = queue_get(roomid=current_user.roomid)
     counter = 0
     for queue_item in queue:
@@ -908,4 +923,6 @@ def barcode():
             counter += 1
             queue_item.order = counter
 
-    return render_template("barcode.html", signup_img=signup_img, login_img=login_img, queue=queue)
+    return render_template(
+        "barcode.html", signup_img=signup_img, login_img=login_img, queue=queue
+    )

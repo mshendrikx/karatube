@@ -12,6 +12,7 @@ babel = Babel()
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
+
 def get_locale():
 
     # Get language from current user

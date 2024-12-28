@@ -11,8 +11,8 @@ from . import db
 auth = Blueprint("auth", __name__)
 
 
-#@auth.before_request
-#def before_request():
+# @auth.before_request
+# def before_request():
 #    g.locale = get_locale()
 
 
