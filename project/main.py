@@ -32,7 +32,6 @@ from .karatube import (
     queue_get,
     check_video,
     musicbrainz_search,
-    get_locale,
 )
 
 
