@@ -4,14 +4,15 @@ import io
 import base64
 import time
 
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, g
 from flask_babel import gettext as _
 from urllib.request import urlretrieve
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from pathlib import Path
+from flask import g 
 from . import db
-from . import babel
+
 
 from .models import User, Room, Song, Queue, Roomadm, Config, Controls
 from .karatube import (

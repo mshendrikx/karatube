@@ -5,15 +5,15 @@ from flask_babel import gettext as _
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
 from .models import User, Room, Roomadm
-from .karatube import recover_email, get_locale
+from .karatube import recover_email
 from . import db
 
 auth = Blueprint("auth", __name__)
 
 
-@auth.before_request
-def before_request():
-    g.locale = get_locale()
+#@auth.before_request
+#def before_request():
+#    g.locale = get_locale()
 
 
 @auth.route("/login")
@@ -35,7 +35,7 @@ def login_post():
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not check_password_hash(user.password, password):
-        flash(_('Please check your login details and try again.'))
+        flash(_("Please check your login details and try again."))
         flash("alert-danger")
         return redirect(
             url_for("auth.login")
@@ -47,7 +47,7 @@ def login_post():
     # if the above check passes, then we know the user has the right credentials
     if not room:
         if user.admin != "X":
-            flash(_('User not assigned to room.'))
+            flash(_("User not assigned to room."))
             flash("alert-danger")
             return redirect(
                 url_for("auth.login")
@@ -92,19 +92,19 @@ def signup_post():
     roompass = request.form.get("roompass")
 
     if password != repass:
-        flash( _('Password dont match') )
+        flash(_("Password dont match"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
     room = Room.query.filter_by(roomid=roomid).first()
 
     if not room or not check_password_hash(room.password, roompass):
-        flash(_('Wrong room or room password'))
+        flash(_("Wrong room or room password"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
     if "@" not in email:
-        flash(_('Enter valid E-mail'))
+        flash(_("Enter valid E-mail"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
@@ -115,7 +115,7 @@ def signup_post():
     if (
         user
     ):  # if a user is found, we want to redirect back to signup page so user can try again
-        flash(_('E-mail already registred'))
+        flash(_("E-mail already registred"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
@@ -128,7 +128,7 @@ def signup_post():
     if (
         user
     ):  # if a user is found, we want to redirect back to signup page so user can try again
-        flash(_('User already exists'))
+        flash(_("User already exists"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
@@ -148,7 +148,7 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    message = _('User') + " " + str(userid) + "  " + _('created, please login')
+    message = _("User") + " " + str(userid) + "  " + _("created, please login")
 
     flash(message)
     flash("alert-success")
@@ -175,7 +175,7 @@ def recoverlogin_post():
     email = request.form.get("email")
 
     if "@" not in email:
-        flash(_('Enter valid E-mail'))
+        flash(_("Enter valid E-mail"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
@@ -186,17 +186,17 @@ def recoverlogin_post():
     if (
         not user
     ):  # if a user is found, we want to redirect back to signup page so user can try again
-        flash(_('E-mail not exist in database.'))
+        flash(_("E-mail not exist in database."))
         flash("alert-danger")
     else:
         password = os.urandom(5).hex()
         if recover_email(user, password):
             user.password = generate_password_hash(password, method="pbkdf2:sha256")
             db.session.commit()
-            flash(_('Recorver E-mail as sended'))
+            flash(_("Recorver E-mail as sended"))
             flash("alert-success")
         else:
-            flash(_('Fails to send recover email. Contact administrator'))
+            flash(_("Fails to send recover email. Contact administrator"))
             flash("alert-danger")
 
     return redirect(url_for("auth.login"))

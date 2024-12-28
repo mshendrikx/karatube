@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, g
+from flask import Flask, request, g
 from flask_babel import Babel, gettext as _
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from werkzeug.security import generate_password_hash
 
 # init SQLAlchemy so we can use it later in our models
@@ -12,21 +12,36 @@ babel = Babel()
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
+
 def create_app():
     app = Flask(__name__)
 
     mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
     mariadb_host = os.environ.get("MYSQL_HOST")
 
-    app.config['BABEL_DEFAULT_LOCALE'] = 'en'  # Default language
-    app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
+    app.config["BABEL_DEFAULT_LOCALE"] = "en"  # Default language
+    app.config["BABEL_TRANSLATION_DIRECTORIES"] = "./translations"
     app.config["SECRET_KEY"] = os.urandom(24).hex()
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/karatube"
     )
 
+    def get_locale():
+
+        # Get language from current user
+        if current_user.is_authenticated == True:
+            lang = current_user.language
+        # Try to get the locale from the URL parameter 'lang'
+        elif request.args.get("lang"):
+            lang = request.args.get("lang")
+        else:
+            lang = request.accept_languages.best_match(["en", "pt"])
+
+        # If no 'lang' parameter, use the Accept-Languages header
+        return lang
+
     db.init_app(app)
-    babel.init_app(app)
+    babel.init_app(app, locale_selector=get_locale)
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"

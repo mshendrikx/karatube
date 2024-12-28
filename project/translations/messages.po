@@ -1,18 +1,17 @@
-# Portuguese translations for PROJECT.
+# Translations template for PROJECT.
 # Copyright (C) 2024 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-12-28 10:41-0300\n"
-"PO-Revision-Date: 2024-12-27 14:18-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: pt\n"
-"Language-Team: pt <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,305 +19,305 @@ msgstr ""
 
 #: auth.py:38
 msgid "Please check your login details and try again."
-msgstr "Verifique seus dados e tente novamente"
+msgstr ""
 
 #: auth.py:50
 msgid "User not assigned to room."
-msgstr "Usuário não associado à sala"
+msgstr ""
 
 #: auth.py:95
 msgid "Password dont match"
-msgstr "Passord divergente"
+msgstr ""
 
 #: auth.py:102 main.py:853
 msgid "Wrong room or room password"
-msgstr "Sala ou password errada"
+msgstr ""
 
 #: auth.py:107 auth.py:178 main.py:88
 msgid "Enter valid E-mail"
-msgstr "Entrar E-mail válido"
+msgstr ""
 
 #: auth.py:118
 msgid "E-mail already registred"
-msgstr "E-mail já registrado"
+msgstr ""
 
 #: auth.py:131
 msgid "User already exists"
-msgstr "Usuário já existe"
+msgstr ""
 
 #: auth.py:151 templates/configuration.html:73
 msgid "User"
-msgstr "Usuário"
+msgstr ""
 
 #: auth.py:151
 msgid "created, please login"
-msgstr "criado, por favor entrar"
+msgstr ""
 
 #: auth.py:189
 msgid "E-mail not exist in database."
-msgstr "E-mail não existe na base de dados"
+msgstr ""
 
 #: auth.py:196
 msgid "Recorver E-mail as sended"
-msgstr "E-mail de recuperação enviado"
+msgstr ""
 
 #: auth.py:199
 msgid "Fails to send recover email. Contact administrator"
-msgstr "Falha ao enviar E-mail de recuperação. Contactar administrador"
+msgstr ""
 
 #: karatube.py:435
 msgid "KaraTube Login"
-msgstr "Karatube Login"
+msgstr ""
 
 #: karatube.py:436 templates/signup.html:7
 msgid "User:"
-msgstr "Usuário:"
+msgstr ""
 
 #: karatube.py:436 templates/login.html:11 templates/profile.html:46
 #: templates/signup.html:23
 msgid "Password:"
-msgstr "Password:"
+msgstr ""
 
 #: main.py:83 test.py:4
 msgid "Password do not match"
-msgstr "Password divergente"
+msgstr ""
 
 #: main.py:148
 msgid "No music found in database"
-msgstr "Música não encontrada"
+msgstr ""
 
 #: main.py:177
 msgid "Youtube video alredy downloaded"
-msgstr "Vídeo já baixado do Youtube"
+msgstr ""
 
 #: main.py:219
 msgid "Song alredy in queue"
-msgstr "Música já está na fila"
+msgstr ""
 
 #: main.py:224
 msgid "Song added to queue"
-msgstr "Música adicionada à fila"
+msgstr ""
 
 #: main.py:227 main.py:242 main.py:245
 msgid "Fail to add song to queue"
-msgstr "Falha ao incluir música na fila"
+msgstr ""
 
 #: main.py:235
 msgid "There is no video file, download again"
-msgstr "Arquivo do vídeo não existe, fazer download de novo"
+msgstr ""
 
 #: main.py:239
 msgid "Downloading video, wait finish"
-msgstr "Baixando vídeo, esperar o término"
+msgstr ""
 
 #: main.py:264
 msgid "Song deleted"
-msgstr "Música apagada"
+msgstr ""
 
 #: main.py:267
 msgid "Song delete fails"
-msgstr "Falha ao apagar música"
+msgstr ""
 
 #: main.py:270
 msgid "Only admin can delete song"
-msgstr "Apenas administradores podem apagar músicas"
+msgstr ""
 
 #: main.py:323
 msgid "Queue deleted"
-msgstr "Fila apagada"
+msgstr ""
 
 #: main.py:326
 msgid "Only room admin can delete queue"
-msgstr "Apenas administradores da sala podem modificar fila"
+msgstr ""
 
 #: main.py:329
 msgid "Fail to delete queue"
-msgstr "Falha ao apagar fila"
+msgstr ""
 
 #: main.py:346
 msgid "User is not room admin."
-msgstr "Usuário não é administrador da sala"
+msgstr ""
 
 #: main.py:352
 msgid "Room is not in database."
-msgstr "Sala não está na base de dados."
+msgstr ""
 
 #: main.py:500 main.py:553 main.py:577 main.py:774 main.py:802
 msgid "Must be administrator."
-msgstr "Deve ser administrador."
+msgstr ""
 
 #: main.py:513
 msgid "No user in DB."
-msgstr "Usuário não existe na base de dados."
+msgstr ""
 
 #: main.py:523
 msgid "Room alredy exists."
-msgstr "Sala já existe."
+msgstr ""
 
 #: main.py:539
 msgid "Room created."
-msgstr "Sala criada."
+msgstr ""
 
 #: main.py:542
 msgid "Fail to create Room."
-msgstr "Falha ao criar sala."
+msgstr ""
 
 #: main.py:593
 msgid "Configuration updated."
-msgstr "Configuração atualizada."
+msgstr ""
 
 #: main.py:633
 msgid "User must be an administrator."
-msgstr "Usuário deve ser adminstrador."
+msgstr ""
 
 #: main.py:682
 msgid "Room not available."
-msgstr "Sala não disponível."
+msgstr ""
 
 #: main.py:687
 msgid "Wrong key for room, scan room qrcode again."
-msgstr "Chave de sala errada, ler qrcode da sala novamente."
+msgstr ""
 
 #: main.py:710
 msgid "User not exist in database."
-msgstr "Usuário não existe na base de dados."
+msgstr ""
 
 #: main.py:721
 msgid "User alredy in room."
-msgstr "Usuário já está na sala."
+msgstr ""
 
 #: main.py:724
 msgid "User added to room."
-msgstr "Usuário incluído na sala."
+msgstr ""
 
 #: main.py:739
 msgid "Current user can not be removed from room."
-msgstr "Usuário atual não pode ser removido da sala."
+msgstr ""
 
 #: main.py:747
 msgid "User removed from room."
-msgstr "Usuário removido da sala."
+msgstr ""
 
 #: main.py:758
 msgid "Current user can not be removed from administrator."
-msgstr "Usuário atual não pode ser removido da administração."
+msgstr ""
 
 #: main.py:763
 msgid "User remove from administrator."
-msgstr "Usuário removido da administração."
+msgstr ""
 
 #: main.py:784
 msgid "Room not exists."
-msgstr "Sala não existe."
+msgstr ""
 
 #: main.py:787
 msgid "Room deleted."
-msgstr "Sala apagada."
+msgstr ""
 
 #: main.py:811
 msgid "User not exist is database."
-msgstr "Usuário não existe na base de dados."
+msgstr ""
 
 #: main.py:817
 msgid "Password set to: K4r4tub3"
-msgstr "Password modificada para: K4r4tub3"
+msgstr ""
 
 #: main.py:820
 msgid "User deleted from database."
-msgstr "Usuário removido da base de dados."
+msgstr ""
 
 #: main.py:827
 msgid "Administrator role removed."
-msgstr "Perfil de administrador removido."
+msgstr ""
 
 #: main.py:831
 msgid "User is set as administrator."
-msgstr "Usuário adicionado aos administradores."
+msgstr ""
 
 #: main.py:850
 msgid "User alredy in room"
-msgstr "Usuário já está na sala."
+msgstr ""
 
 #: main.py:856
 msgid "User room changed"
-msgstr "Sala do usuário modificada"
+msgstr ""
 
 #: main.py:870
 msgid "Dinamically barcode is not suported."
-msgstr "Código de barras dinâmico não suportado."
+msgstr ""
 
 #: templates/barcode.html:19 templates/queue.html:13
 msgid "Singer"
-msgstr "Cantor:"
+msgstr ""
 
 #: templates/barcode.html:20 templates/musicdb.html:11 templates/musics.html:31
 #: templates/queue.html:14
 msgid "Music"
-msgstr "Música"
+msgstr ""
 
 #: templates/barcode.html:21 templates/musicdb.html:10 templates/queue.html:15
 msgid "Artist"
-msgstr "Artista"
+msgstr ""
 
 #: templates/barcode.html:51
 msgid "HOST"
-msgstr "SITE"
+msgstr ""
 
 #: templates/barcode.html:55
 msgid "ROOM"
-msgstr "SALA"
+msgstr ""
 
 #: templates/base.html:30
 msgid "Login"
-msgstr "Entrar"
+msgstr ""
 
 #: templates/base.html:33
 msgid "Signup"
-msgstr "Registrar"
+msgstr ""
 
 #: templates/base.html:38
 msgid "Musics"
-msgstr "Músicas"
+msgstr ""
 
 #: templates/base.html:41
 msgid "Queue"
-msgstr "Fila"
+msgstr ""
 
 #: templates/base.html:44
 msgid "Profile"
-msgstr "Perfil"
+msgstr ""
 
 #: templates/base.html:47
 msgid "Barcode"
-msgstr "Barcode"
+msgstr ""
 
 #: templates/base.html:51 templates/player.html:175
 msgid "Room"
-msgstr "Sala"
+msgstr ""
 
 #: templates/base.html:54
 msgid "Player"
-msgstr "Player"
+msgstr ""
 
 #: templates/base.html:59
 msgid "Configuration"
-msgstr "Configuração"
+msgstr ""
 
 #: templates/base.html:63
 msgid "Logout"
-msgstr "Sair"
+msgstr ""
 
 #: templates/configuration.html:5
 msgid "Settings"
-msgstr "Configurações"
+msgstr ""
 
 #: templates/configuration.html:8
 msgid "Song Library:"
-msgstr "Biblioteca de Músicas:"
+msgstr ""
 
 #: templates/configuration.html:21
 msgid "LAST.FM API Key:"
-msgstr "Chave API LAST.FM"
+msgstr ""
 
 #: templates/configuration.html:23
 msgid ""
@@ -328,148 +327,145 @@ msgstr ""
 
 #: templates/configuration.html:28
 msgid "Screen update sec:"
-msgstr "Atualização de tela em seg:"
+msgstr ""
 
 #: templates/configuration.html:33 templates/profile.html:77
 #: templates/room.html:78
 msgid "Update"
-msgstr "Atualizar"
+msgstr ""
 
 #: templates/configuration.html:39
 msgid "Create Room"
-msgstr "Criar Sala"
+msgstr ""
 
 #: templates/configuration.html:50
 msgid "Save"
-msgstr "Gravar"
+msgstr ""
 
 #: templates/configuration.html:57
 msgid "Delete Room"
-msgstr "Apagar Sala"
+msgstr ""
 
 #: templates/configuration.html:66
 msgid "Delete"
-msgstr "Apagar"
+msgstr ""
 
 #: templates/index.html:7
 msgid "Hello,"
-msgstr "Olá,"
+msgstr ""
 
 #: templates/index.html:11
 msgid "Login first !"
-msgstr "Primeiro entrar !"
+msgstr ""
 
 #: templates/login.html:7
 msgid "User / E-mail:"
-msgstr "Usuário / E-mail:"
+msgstr ""
 
 #: templates/login.html:17
 msgid "Remember me"
-msgstr "Lembrar-me"
+msgstr ""
 
 #: templates/login.html:23
 msgid "Recover login data"
-msgstr "Recuperar dados de login"
+msgstr ""
 
 #: templates/musics.html:11
 msgid "Singer:"
-msgstr "Cantor:"
+msgstr ""
 
 #: templates/musics.html:20
-#, fuzzy
 msgid "Artist - Music"
-msgstr "Artista"
+msgstr ""
 
 #: templates/musics.html:22
 msgid "Search Youtube"
-msgstr "Procurar no Youtube"
+msgstr ""
 
 #: templates/musics.html:30 templates/youtube.html:16
 msgid "Preview"
-msgstr "Pré-visualizar"
+msgstr ""
 
 #: templates/player.html:152
 msgid "Singing:"
-msgstr "Cantando:"
+msgstr ""
 
 #: templates/player.html:162
 msgid "Now:"
-msgstr "Agora:"
+msgstr ""
 
 #: templates/player.html:168
 msgid "Next:"
-msgstr "Próximo:"
+msgstr ""
 
 #: templates/player.html:179
 msgid "Host"
-msgstr "Site"
+msgstr ""
 
 #: templates/profile.html:6
 msgid "Welcome,"
-msgstr "Bem-vindo,"
+msgstr ""
 
 #: templates/profile.html:10
 msgid "You are in room:"
-msgstr "Você está na sala:"
+msgstr ""
 
 #: templates/profile.html:19 templates/signup.html:11
 msgid "Name:"
-msgstr "Nome:"
+msgstr ""
 
 #: templates/profile.html:28 templates/recoverlogin.html:11
 #: templates/signup.html:15
 msgid "E-mail:"
-msgstr "E-mail:"
+msgstr ""
 
 #: templates/profile.html:37 templates/signup.html:19
 msgid "Mobile:"
-msgstr "Celular:"
+msgstr ""
 
 #: templates/profile.html:54 templates/signup.html:27
 msgid "Re-type Password:"
-msgstr "Confirmar Password:"
+msgstr ""
 
 #: templates/profile.html:62 templates/queue.html:6 templates/room.html:7
 msgid "Room:"
-msgstr "Sala:"
+msgstr ""
 
 #: templates/profile.html:81
 msgid ""
 "Regular users must scan QR code in KaraTube player screen to change room "
 "or ask a room admin to add him."
 msgstr ""
-"Usuários comuns devem escanear o QR-Code na tela do player do KaraTube "
-"para mudar de sala ou pedir para um administrador adicioná-lo."
 
 #: templates/recoverlogin.html:18
 msgid "Send"
-msgstr "Enviar"
+msgstr ""
 
 #: templates/room.html:12
 msgid "Player Controls"
-msgstr "Controles do Player"
+msgstr ""
 
 #: templates/room.html:51
 msgid "Config"
-msgstr "Configuração"
+msgstr ""
 
 #: templates/room.html:75
 msgid "Song Interval:"
-msgstr "Intervalo entre músicas:"
+msgstr ""
 
 #: templates/room.html:88
 msgid "Users"
-msgstr "Usuários"
+msgstr ""
 
 #: templates/room.html:93 templates/room.html:125
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 #: templates/room.html:120
 msgid "Administrators"
-msgstr "Administradores"
+msgstr ""
 
 #: templates/youtube.html:17
 msgid "Description"
-msgstr "Descrição"
+msgstr ""
 
