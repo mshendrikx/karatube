@@ -63,8 +63,13 @@
                 </div>
                 <div class="col-3 text-white">
                     <select name="lang_selection" id="lang_selection" required>
-                        <option value="en">English</option>
+                        {% if current_user.language == 'en' %}
+                        <option value="en" selected>English</option>
                         <option value="pt">Português</option>
+                        {% else %}
+                        <option value="en">English</option>
+                        <option value="pt" selected>Português</option>
+                        {% endif %}
                     </select>
                 </div>
             </div>

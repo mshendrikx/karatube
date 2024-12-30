@@ -12,14 +12,13 @@ from flask import (
     redirect,
     url_for,
     jsonify,
-    g,
+    session,
 )
 from flask_babel import gettext as _
 from urllib.request import urlretrieve
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from pathlib import Path
-from flask import g
 from . import db
 
 
@@ -48,11 +47,6 @@ class PlayerData:
 LOCK_QUEUE = {}
 
 main = Blueprint("main", __name__)
-
-
-@main.before_request
-def before_request():
-    g.locale = get_locale()
 
 
 @main.route("/")

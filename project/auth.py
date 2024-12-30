@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash, g
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_babel import gettext as _
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
@@ -9,11 +9,6 @@ from .karatube import recover_email
 from . import db
 
 auth = Blueprint("auth", __name__)
-
-
-# @auth.before_request
-# def before_request():
-#    g.locale = get_locale()
 
 
 @auth.route("/login")

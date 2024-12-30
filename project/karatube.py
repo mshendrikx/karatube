@@ -4,9 +4,7 @@ import requests
 import os
 import smtplib
 
-from flask import request
 from flask_babel import gettext as _
-from flask_login import current_user
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch

@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, g
+from flask import Flask, request, session
 from flask_babel import Babel, gettext as _
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
@@ -9,8 +9,6 @@ from werkzeug.security import generate_password_hash
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 babel = Babel()
-
-base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_locale():
