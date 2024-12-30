@@ -45,6 +45,7 @@ class PlayerData:
 
 
 LOCK_QUEUE = {}
+SESSION_MUSICS = {}
 
 main = Blueprint("main", __name__)
 
@@ -117,6 +118,7 @@ def profile_post():
 @main.route("/musics")
 @login_required
 def musics():
+
     song_list = Song.query.order_by("artist", "name")
     songs_check = song_list.filter_by(downloaded=0)
     for song_check in songs_check:
@@ -142,6 +144,8 @@ def musics():
 @login_required
 def musics_post():
 
+    global SESSION_MUSICS
+
     search_string = request.form.get("search_string")
     singer_user = request.form.get("user_selection")
     config = Config.query.first()
@@ -155,27 +159,38 @@ def musics_post():
         flash("alert-warning")
         return redirect(url_for("main.musics"))
     else:
+        SESSION_MUSICS[session["session_id"]] = musics
         return render_template("musicdb.html", musics=musics, singer_user=singer_user)
 
 
-@main.route("/youtube/<artist>/<song>/<singer>")
+@main.route("/youtube/<song>/<singer>")
 @login_required
-def youtube(artist, song, singer):
-    search_arg = artist + " " + song
+def youtube(song, singer):
+
+    song_id = int(song)
+    search_arg = (
+        SESSION_MUSICS[session["session_id"]][song_id].artist
+        + " "
+        + SESSION_MUSICS[session["session_id"]][song_id].song
+    )
     youtube_videos = youtube_search(search_arg)
     videos = [video.get_display_data() for video in youtube_videos]
-    song = song.replace("?", "")
 
     return render_template(
-        "youtube.html", videos=videos, artist=artist, song=song, singer=singer
+        "youtube.html",
+        videos=videos,
+        singer=singer,
+        song_id=song_id,
     )
 
 
-@main.route("/youtubedl/<artist>/<song>/<id>/<image>/<singer>")
+@main.route("/youtubedl/<song>/<id>/<image>/<singer>")
 @login_required
-def youtubedl(artist, song, id, image, singer):
+def youtubedl(song, id, image, singer):
 
     result = False
+
+    song_id = int(song)
 
     song_exists = Song.query.filter_by(youtubeid=id).first()
 
@@ -184,7 +199,12 @@ def youtubedl(artist, song, id, image, singer):
         flash("alert-warning")
     else:
         try:
-            new_song = Song(youtubeid=id, name=song, artist=artist, downloaded=0)
+            new_song = Song(
+                youtubeid=id,
+                name=SESSION_MUSICS[session["session_id"]][song_id].song,
+                artist=SESSION_MUSICS[session["session_id"]][song_id].artist,
+                downloaded=0,
+            )
             db.session.add(new_song)
             db.session.commit()
             result = True

@@ -22,7 +22,7 @@
             <tr>
                 <td>
                     <a
-                        href="#" data-variable1="{{ artist }} " data-variable2="{{ song }}" data-variable3="{{ video['id'] }}" data-variable4="{{ video['image'] }}" data-variable5="{{ singer }}">
+                        href="#" data-variable1="{{ song_id }} " data-variable2="{{ video['id'] }}" data-variable3="{{ video['image'] }}" data-variable4="{{ singer }}">
                         <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24">
                     </a>
                 </td>
@@ -58,7 +58,7 @@
               variableData[variableName] = attribute.value;
             }
           }
-          const dynamicUrl = buildDynamicUrl(variableData[1], variableData[2], variableData[3], variableData[4], variableData[5]);
+          const dynamicUrl = buildDynamicUrl(variableData[1], variableData[2], variableData[3], variableData[4]);
           link.href = dynamicUrl;
         } catch (error) {
           
@@ -67,7 +67,7 @@
     });
     
     function buildDynamicUrl(variable1, variable2, variable3, variable4, variable5) {
-      return `/youtubedl/${variable1}/${variable2}/${variable3}/${variable4}/${variable5}`;  // Replace with your base URL and path
+      return `/youtubedl/${variable1}/${variable2}/${variable3}/${variable4}`;  // Replace with your base URL and path
     }
 </script>
 

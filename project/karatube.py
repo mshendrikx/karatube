@@ -45,6 +45,7 @@ class SongQueue:
 
 
 class MusicData:
+    id = 0
     artist = ""
     song = ""
 
@@ -210,12 +211,15 @@ def lastfm_search(search_arg, lastfm_pass):
             if not title in artists[artist]:
                 artists[artist].append(title)
 
+        count_id = 0
         for artist in artists:
             for song in artists[artist]:
                 music_data = MusicData()
+                music_data.id = count_id
                 music_data.song = song
                 music_data.artist = artist
                 tracks.append(music_data)
+                count_id += 1
     except:
         return None
 
@@ -255,12 +259,15 @@ def musicbrainz_search(search_arg):
             if not title in artists[artist]:
                 artists[artist].append(title)
 
+        count_id = 0
         for artist in artists:
             for song in artists[artist]:
                 music_data = MusicData()
+                music_data = count_id
                 music_data.song = song
                 music_data.artist = artist
                 tracks.append(music_data)
+                count_id += 1
 
     except:
         return None

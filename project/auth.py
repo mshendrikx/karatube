@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_babel import gettext as _
@@ -63,6 +64,9 @@ def login_post():
     login_user(user, remember=remember)
     db.session.add(user)
     db.session.commit()
+    
+    if 'session_id' not in session:
+        session['session_id'] = str(uuid.uuid4())
 
     return redirect(url_for("main.profile"))
 
