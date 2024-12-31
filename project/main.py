@@ -205,10 +205,9 @@ def youtubedl(song, id, image, singer):
         flash("alert-warning")
     else:
         try:
-            if wireguard_download(youtubeid=id):
-                downloaded = 1
-            else:
-                downloaded = 0
+            downloaded = 0
+#            if wireguard_download(youtubeid=id):
+#                downloaded = 1
             new_song = Song(
                 youtubeid=id,
                 name=SESSION_MUSICS[session["session_id"]][song_id].song,
