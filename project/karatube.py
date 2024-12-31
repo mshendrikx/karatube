@@ -451,3 +451,25 @@ def recover_email(user, password):
         smtp_server=os.environ["SMTP_SERVER"],
         smtp_port=os.environ["SMTP_PORT"],
     )
+
+
+def wireguard_download(youtubeid):
+
+    url = (        
+        'http://'
+        + os.environ.get("WIREGUARD_CONTAINER")
+        + ":"
+        + os.environ.get("WIREGUARD_PORT")
+        + "/"
+        + str(youtubeid)
+    )
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if data["downloaded"] == 1:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return False

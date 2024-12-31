@@ -31,6 +31,7 @@ from .karatube import (
     queue_get,
     check_video,
     musicbrainz_search,
+    wireguard_download,
 )
 
 
@@ -119,6 +120,11 @@ def profile_post():
 @login_required
 def musics():
 
+    try:
+        del SESSION_MUSICS[session["session_id"]]
+    except:
+        1 == 1
+        
     song_list = Song.query.order_by("artist", "name")
     songs_check = song_list.filter_by(downloaded=0)
     for song_check in songs_check:
@@ -199,11 +205,15 @@ def youtubedl(song, id, image, singer):
         flash("alert-warning")
     else:
         try:
+            if wireguard_download(youtubeid=id):
+                downloaded = 1
+            else:
+                downloaded = 0
             new_song = Song(
                 youtubeid=id,
                 name=SESSION_MUSICS[session["session_id"]][song_id].song,
                 artist=SESSION_MUSICS[session["session_id"]][song_id].artist,
-                downloaded=0,
+                downloaded=downloaded,
             )
             db.session.add(new_song)
             db.session.commit()
@@ -231,11 +241,10 @@ def addqueue(youtubeid, userid):
 
     global LOCK_QUEUE
 
-    if not current_user.roomid in LOCK_QUEUE:
-        LOCK_QUEUE[current_user.roomid] = True
-    else:
-        while LOCK_QUEUE[current_user.roomid] == True:
-            time.sleep(1)
+    while current_user.roomid in LOCK_QUEUE:
+        time.sleep(1)
+        
+    LOCK_QUEUE[current_user.roomid] = True
 
     try:
         queue_check = Queue.query.filter_by(
@@ -252,7 +261,7 @@ def addqueue(youtubeid, userid):
                 else:
                     flash(_("Fail to add song to queue"))
                     flash("alert-danger")
-            else:
+            else:                                     
                 add_song = Song.query.filter_by(youtubeid=youtubeid).first()
                 if add_song:
                     if add_song.downloaded == 1:
@@ -271,8 +280,11 @@ def addqueue(youtubeid, userid):
         flash(_("Fail to add song to queue"))
         flash("alert-danger")
 
-    LOCK_QUEUE[current_user.roomid] = False
-
+    try:
+        del LOCK_QUEUE[current_user.roomid]
+    except:
+        1 == 1
+        
     return redirect(url_for("main.musics"))
 
 
@@ -322,11 +334,10 @@ def delqueue(queueid):
 
     global LOCK_QUEUE
 
-    if not current_user.roomid in LOCK_QUEUE:
-        LOCK_QUEUE[current_user.roomid] = True
-    else:
-        while LOCK_QUEUE[current_user.roomid] == True:
-            time.sleep(1)
+    while current_user.roomid in LOCK_QUEUE:
+        time.sleep(1)
+        
+    LOCK_QUEUE[current_user.roomid] = True
 
     queue = Queue.query.filter_by(id=queueid).first()
 
@@ -357,7 +368,10 @@ def delqueue(queueid):
         flash(_("Fail to delete queue"))
         flash("alert-danger")
 
-    LOCK_QUEUE[current_user.roomid] = False
+    try:
+        del LOCK_QUEUE[current_user.roomid]
+    except:
+        1 == 1
 
     return redirect(url_for("main.queue"))
 
