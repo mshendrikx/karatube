@@ -16,11 +16,15 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-# Generate crontab content directly in the Dockerfile
-RUN echo "* * * * * python3 /app/karatubed.py" > /etc/cron.d/karatubed-cron
+RUN mv karatubed_cron /etc/cron.d/
 
-# Set permissions
-RUN chmod 0644 /etc/cron.d/karatubed-cron
+RUN chmod 0644 /etc/cron.d/karatubed_cron
+
+RUN crontab /etc/cron.d/karatubed_cron
+
+RUN chmod +x /app/karatubed.sh
+
+RUN mkdir logs
 
 # Expose port 7003 for web traffic
 EXPOSE 7003

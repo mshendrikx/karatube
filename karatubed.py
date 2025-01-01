@@ -44,7 +44,17 @@ def is_script_running():
             return True
     return False
 
+log_file = "/app/logs/karatubed.log"
+try:
+    with open(log_file, "a") as ef:
+        ef.write(f"Open file\n")
+except Exception as ef_err:
+    1 == 1
+
 session = get_session()
+
+if session == None:
+    ef.write(f"Erro no BD\n")
 
 songs = session.query(Song).filter_by(downloaded=0)
 
@@ -57,4 +67,5 @@ for song in songs:
         try:
             YouTube(download_url).streams.first().download(output_path=file_path, filename=video_file)
         except Exception as e:
-           continue
+            ef.write(f"Erro no download\n")
+            continue
