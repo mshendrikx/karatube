@@ -50,10 +50,11 @@ songs = session.query(Song).filter_by(downloaded=0)
 
 for song in songs:
     video_file = str(song.youtubeid) + ".mp4"
-    filename = os.environ.get("LOCAL_PATH") + "/" + video_file
+    filename = '/app/project/static/songs/' + video_file
+    file_path = '/app/project/static/songs'
     if not os.path.exists(video_file):
         download_url = YT_BASE_URL + str(song.youtubeid)
         try:
-            YouTube(download_url).streams.first().download(filename=filename)
+            YouTube(download_url).streams.first().download(output_path=file_path, filename=video_file)
         except Exception as e:
            continue
