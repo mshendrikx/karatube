@@ -11,9 +11,4 @@ youtube-search-python
 pytz
 Pillow
 httpx==0.27.2
-sqlalchemy
-mysql-connector-python
-pytubefix
-psutil
-apscheduler
 tzdata 
