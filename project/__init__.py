@@ -6,10 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from werkzeug.security import generate_password_hash
 
+
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 babel = Babel()
-
 
 def get_locale():
 
@@ -23,7 +23,6 @@ def get_locale():
         lang = request.accept_languages.best_match(["en", "pt"])
     # If no 'lang' parameter, use the Accept-Languages header
     return lang
-
 
 def create_app():
     app = Flask(__name__)

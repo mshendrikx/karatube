@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # Install packages
 RUN apt-get update && apt-get install -y python3-pip apt-transport-https nano curl cron
-
+ENV TZ=America/Sao_Paulo
 RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -15,14 +15,6 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 COPY . .
-
-RUN mv karatubed_cron /etc/cron.d/
-
-RUN chmod 0644 /etc/cron.d/karatubed_cron
-
-RUN crontab /etc/cron.d/karatubed_cron
-
-RUN chmod +x /app/karatubed.sh
 
 RUN mkdir logs
 

@@ -10,6 +10,7 @@ services:
     volumes:
       - /path/to/mp4_videos:/app/project/static/songs
       - /path/to/videos_thumbnails:/app/project/static/thumbs
+      - /path/to/crontab_los:/app/logs
     ports:
       - 7003:7003
     networks:

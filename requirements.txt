@@ -15,3 +15,5 @@ sqlalchemy
 mysql-connector-python
 pytubefix
 psutil
+apscheduler
+tzdata 
