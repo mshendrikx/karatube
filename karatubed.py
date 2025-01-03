@@ -6,7 +6,6 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-from pytubefix import YouTube
 from pathlib import Path
 
 YT_BASE_URL = "https://www.youtube.com/watch?v="
@@ -24,8 +23,10 @@ class Song(Base):
 def get_session():
     
     try:
-        mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
-        mariadb_host = os.environ.get("MYSQL_HOST")
+        #mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
+        #mariadb_host = os.environ.get("MYSQL_HOST")
+        mariadb_pass = "M4r14d8P455"
+        mariadb_host = "apps.hendrikx.com.br"      
         engine_string = 'mysql+pymysql://root:' + str(mariadb_pass) + "@" + str(mariadb_host) + '/karatube'
         engine = create_engine(engine_string)
     except Exception as e:
@@ -60,12 +61,13 @@ songs = session.query(Song).filter_by(downloaded=0)
 
 for song in songs:
     video_file = str(song.youtubeid) + ".mp4"
-    filename = '/app/project/static/songs/' + video_file
-    file_path = '/app/project/static/songs'
-    if not os.path.exists(video_file):
+    #filename = '/app/project/static/songs/' + video_file
+    filename = '/home/ubuntu/apps/karatube/' + video_file
+    if not os.path.exists(filename):
         download_url = YT_BASE_URL + str(song.youtubeid)
         try:
-            YouTube(download_url).streams.first().download(output_path=file_path, filename=video_file)
+            command = "yt-dlp -f mp4 " + download_url + " --cookies cookies.txt -o " + filename
+            process = subprocess.run(command, capture_output=True, text=True, check=True, shell=True)
         except Exception as e:
-            ef.write(f"Erro no download\n")
+            print(e.stderr)
             continue

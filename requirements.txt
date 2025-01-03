@@ -12,3 +12,6 @@ pytz
 Pillow
 httpx==0.27.2
 tzdata 
+yt-dlp
+selenium
+seleniumbase

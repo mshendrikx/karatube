@@ -2,7 +2,7 @@
 FROM ubuntu:22.04
 
 # Install packages
-RUN apt-get update && apt-get install -y python3-pip apt-transport-https nano curl cron
+RUN apt-get update && apt-get install -y python3-pip apt-transport-https nano curl cron python3-tk python3-dev xvfb chromium-browser chromium-chromedriver 
 ENV TZ=America/Sao_Paulo
 RUN rm -rf /var/lib/apt/lists/*
 

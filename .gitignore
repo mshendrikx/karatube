@@ -10,7 +10,8 @@ project/static/thumbs/**
 passwords.txt
 app.sh
 debug.py
-test.py
-test2.py
+test*
 credentials.json
 build.sh
+www.youtube.com_cookies.txt
+cookies.txt
