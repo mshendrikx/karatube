@@ -14,4 +14,4 @@ test*
 credentials.json
 build.sh
 www.youtube.com_cookies.txt
-cookies.txt
+*cookies.txt

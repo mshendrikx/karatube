@@ -1,5 +1,4 @@
 import os
-import logging
 
 from flask import Flask, request, session
 from flask_babel import Babel, gettext as _
@@ -11,10 +10,6 @@ from werkzeug.security import generate_password_hash
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 babel = Babel()
-
-# Configure logging
-logging.basicConfig(filename='/app/logs/karatube.log', level=logging.INFO, 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 def get_locale():
 
