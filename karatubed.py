@@ -66,7 +66,7 @@ for song in songs:
     if not os.path.exists(filename):
         download_url = YT_BASE_URL + str(song.youtubeid)
         try:
-            command = "yt-dlp -f mp4 " + download_url + " --cookies cookies.txt -o " + filename
+            command = "yt-dlp -f mp4 -4 " + download_url + " --cookies /home/ubuntu/apps/karatube/cookies.txt -o " + filename
             process = subprocess.run(command, capture_output=True, text=True, check=True, shell=True)
         except Exception as e:
             print(e.stderr)
