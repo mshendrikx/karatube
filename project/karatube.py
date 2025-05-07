@@ -407,6 +407,8 @@ def send_email(
     html_content=None,
     smtp_server="localhost",
     smtp_port=25,
+    smtp_user=None,
+    smtp_password=None,
 ):
     message = create_message(
         sender_name, sender_email, recipient, subject, text_content, html_content
@@ -420,14 +422,15 @@ def send_email(
                 server.starttls()
 
             # Authenticate if required (check Postfix configuration)
-            if server.has_extn("AUTH"):
+            if smtp_user != '' and smtp_password != '':
                 # Replace with your credentials
-                server.login("your_username", "your_password")
+                server.login(smtp_user, smtp_password)
 
             server.sendmail(sender_email, recipient, message.as_string())
 
             return True
-    except:
+    except smtplib.SMTPException as e:
+        print(f"Error sending email: {e}")
         return False
 
 
@@ -450,6 +453,8 @@ def recover_email(user, password):
         text_content=text_content,
         smtp_server=os.environ["SMTP_SERVER"],
         smtp_port=os.environ["SMTP_PORT"],
+        smtp_user=os.environ["SMTP_USER"],
+        smtp_password=os.environ["SMTP_PASS"],
     )
 
 
