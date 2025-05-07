@@ -16,6 +16,3 @@ yt-dlp
 selenium
 seleniumbase
 apscheduler
-mailjet_rest
-mailerlite
-mailersend
