@@ -34,6 +34,8 @@ def create_app():
     app.config["BABEL_DEFAULT_LOCALE"] = "en"  # Default language
     app.config["BABEL_TRANSLATION_DIRECTORIES"] = "./translations"
     app.config["SECRET_KEY"] = os.urandom(24).hex()
+    app.config['RECAPTCHA_PUBLIC_KEY'] = os.environ.get("RECAPTCHA_SITE_KEY")
+    app.config['RECAPTCHA_PRIVATE_KEY'] = os.environ.get("RECAPTCHA_SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/karatube"
     )

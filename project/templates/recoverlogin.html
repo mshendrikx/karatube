@@ -10,6 +10,7 @@
                 <div class="col-3 text-white">
                     <label for="email">{{ _('E-mail:') }}</label>
                 </div>
+                {{ recaptcha_field() }}
                 <div class="col-9 text-white">
                     <input type="text" class="form-control" id="email" name="email" required>
                 </div>

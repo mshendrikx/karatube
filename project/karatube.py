@@ -429,6 +429,7 @@ def send_email(
             server.sendmail(sender_email, recipient, message.as_string())
 
             return True
+        
     except smtplib.SMTPException as e:
         print(f"Error sending email: {e}")
         return False

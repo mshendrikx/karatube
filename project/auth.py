@@ -1,7 +1,8 @@
 import os
 import uuid
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from flask_wtf import FlaskForm, RecaptchaField
+from flask import Blueprint, current_app, render_template, redirect, url_for, request, flash, session
 from flask_babel import gettext as _
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
@@ -11,6 +12,8 @@ from . import db
 
 auth = Blueprint("auth", __name__)
 
+class RecoverLoginForm(FlaskForm):
+    recaptcha = RecaptchaField()
 
 @auth.route("/login")
 def login():
@@ -177,6 +180,12 @@ def recoverlogin():
 @auth.route("/recoverlogin", methods=["POST"])
 def recoverlogin_post():
 
+    form = RecoverLoginForm()
+    if not form.validate_on_submit():
+        flash(_("Invalid reCAPTCHA. Please try again."))
+        flash("alert-danger")
+        return redirect(url_for("auth.recoverlogin"))
+
     email = request.form.get("email")
 
     if "@" not in email:
@@ -184,13 +193,9 @@ def recoverlogin_post():
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
 
-    user = User.query.filter_by(
-        email=email
-    ).first()  # if this returns a user, then the email already exists in database
+    user = User.query.filter_by(email=email).first()
 
-    if (
-        not user
-    ):  # if a user is found, we want to redirect back to signup page so user can try again
+    if not user:
         flash(_("E-mail not exist in database."))
         flash("alert-danger")
     else:
@@ -198,10 +203,40 @@ def recoverlogin_post():
         if recover_email(user, password):
             user.password = generate_password_hash(password, method="pbkdf2:sha256")
             db.session.commit()
-            flash(_("Recorver E-mail as sended"))
+            flash(_("Recover E-mail has been sent"))
             flash("alert-success")
         else:
-            flash(_("Fails to send recover email. Contact administrator"))
+            flash(_("Failed to send recover email. Contact administrator"))
             flash("alert-danger")
 
     return redirect(url_for("auth.login"))
+
+#    email = request.form.get("email")
+#
+#    if "@" not in email:
+#        flash(_("Enter valid E-mail"))
+#        flash("alert-danger")
+#        return redirect(url_for("auth.signup"))
+#
+#    user = User.query.filter_by(
+#        email=email
+#    ).first()  # if this returns a user, then the email already exists in database
+#
+#    if (
+#        not user
+#    ):  # if a user is found, we want to redirect back to signup page so user can try again
+#        flash(_("E-mail not exist in database."))
+#        flash("alert-danger")
+#    else:
+#        password = os.urandom(5).hex()
+#        if recover_email(user, password):
+#            user.password = generate_password_hash(password, method="pbkdf2:sha256")
+#            db.session.commit()
+#            flash(_("Recorver E-mail as sended"))
+#            flash("alert-success")
+#        else:
+#            flash(_("Fails to send recover email. Contact administrator"))
+#            flash("alert-danger")
+#
+#    return redirect(url_for("auth.login"))
+#
