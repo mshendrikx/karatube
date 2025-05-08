@@ -401,7 +401,7 @@ def create_message(
 def send_email(
     sender_name,
     sender_email,
-    recipient,
+    recipient, 
     subject,
     text_content,
     html_content=None,

@@ -831,7 +831,10 @@ def delroom():
         flash("alert-success")
         Roomadm.query.filter_by(roomid=roomid).delete()
         Queue.query.filter_by(roomid=roomid).delete()
-
+        users = User.query.filter_by(roomid=roomid)
+        for user in users:
+            user.roomid = ""
+            
     db.session.commit()
 
     return redirect(url_for("main.configuration"))

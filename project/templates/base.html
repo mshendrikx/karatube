@@ -35,17 +35,19 @@
                     {% endif %}
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.profile') }}">{{ _('Profile') }}</a>
+                    </li>
+                    {% if current_user.roomid != "" %}
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.musics') }}">{{ _('Musics') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.queue') }}">{{ _('Queue') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.profile') }}">{{ _('Profile') }}</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.barcode') }}">{{ _('Barcode') }}</a>
                     </li>
+                    {% endif %}
                     {% if current_user.roomadm == 'X' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.roomcontrol') }}">{{ _('Room') }}</a>

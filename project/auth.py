@@ -37,22 +37,23 @@ def login_post():
             url_for("auth.login")
         )  # if the user doesn't exist or password is wrong, reload the page
 
-    room = Room.query.filter_by(roomid=user.roomid).first()
+    #room = Room.query.filter_by(roomid=user.roomid).first()
     # check if the room actually exists
     # take the room-supplied password, hash it, and compare it to the hashed password in the database
     # if the above check passes, then we know the user has the right credentials
-    if not room:
-        if user.admin != "X":
-            flash(_("User not assigned to room."))
-            flash("alert-danger")
-            return redirect(
-                url_for("auth.login")
-            )  # if the user doesn't exist or password is wrong, reload the page
-
+    #if not room:
+    #    if user.admin != "X":
+    #        flash(_("User not assigned to room."))
+    #        flash("alert-danger")
+    #        return redirect(
+    #            url_for("auth.login")
+    #        )  # if the user doesn't exist or password is wrong, reload the page
+            
     if user.admin == "X":
         user.roomadm = "X"
     else:
-        roomadm = Roomadm.query.filter_by(roomid=room.roomid, userid=user.id).first()
+        #roomadm = Roomadm.query.filter_by(roomid=room.roomid, userid=user.id).first()
+        roomadm = Roomadm.query.filter_by(roomid=user.roomid, userid=user.id).first()
         try:
             if roomadm.roomid == user.roomid:
                 user.roomadm = "X"
@@ -61,6 +62,9 @@ def login_post():
         except:
             user.roomadm = ""
 
+    if user.roomadm == "":        
+        user.roomid = ""
+    
     login_user(user, remember=remember)
     db.session.add(user)
     db.session.commit()
