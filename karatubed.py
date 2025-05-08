@@ -23,10 +23,8 @@ class Song(Base):
 def get_session():
     
     try:
-        #mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
-        #mariadb_host = os.environ.get("MYSQL_HOST")
-        mariadb_pass = "M4r14d8P455"
-        mariadb_host = "apps.hendrikx.com.br"      
+        mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
+        mariadb_host = os.environ.get("MYSQL_HOST")
         engine_string = 'mysql+pymysql://root:' + str(mariadb_pass) + "@" + str(mariadb_host) + '/karatube'
         engine = create_engine(engine_string)
     except Exception as e:
