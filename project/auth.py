@@ -23,6 +23,7 @@ def login():
 
 @auth.route("/login", methods=["POST"])
 def login_post():
+    
     # login code goes here
     userid = request.form.get("userid")
     password = request.form.get("password")
@@ -41,18 +42,6 @@ def login_post():
             url_for("auth.login")
         )  # if the user doesn't exist or password is wrong, reload the page
 
-    #room = Room.query.filter_by(roomid=user.roomid).first()
-    # check if the room actually exists
-    # take the room-supplied password, hash it, and compare it to the hashed password in the database
-    # if the above check passes, then we know the user has the right credentials
-    #if not room:
-    #    if user.admin != "X":
-    #        flash(_("User not assigned to room."))
-    #        flash("alert-danger")
-    #        return redirect(
-    #            url_for("auth.login")
-    #        )  # if the user doesn't exist or password is wrong, reload the page
-            
     if user.admin == "X":
         user.roomadm = "X"
     else:
@@ -96,7 +85,7 @@ def signup_post():
     email = request.form.get("email")
     mobile = request.form.get("mobile")
     roomid = request.form.get("roomid")
-    roompass = request.form.get("roompass")
+    roompass = str(request.form.get("roomid")) + "§" + str(request.form.get("roompass"))
     language = request.form.get("lang_selection")
 
     if password != repass:

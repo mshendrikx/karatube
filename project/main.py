@@ -889,14 +889,14 @@ def updateuser():
 def changeroom_post():
 
     roomid = request.form.get("roomid")
-    roompass = request.form.get("roompass")
+    roompass = str(roomid) + "§" + request.form.get("roompass")
 
     room = Room.query.filter_by(roomid=roomid).first()
 
     if roomid == current_user.roomid:
         flash(_("User alredy in room"))
         flash("alert-warning")
-    elif not room or not check_password_hash(room.password, roompass):
+    elif not room or room.password != roompass:
         flash(_("Wrong room or room password"))
         flash("alert-danger")
     else:
@@ -912,12 +912,9 @@ def changeroom_post():
 @login_required
 def barcode():
 
-    roompass = os.environ.get("ROOM_PASS")
-    if roompass == None:
-        flash(_("Dinamically barcode is not suported."))
-        flash("alert-danger")
+    room = Room.query.filter_by(roomid=current_user.roomid).first()
 
-    qrcode_data = str(current_user.roomid) + "§" + str(roompass)
+    qrcode_data = room.password
     # Create a QR code object with desired error correction level
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
     qr.add_data(qrcode_data)
