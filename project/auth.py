@@ -85,7 +85,7 @@ def signup_post():
     email = request.form.get("email")
     mobile = request.form.get("mobile")
     roomid = request.form.get("roomid")
-    roompass = str(request.form.get("roomid")) + "§" + str(request.form.get("roompass"))
+    roompass = request.form.get("roompass")
     language = request.form.get("lang_selection")
 
     if password != repass:

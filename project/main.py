@@ -398,9 +398,8 @@ def player():
     if roompass == None:
         roompass = os.urandom(12).hex()
         qrcode_data = str(current_user.roomid) + "§" + str(roompass)
-    room.password = qrcode_data
+    room.password = roompass
     db.session.commit()
-
     
     # Create a QR code object with desired error correction level
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
@@ -889,7 +888,7 @@ def updateuser():
 def changeroom_post():
 
     roomid = request.form.get("roomid")
-    roompass = str(roomid) + "§" + request.form.get("roompass")
+    roompass = request.form.get("roompass")
 
     room = Room.query.filter_by(roomid=roomid).first()
 
