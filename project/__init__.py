@@ -36,6 +36,8 @@ def create_app():
     app.config["SECRET_KEY"] = os.urandom(24).hex()
     app.config['RECAPTCHA_PUBLIC_KEY'] = os.environ.get("RECAPTCHA_SITE_KEY")
     app.config['RECAPTCHA_PRIVATE_KEY'] = os.environ.get("RECAPTCHA_SECRET_KEY")
+    app.config['RECAPTCHA_USE_SSL'] = True
+    app.config['RECAPTCHA_OPTIONS'] = {'theme': 'light'}
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/karatube"
     )

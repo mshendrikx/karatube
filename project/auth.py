@@ -1,5 +1,6 @@
 import os
 import uuid
+import requests
 
 from flask_wtf import FlaskForm, RecaptchaField
 from flask import Blueprint, current_app, render_template, redirect, url_for, request, flash, session
@@ -173,25 +174,38 @@ def logout():
 
 @auth.route("/recoverlogin")
 def recoverlogin():
-
-    return render_template("recoverlogin.html")
+    
+    form = RecoverLoginForm()
+    return render_template("recoverlogin.html", form=form)
 
 
 @auth.route("/recoverlogin", methods=["POST"])
 def recoverlogin_post():
 
     form = RecoverLoginForm()
-    if not form.validate_on_submit():
-        flash(_("Invalid reCAPTCHA. Please try again."))
+    recaptcha_response = request.form.get('g-recaptcha-response')
+    secret_key = current_app.config['RECAPTCHA_PRIVATE_KEY']
+
+    # Verify the reCAPTCHA response with Google's API
+    recaptcha_verify_url = "https://www.google.com/recaptcha/api/siteverify"
+    response = requests.post(recaptcha_verify_url, data={
+        'secret': secret_key,
+        'response': recaptcha_response
+    })
+    result = response.json()
+
+    if not result.get('success') or result.get('score', 0) < 0.5:
+        flash(_("Failed reCAPTCHA verification. Please try again."))
         flash("alert-danger")
         return redirect(url_for("auth.recoverlogin"))
 
+    # Proceed with the rest of the recoverlogin logic
     email = request.form.get("email")
 
     if "@" not in email:
         flash(_("Enter valid E-mail"))
         flash("alert-danger")
-        return redirect(url_for("auth.signup"))
+        return redirect(url_for("auth.recoverlogin"))
 
     user = User.query.filter_by(email=email).first()
 
