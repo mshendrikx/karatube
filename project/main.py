@@ -396,7 +396,7 @@ def player():
 
     roompass = os.environ.get("ROOM_PASS")
     if roompass == None:
-        roompass = os.urandom(8).hex()
+        roompass = os.urandom(4).hex()
         qrcode_data = str(current_user.roomid) + "§" + str(roompass)
     room.password = roompass
     db.session.commit()
