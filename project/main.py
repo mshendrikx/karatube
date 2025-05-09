@@ -124,7 +124,7 @@ def musics():
         del SESSION_MUSICS[session["session_id"]]
     except:
         1 == 1
-        
+
     song_list = Song.query.order_by("artist", "name")
     songs_check = song_list.filter_by(downloaded=0)
     for song_check in songs_check:
@@ -242,7 +242,7 @@ def addqueue(youtubeid, userid):
 
     while current_user.roomid in LOCK_QUEUE:
         time.sleep(1)
-        
+
     LOCK_QUEUE[current_user.roomid] = True
 
     try:
@@ -260,7 +260,7 @@ def addqueue(youtubeid, userid):
                 else:
                     flash(_("Fail to add song to queue"))
                     flash("alert-danger")
-            else:                                     
+            else:
                 add_song = Song.query.filter_by(youtubeid=youtubeid).first()
                 if add_song:
                     if add_song.downloaded == 1:
@@ -283,7 +283,7 @@ def addqueue(youtubeid, userid):
         del LOCK_QUEUE[current_user.roomid]
     except:
         1 == 1
-        
+
     return redirect(url_for("main.musics"))
 
 
@@ -335,7 +335,7 @@ def delqueue(queueid):
 
     while current_user.roomid in LOCK_QUEUE:
         time.sleep(1)
-        
+
     LOCK_QUEUE[current_user.roomid] = True
 
     queue = Queue.query.filter_by(id=queueid).first()
@@ -400,7 +400,7 @@ def player():
         qrcode_data = str(current_user.roomid) + "§" + str(roompass)
     room.password = roompass
     db.session.commit()
-    
+
     # Create a QR code object with desired error correction level
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L)
     qr.add_data(qrcode_data)
@@ -834,7 +834,7 @@ def delroom():
         users = User.query.filter_by(roomid=roomid)
         for user in users:
             user.roomid = ""
-            
+
     db.session.commit()
 
     return redirect(url_for("main.configuration"))

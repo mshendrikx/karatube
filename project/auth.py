@@ -54,9 +54,6 @@ def login_post():
                 user.roomadm = ""
         except:
             user.roomadm = ""
-
-    if user.roomadm == "":        
-        user.roomid = ""
     
     login_user(user, remember=remember)
     db.session.add(user)

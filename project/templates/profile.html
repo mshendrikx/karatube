@@ -1,128 +1,182 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-3">
-    <h3 class="title">
-        {{ _('Welcome,') }} {{ current_user.name }} !
-    </h3>
-    <br>
-    <div class="alert alert-primary">
-        {{ _('You are in room:') }} {{ current_user.roomid }}
-    </div>
+  <h3 class="title">{{ _('Welcome,') }} {{ current_user.name }} !</h3>
+  <br />
+  {% if current_user.roomid == '' %}
+  <div class="alert alert-danger">
+    {{ _('You must enter in a room') }}
+  </div>
+  {% else %}
+  <div class="alert alert-primary">
+    {{ _('You are in room:') }} {{ current_user.roomid }}
+  </div>
+  {% endif %}
 </div>
 <div class="container border">
-    <br>
-    <form action="/profile" method="POST">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="name">{{ _('Name:') }}</label>
-                </div>
-                <div class="col-9 text-white">
-                    <input type="text" class="form-control" id="name" name="name" value="{{ current_user.name }}"
-                        required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="email">{{ _('E-mail:') }}</label>
-                </div>
-                <div class="col-9 text-white">
-                    <input type="text" class="form-control" id="email" name="email" value="{{ current_user.email }}"
-                        required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="mobile">{{ _('Mobile:') }}</label>
-                </div>
-                <div class="col-9 text-white">
-                    <input type="text" class="form-control" id="mobile" name="mobile" value="{{ current_user.mobile }}">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="password">{{ _('Password:') }}</label>
-                </div>
-                <div class="col-9 text-white">
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="repass">{{ _('Re-type Password:') }}</label>
-                </div>
-                <div class="col-9 text-white">
-                    <input type="password" class="form-control" id="repass" name="repass">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="lang_selection">{{ _('Language:') }}</label>
-                </div>
-                <div class="col-3 text-white">
-                    <select name="lang_selection" id="lang_selection" required>
-                        {% if current_user.language == 'en' %}
-                        <option value="en" selected>English</option>
-                        <option value="pt">Português</option>
-                        {% else %}
-                        <option value="en">English</option>
-                        <option value="pt" selected>Português</option>
-                        {% endif %}
-                    </select>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="room_selection">{{ _('Room:') }}</label>
-                </div>
-                <div class="col-3 text-white">
-                    <select name="room_selection" id="room_selection">
-                        {% for roomid in rooms %}
-                        <option value="{{ roomid }}">{{ roomid }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-6 text-white">
-                    <p>*</p>
-                </div>
-            </div>
+  <br />
+  <form action="/profile" method="POST">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="name">{{ _('Name:') }}</label>
         </div>
-        <br>
-        <button class="btn btn-outline-primary">{{ _('Update') }}</button>
-    </form>
-    <br>
-    <form action="/changeroom" method="POST">
-        <p>* {{ _('Regular users must scan QR code in KaraTube player screen to change room or ask a room admin to add
-            him.') }}</p>
-        <div class="mb-3" id="reader"></div>
-        <input type="hidden" class="form-control" id="roomid" name="roomid" value="" required>
-        <input type="hidden" class="form-control" id="roompass" name="roompass" value="" required>
-        <button hidden class="btn btn-outline-primary" id="changeroom"></button>
-    </form>
+        <div class="col-9 text-white">
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            value="{{ current_user.name }}"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="email">{{ _('E-mail:') }}</label>
+        </div>
+        <div class="col-9 text-white">
+          <input
+            type="text"
+            class="form-control"
+            id="email"
+            name="email"
+            value="{{ current_user.email }}"
+            required
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="mobile">{{ _('Mobile:') }}</label>
+        </div>
+        <div class="col-9 text-white">
+          <input
+            type="text"
+            class="form-control"
+            id="mobile"
+            name="mobile"
+            value="{{ current_user.mobile }}"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="password">{{ _('Password:') }}</label>
+        </div>
+        <div class="col-9 text-white">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="repass">{{ _('Re-type Password:') }}</label>
+        </div>
+        <div class="col-9 text-white">
+          <input
+            type="password"
+            class="form-control"
+            id="repass"
+            name="repass"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="lang_selection">{{ _('Language:') }}</label>
+        </div>
+        <div class="col-3 text-white">
+          <select name="lang_selection" id="lang_selection" required>
+            {% if current_user.language == 'en' %}
+            <option value="en" selected>English</option>
+            <option value="pt">Português</option>
+            {% else %}
+            <option value="en">English</option>
+            <option value="pt" selected>Português</option>
+            {% endif %}
+          </select>
+        </div>
+      </div>
+      {% if current_user.roomadm == 'X' %}
+      <br />
+      <div class="row">
+        <div class="col-3 text-white">
+          <label for="room_selection">{{ _('Room:') }}</label>
+        </div>
+        <div class="col-3 text-white">
+          <select name="room_selection" id="room_selection">
+            {% for roomid in rooms %}
+            <option value="{{ roomid }}">{{ roomid }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-6 text-white">
+          <p>*</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <br />
+    <button class="btn btn-outline-primary">{{ _('Update') }}</button>
+  </form>
+  <br />
+  <form action="/changeroom" method="POST">
+    <p>
+      * {{ _('Regular users must scan QR code in KaraTube player screen to
+      change room or ask a room admin to add him.') }}
+    </p>
+    <div class="mb-3" id="reader"></div>
+    <input
+      type="hidden"
+      class="form-control"
+      id="roomid"
+      name="roomid"
+      value=""
+      required
+    />
+    <input
+      type="hidden"
+      class="form-control"
+      id="roompass"
+      name="roompass"
+      value=""
+      required
+    />
+    <button hidden class="btn btn-outline-primary" id="changeroom"></button>
+  </form>
 </div>
 <script>
-    const html5QrCode = new Html5Qrcode("reader");
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        // Handle on success condition with the decoded text or result.
-        let roomid = document.getElementById('roomid');
-        let roompass = document.getElementById('roompass');
-        let changeroom = document.getElementById("changeroom");
-        let separator = "§";
-        let parts = decodedText.split(separator);
-        roomid.value = parts[0]
-        roompass.value = parts[1]
-        html5QrCode.stop().then((ignore) => {
-            // QR Code scanning is stopped.
-        }).catch((err) => {
-            // Stop failed, handle it.
-        });
-        changeroom.click();
-    };
-    const config = { fps: 100, qrbox: { width: 200, height: 200 } };
-    // If you want to prefer back camera
-    html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
-
+  const html5QrCode = new Html5Qrcode("reader");
+  const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+    // Handle on success condition with the decoded text or result.
+    let roomid = document.getElementById("roomid");
+    let roompass = document.getElementById("roompass");
+    let changeroom = document.getElementById("changeroom");
+    let separator = "§";
+    let parts = decodedText.split(separator);
+    roomid.value = parts[0];
+    roompass.value = parts[1];
+    html5QrCode
+      .stop()
+      .then((ignore) => {
+        // QR Code scanning is stopped.
+      })
+      .catch((err) => {
+        // Stop failed, handle it.
+      });
+    changeroom.click();
+  };
+  const config = { fps: 100, qrbox: { width: 200, height: 200 } };
+  // If you want to prefer back camera
+  html5QrCode.start(
+    { facingMode: "environment" },
+    config,
+    qrCodeSuccessCallback
+  );
 </script>
 {% endblock %}
