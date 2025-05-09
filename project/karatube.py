@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 from youtubesearchpython import VideosSearch
 from pathlib import Path
 from .models import User, Song, Queue
+from pytubefix import YouTube
 from . import db
 
 APP_PATH = str(Path(__file__).parent.absolute())
@@ -401,7 +402,7 @@ def create_message(
 def send_email(
     sender_name,
     sender_email,
-    recipient, 
+    recipient,
     subject,
     text_content,
     html_content=None,
@@ -422,14 +423,14 @@ def send_email(
                 server.starttls()
 
             # Authenticate if required (check Postfix configuration)
-            if smtp_user != '' and smtp_password != '':
+            if smtp_user != "" and smtp_password != "":
                 # Replace with your credentials
                 server.login(smtp_user, smtp_password)
 
             server.sendmail(sender_email, recipient, message.as_string())
 
             return True
-        
+
     except smtplib.SMTPException as e:
         print(f"Error sending email: {e}")
         return False
@@ -459,23 +460,18 @@ def recover_email(user, password):
     )
 
 
-def wireguard_download(youtubeid):
+def youtube_download(youtubeid):
 
-    url = (        
-        'http://'
-        + os.environ.get("WIREGUARD_CONTAINER")
-        + ":"
-        + os.environ.get("WIREGUARD_PORT")
-        + "/"
-        + str(youtubeid)
-    )
+    video_file = str(youtubeid) + ".mp4"
+    video_path = "/app/project/static/songs"
+    download_url = YT_BASE_URL + str(youtubeid)
 
     try:
-        response = requests.get(url)
-        data = response.json()
-        if data["downloaded"] == 1:
-            return True
-        else:
-            return False
+        YouTube(download_url).streams.first().download(
+            output_path=video_path, filename=video_file
+        )
+        result = True
     except Exception as e:
-        return False
+        result = False
+
+    return result

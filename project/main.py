@@ -31,7 +31,7 @@ from .karatube import (
     queue_get,
     check_video,
     musicbrainz_search,
-    wireguard_download,
+    youtube_download,
 )
 
 
@@ -206,8 +206,8 @@ def youtubedl(song, id, image, singer):
     else:
         try:
             downloaded = 0
-#            if wireguard_download(youtubeid=id):
-#                downloaded = 1
+            if youtube_download(youtubeid=id):
+                downloaded = 1
             new_song = Song(
                 youtubeid=id,
                 name=SESSION_MUSICS[session["session_id"]][song_id].song,

@@ -17,3 +17,5 @@ yt-dlp
 selenium
 seleniumbase
 apscheduler
+pytubefix
+python-dotenv
