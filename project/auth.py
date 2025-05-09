@@ -106,7 +106,7 @@ def signup_post():
 
     room = Room.query.filter_by(roomid=roomid).first()
 
-    if not room or not check_password_hash(room.password, roompass):
+    if not room or room.password != roompass:
         flash(_("Wrong room or room password"))
         flash("alert-danger")
         return redirect(url_for("auth.signup"))
@@ -224,33 +224,3 @@ def recoverlogin_post():
             flash("alert-danger")
 
     return redirect(url_for("auth.login"))
-
-#    email = request.form.get("email")
-#
-#    if "@" not in email:
-#        flash(_("Enter valid E-mail"))
-#        flash("alert-danger")
-#        return redirect(url_for("auth.signup"))
-#
-#    user = User.query.filter_by(
-#        email=email
-#    ).first()  # if this returns a user, then the email already exists in database
-#
-#    if (
-#        not user
-#    ):  # if a user is found, we want to redirect back to signup page so user can try again
-#        flash(_("E-mail not exist in database."))
-#        flash("alert-danger")
-#    else:
-#        password = os.urandom(5).hex()
-#        if recover_email(user, password):
-#            user.password = generate_password_hash(password, method="pbkdf2:sha256")
-#            db.session.commit()
-#            flash(_("Recorver E-mail as sended"))
-#            flash("alert-success")
-#        else:
-#            flash(_("Fails to send recover email. Contact administrator"))
-#            flash("alert-danger")
-#
-#    return redirect(url_for("auth.login"))
-#
