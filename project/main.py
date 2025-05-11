@@ -134,6 +134,7 @@ def musics():
             for queue_item in queue:
                 queue_item.status = ""
             db.session.commit()
+            
     user_sel = []
     user_sel.append(current_user)
     user_list = User.query.filter_by(roomid=current_user.roomid)
