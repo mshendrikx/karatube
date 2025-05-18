@@ -150,9 +150,12 @@ def musics():
 @main.route("/musics", methods=["POST"])
 @login_required
 def musics_post():
-
+    
     global SESSION_MUSICS
-
+    
+    if not session:
+        return redirect(url_for("auth.logout"))
+    
     search_string = request.form.get("search_string")
     singer_user = request.form.get("user_selection")
     config = Config.query.first()
@@ -175,11 +178,17 @@ def musics_post():
 def youtube(song, singer):
 
     song_id = int(song)
-    search_arg = (
-        SESSION_MUSICS[session["session_id"]][song_id].artist
-        + " "
-        + SESSION_MUSICS[session["session_id"]][song_id].song
-    )
+    try:
+        search_arg = (
+            SESSION_MUSICS[session["session_id"]][song_id].artist
+            + " "
+            + SESSION_MUSICS[session["session_id"]][song_id].song
+        )
+    except Exception as e:
+        flash(_("Error getting song"))
+        flash("alert-danger")
+        return redirect(url_for("main.musics"))
+    
     youtube_videos = youtube_search(search_arg)
     videos = [video.get_display_data() for video in youtube_videos]
 
