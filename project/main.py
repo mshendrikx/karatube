@@ -134,7 +134,7 @@ def musics():
             for queue_item in queue:
                 queue_item.status = ""
             db.session.commit()
-            
+
     user_sel = []
     user_sel.append(current_user)
     user_list = User.query.filter_by(roomid=current_user.roomid)
@@ -150,12 +150,9 @@ def musics():
 @main.route("/musics", methods=["POST"])
 @login_required
 def musics_post():
-    
+
     global SESSION_MUSICS
-    
-    if not session:
-        return redirect(url_for("auth.logout"))
-    
+
     search_string = request.form.get("search_string")
     singer_user = request.form.get("user_selection")
     config = Config.query.first()
@@ -169,8 +166,15 @@ def musics_post():
         flash("alert-warning")
         return redirect(url_for("main.musics"))
     else:
-        SESSION_MUSICS[session["session_id"]] = musics
-        return render_template("musicdb.html", musics=musics, singer_user=singer_user)
+        try:
+            SESSION_MUSICS[session["session_id"]] = musics
+            return render_template(
+                "musicdb.html", musics=musics, singer_user=singer_user
+            )
+        except Exception as e:
+            flash(_("Session expired, please login again"))
+            flash("alert-warning")
+            return redirect(url_for("auth.logout"))
 
 
 @main.route("/youtube/<song>/<singer>")
@@ -188,7 +192,7 @@ def youtube(song, singer):
         flash(_("Error getting song"))
         flash("alert-danger")
         return redirect(url_for("main.musics"))
-    
+
     youtube_videos = youtube_search(search_arg)
     videos = [video.get_display_data() for video in youtube_videos]
 
