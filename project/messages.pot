@@ -1,14 +1,14 @@
 # Translations template for PROJECT.
-# Copyright (C) 2024 ORGANIZATION
+# Copyright (C) 2025 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-27 14:15-0300\n"
+"POT-Creation-Date: 2025-05-19 08:00-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,254 +17,258 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: auth.py:38
+#: auth.py:39
 msgid "Please check your login details and try again."
 msgstr ""
 
-#: auth.py:50
-msgid "User not assigned to room."
-msgstr ""
-
-#: auth.py:95
+#: auth.py:89
 msgid "Password dont match"
 msgstr ""
 
-#: auth.py:102 main.py:852
+#: auth.py:96 main.py:913
 msgid "Wrong room or room password"
 msgstr ""
 
-#: auth.py:107 auth.py:178 main.py:87
+#: auth.py:101 auth.py:192 main.py:95
 msgid "Enter valid E-mail"
 msgstr ""
 
-#: auth.py:118
+#: auth.py:112
 msgid "E-mail already registred"
 msgstr ""
 
-#: auth.py:131
+#: auth.py:125
 msgid "User already exists"
 msgstr ""
 
-#: auth.py:151 templates/configuration.html:73
+#: auth.py:146 templates/configuration.html:72
 msgid "User"
 msgstr ""
 
-#: auth.py:151
+#: auth.py:146
 msgid "created, please login"
 msgstr ""
 
-#: auth.py:189
-msgid "E-mail not exist in database."
-msgstr ""
-
-#: auth.py:196
-msgid "Recorver E-mail as sended"
+#: auth.py:184
+msgid "Failed reCAPTCHA verification. Please try again."
 msgstr ""
 
 #: auth.py:199
-msgid "Fails to send recover email. Contact administrator"
+msgid "E-mail not exist in database."
 msgstr ""
 
-#: karatube.py:434
+#: auth.py:206
+msgid "Recover E-mail has been sent"
+msgstr ""
+
+#: auth.py:209
+msgid "Failed to send recover email. Contact administrator"
+msgstr ""
+
+#: karatube.py:445
 msgid "KaraTube Login"
 msgstr ""
 
-#: karatube.py:435 templates/signup.html:7
+#: karatube.py:447 templates/signup.html:7
 msgid "User:"
 msgstr ""
 
-#: karatube.py:435 templates/login.html:11 templates/profile.html:46
+#: karatube.py:447 templates/login.html:11 templates/profile.html:65
 #: templates/signup.html:23
 msgid "Password:"
 msgstr ""
 
-#: main.py:82
+#: main.py:90
 msgid "Password do not match"
 msgstr ""
 
-#: main.py:147
+#: main.py:165
 msgid "No music found in database"
 msgstr ""
 
-#: main.py:176
-msgid "Youtube video alredy downloaded"
+#: main.py:175
+msgid "Session expired, please login again"
+msgstr ""
+
+#: main.py:192
+msgid "Error getting song"
 msgstr ""
 
 #: main.py:218
+msgid "Youtube video alredy downloaded"
+msgstr ""
+
+#: main.py:267
 msgid "Song alredy in queue"
 msgstr ""
 
-#: main.py:223
+#: main.py:272
 msgid "Song added to queue"
 msgstr ""
 
-#: main.py:226 main.py:241 main.py:244
+#: main.py:275 main.py:290 main.py:293
 msgid "Fail to add song to queue"
 msgstr ""
 
-#: main.py:234
+#: main.py:283
 msgid "There is no video file, download again"
 msgstr ""
 
-#: main.py:238
+#: main.py:287
 msgid "Downloading video, wait finish"
 msgstr ""
 
-#: main.py:263
+#: main.py:315
 msgid "Song deleted"
 msgstr ""
 
-#: main.py:266
+#: main.py:318
 msgid "Song delete fails"
 msgstr ""
 
-#: main.py:269
+#: main.py:321
 msgid "Only admin can delete song"
 msgstr ""
 
-#: main.py:322
+#: main.py:375
 msgid "Queue deleted"
 msgstr ""
 
-#: main.py:325
+#: main.py:378
 msgid "Only room admin can delete queue"
 msgstr ""
 
-#: main.py:328
+#: main.py:381
 msgid "Fail to delete queue"
 msgstr ""
 
-#: main.py:345
+#: main.py:401
 msgid "User is not room admin."
 msgstr ""
 
-#: main.py:351
+#: main.py:407
 msgid "Room is not in database."
 msgstr ""
 
-#: main.py:499 main.py:552 main.py:576 main.py:773 main.py:801
+#: main.py:555 main.py:608 main.py:632 main.py:831 main.py:862
 msgid "Must be administrator."
 msgstr ""
 
-#: main.py:512
+#: main.py:568
 msgid "No user in DB."
 msgstr ""
 
-#: main.py:522
+#: main.py:578
 msgid "Room alredy exists."
 msgstr ""
 
-#: main.py:538
+#: main.py:594
 msgid "Room created."
 msgstr ""
 
-#: main.py:541
+#: main.py:597
 msgid "Fail to create Room."
 msgstr ""
 
-#: main.py:592
+#: main.py:648
 msgid "Configuration updated."
 msgstr ""
 
-#: main.py:632
+#: main.py:690
 msgid "User must be an administrator."
 msgstr ""
 
-#: main.py:681
+#: main.py:739
 msgid "Room not available."
 msgstr ""
 
-#: main.py:686
+#: main.py:744
 msgid "Wrong key for room, scan room qrcode again."
 msgstr ""
 
-#: main.py:709
+#: main.py:767
 msgid "User not exist in database."
 msgstr ""
 
-#: main.py:720
+#: main.py:778
 msgid "User alredy in room."
 msgstr ""
 
-#: main.py:723
+#: main.py:781
 msgid "User added to room."
 msgstr ""
 
-#: main.py:738
+#: main.py:796
 msgid "Current user can not be removed from room."
 msgstr ""
 
-#: main.py:746
+#: main.py:804
 msgid "User removed from room."
 msgstr ""
 
-#: main.py:757
+#: main.py:815
 msgid "Current user can not be removed from administrator."
 msgstr ""
 
-#: main.py:762
+#: main.py:820
 msgid "User remove from administrator."
 msgstr ""
 
-#: main.py:783
+#: main.py:841
 msgid "Room not exists."
 msgstr ""
 
-#: main.py:786
+#: main.py:844
 msgid "Room deleted."
 msgstr ""
 
-#: main.py:810
+#: main.py:871
 msgid "User not exist is database."
 msgstr ""
 
-#: main.py:816
+#: main.py:877
 msgid "Password set to: K4r4tub3"
 msgstr ""
 
-#: main.py:819
+#: main.py:880
 msgid "User deleted from database."
 msgstr ""
 
-#: main.py:826
+#: main.py:887
 msgid "Administrator role removed."
 msgstr ""
 
-#: main.py:830
+#: main.py:891
 msgid "User is set as administrator."
 msgstr ""
 
-#: main.py:849
+#: main.py:910
 msgid "User alredy in room"
 msgstr ""
 
-#: main.py:855
+#: main.py:916
 msgid "User room changed"
 msgstr ""
 
-#: main.py:869
-msgid "Dinamically barcode is not suported."
-msgstr ""
-
-#: templates/barcode.html:19 templates/queue.html:13
+#: templates/barcode.html:14 templates/queue.html:13
 msgid "Singer"
 msgstr ""
 
-#: templates/barcode.html:20 templates/musicdb.html:11 templates/musics.html:31
+#: templates/barcode.html:15 templates/musicdb.html:11 templates/musics.html:31
 #: templates/queue.html:14
 msgid "Music"
 msgstr ""
 
-#: templates/barcode.html:21 templates/musicdb.html:10 templates/queue.html:15
+#: templates/barcode.html:16 templates/musicdb.html:10 templates/queue.html:15
 msgid "Artist"
 msgstr ""
 
 #: templates/barcode.html:51
-msgid "HOST"
+msgid "ROOM"
 msgstr ""
 
-#: templates/barcode.html:55
-msgid "ROOM"
+#: templates/barcode.html:61
+msgid "HOST"
 msgstr ""
 
 #: templates/base.html:30
@@ -276,34 +280,34 @@ msgid "Signup"
 msgstr ""
 
 #: templates/base.html:38
-msgid "Musics"
-msgstr ""
-
-#: templates/base.html:41
-msgid "Queue"
-msgstr ""
-
-#: templates/base.html:44
 msgid "Profile"
 msgstr ""
 
-#: templates/base.html:47
+#: templates/base.html:42
+msgid "Musics"
+msgstr ""
+
+#: templates/base.html:45
+msgid "Queue"
+msgstr ""
+
+#: templates/base.html:50
 msgid "Barcode"
 msgstr ""
 
-#: templates/base.html:51 templates/player.html:175
+#: templates/base.html:53 templates/player.html:175
 msgid "Room"
 msgstr ""
 
-#: templates/base.html:54
+#: templates/base.html:56
 msgid "Player"
 msgstr ""
 
-#: templates/base.html:59
+#: templates/base.html:61
 msgid "Configuration"
 msgstr ""
 
-#: templates/base.html:63
+#: templates/base.html:65
 msgid "Logout"
 msgstr ""
 
@@ -320,33 +324,31 @@ msgid "LAST.FM API Key:"
 msgstr ""
 
 #: templates/configuration.html:23
-msgid ""
-"Get API\n"
-"                Key"
+msgid "Get API Key"
 msgstr ""
 
-#: templates/configuration.html:28
+#: templates/configuration.html:27
 msgid "Screen update sec:"
 msgstr ""
 
-#: templates/configuration.html:33 templates/profile.html:77
+#: templates/configuration.html:32 templates/profile.html:125
 #: templates/room.html:78
 msgid "Update"
 msgstr ""
 
-#: templates/configuration.html:39
+#: templates/configuration.html:38
 msgid "Create Room"
 msgstr ""
 
-#: templates/configuration.html:50
+#: templates/configuration.html:49
 msgid "Save"
 msgstr ""
 
-#: templates/configuration.html:57
+#: templates/configuration.html:56
 msgid "Delete Room"
 msgstr ""
 
-#: templates/configuration.html:66
+#: templates/configuration.html:65
 msgid "Delete"
 msgstr ""
 
@@ -374,6 +376,10 @@ msgstr ""
 msgid "Singer:"
 msgstr ""
 
+#: templates/musics.html:20
+msgid "Artist - Music"
+msgstr ""
+
 #: templates/musics.html:22
 msgid "Search Youtube"
 msgstr ""
@@ -398,42 +404,50 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: templates/profile.html:6
+#: templates/profile.html:3
 msgid "Welcome,"
 msgstr ""
 
-#: templates/profile.html:10
+#: templates/profile.html:7
+msgid "You must enter in a room"
+msgstr ""
+
+#: templates/profile.html:11
 msgid "You are in room:"
 msgstr ""
 
-#: templates/profile.html:19 templates/signup.html:11
+#: templates/profile.html:21 templates/signup.html:11
 msgid "Name:"
 msgstr ""
 
-#: templates/profile.html:28 templates/recoverlogin.html:11
+#: templates/profile.html:36 templates/recoverlogin.html:10
 #: templates/signup.html:15
 msgid "E-mail:"
 msgstr ""
 
-#: templates/profile.html:37 templates/signup.html:19
+#: templates/profile.html:51 templates/signup.html:19
 msgid "Mobile:"
 msgstr ""
 
-#: templates/profile.html:54 templates/signup.html:27
+#: templates/profile.html:78 templates/signup.html:27
 msgid "Re-type Password:"
 msgstr ""
 
-#: templates/profile.html:62 templates/queue.html:6 templates/room.html:7
+#: templates/profile.html:91
+msgid "Language:"
+msgstr ""
+
+#: templates/profile.html:109 templates/queue.html:6 templates/room.html:7
 msgid "Room:"
 msgstr ""
 
-#: templates/profile.html:81
+#: templates/profile.html:130
 msgid ""
-"Regular users must scan QR code in KaraTube player screen to change room "
-"or ask a room admin to add him."
+"Regular users must scan QR code in KaraTube player screen to\n"
+"      change room or ask a room admin to add him."
 msgstr ""
 
-#: templates/recoverlogin.html:18
+#: templates/recoverlogin.html:20
 msgid "Send"
 msgstr ""
 
@@ -459,6 +473,10 @@ msgstr ""
 
 #: templates/room.html:120
 msgid "Administrators"
+msgstr ""
+
+#: templates/signup.html:31
+msgid "language:"
 msgstr ""
 
 #: templates/youtube.html:17
