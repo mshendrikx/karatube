@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-05-19 08:00-0300\n"
+"POT-Creation-Date: 2025-05-19 08:11-0300\n"
 "PO-Revision-Date: 2024-12-27 14:18-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt\n"
@@ -383,8 +383,8 @@ msgstr "Cantor:"
 
 #: templates/musics.html:20
 #, fuzzy
-msgid "Artist - Music"
-msgstr "Artista - Música"
+msgid "\"Artist - Music\""
+msgstr "Artista Música"
 
 #: templates/musics.html:22
 msgid "Search Youtube"
@@ -492,5 +492,4 @@ msgstr "Idioma"
 #: templates/youtube.html:17
 msgid "Description"
 msgstr "Descrição"
-
 
