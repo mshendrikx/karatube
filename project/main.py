@@ -32,6 +32,7 @@ from .karatube import (
     check_video,
     musicbrainz_search,
     youtube_download,
+    youtube_download_api,
 )
 
 
@@ -220,8 +221,8 @@ def youtubedl(song, id, image, singer):
     else:
         try:
             downloaded = 0
-            if youtube_download(youtubeid=id):
-                downloaded = 1
+            #if youtube_download(youtubeid=id):
+            #    downloaded = 1
             new_song = Song(
                 youtubeid=id,
                 name=SESSION_MUSICS[session["session_id"]][song_id].song,
@@ -231,6 +232,7 @@ def youtubedl(song, id, image, singer):
             db.session.add(new_song)
             db.session.commit()
             result = True
+            youtube_download_api(youtubeid=id)
         except:
             result = False
 

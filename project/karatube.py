@@ -3,6 +3,8 @@ import subprocess
 import requests
 import os
 import smtplib
+import pika
+import json
 
 from flask_babel import gettext as _
 from email.mime.multipart import MIMEMultipart
@@ -475,3 +477,40 @@ def youtube_download(youtubeid):
         result = False
 
     return result
+
+
+def youtube_download_async(youtubeid):
+
+    try:
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(os.environ.get("RABBITMQ_HOST"))
+        )
+        channel = connection.channel()
+
+        channel.queue_declare(queue="youtube_download", durable=True)
+        channel.basic_publish(
+            exchange="", routing_key="youtube_download", body=youtubeid
+        )
+
+        connection.close()
+        return True
+    
+    except Exception as e:
+        return False
+
+def youtube_download_api(youtubeid):
+
+    url = 'http://' + os.environ.get("YOUTUBE_DOWNLOAD_HOST") + ':' + os.environ.get("YOUTUBE_DOWNLOAD_PORT") + '/youtube_download/' + youtubeid
+    try:
+        response = requests.get(url, timeout=10) # Added timeout for robustness
+        response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
+        response_json = response.json()
+        api_response_status = response_json.get("status")
+        if api_response_status == "success":
+            status = True
+        else:
+            status = False        
+    except Exception as e:
+        status = False
+    
+    return status

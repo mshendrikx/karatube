@@ -19,3 +19,4 @@ seleniumbase
 apscheduler
 pytubefix
 python-dotenv
+pika
