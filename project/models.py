@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100))
     mobile = db.Column(db.String(30))
     language = db.Column(db.String(2))
+    theme = db.Column(db.String(5))
 
 
 class Song(db.Model):

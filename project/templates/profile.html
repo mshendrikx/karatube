@@ -17,10 +17,10 @@
   <form action="/profile" method="POST">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="name">{{ _('Name:') }}</label>
         </div>
-        <div class="col-9 text-white">
+        <div class="col-9">
           <input
             type="text"
             class="form-control"
@@ -32,10 +32,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="email">{{ _('E-mail:') }}</label>
         </div>
-        <div class="col-9 text-white">
+        <div class="col-9">
           <input
             type="text"
             class="form-control"
@@ -47,10 +47,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="mobile">{{ _('Mobile:') }}</label>
         </div>
-        <div class="col-9 text-white">
+        <div class="col-9">
           <input
             type="text"
             class="form-control"
@@ -61,10 +61,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="password">{{ _('Password:') }}</label>
         </div>
-        <div class="col-9 text-white">
+        <div class="col-9">
           <input
             type="password"
             class="form-control"
@@ -74,10 +74,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="repass">{{ _('Re-type Password:') }}</label>
         </div>
-        <div class="col-9 text-white">
+        <div class="col-9">
           <input
             type="password"
             class="form-control"
@@ -87,10 +87,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="lang_selection">{{ _('Language:') }}</label>
         </div>
-        <div class="col-3 text-white">
+        <div class="col-3">
           <select name="lang_selection" id="lang_selection" required>
             {% if current_user.language == 'en' %}
             <option value="en" selected>English</option>
@@ -102,20 +102,36 @@
           </select>
         </div>
       </div>
+      <div class="row">
+        <div class="col-3">
+          <label for="theme_selection">{{ _('Theme:') }}</label>
+        </div>
+        <div class="col-3">
+          <select name="theme_selection" id="theme_selection" required>
+            {% if current_user.theme == 'dark' %}
+            <option value="dark" selected>Dark</option>
+            <option value="light">Light</option>
+            {% else %}
+            <option value="dark">Dark</option>
+            <option value="light" selected>Light</option>
+            {% endif %}
+          </select>
+        </div>
+      </div>
       {% if current_user.roomadm == 'X' %}
       <br />
       <div class="row">
-        <div class="col-3 text-white">
+        <div class="col-3">
           <label for="room_selection">{{ _('Room:') }}</label>
         </div>
-        <div class="col-3 text-white">
+        <div class="col-3">
           <select name="room_selection" id="room_selection">
             {% for roomid in rooms %}
             <option value="{{ roomid }}">{{ roomid }}</option>
             {% endfor %}
           </select>
         </div>
-        <div class="col-6 text-white">
+        <div class="col-6">
           <p>*</p>
         </div>
       </div>
