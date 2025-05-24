@@ -16,7 +16,11 @@
             <tr>
                 <td>
                     <a href="{{ url_for('main.youtube', song=music.id, singer=singer_user) }}">
-                        <img src="{{ url_for('static', filename='images/icon-search.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-search-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-search-dark.png') }}" height="24" width="24">
+                        {% endif %}
                     </a>
                 </td>
                 <td>{{ music.artist }}</td>

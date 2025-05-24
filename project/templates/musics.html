@@ -41,7 +41,11 @@
                     {% if song.downloaded == 1 %}
                     <a class="clickable-image" id="{{ song.youtubeid }}"
                         href="{{ url_for('main.addqueue', youtubeid=song.youtubeid, userid=current_user.id) }}">
-                        <img src="{{ url_for('static', filename='images/icon-addlist.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-addlist-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-addlist-dark.png') }}" height="24" width="24">
+                        {% endif %}
                     </a>
                     {% endif %}
                 </td>
@@ -55,7 +59,11 @@
                 <td>
                     <a class="clickable-image" id="{{ song.youtubeid }}"
                         href="{{ url_for('main.delsong', youtubeid=song.youtubeid) }}">
-                        <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-delete-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-delete-dark.png') }}" height="24" width="24">
+                        {% endif %}
                     </a>
                 </td>
                 {% endif %}

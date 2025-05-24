@@ -24,15 +24,27 @@
                     {% if current_user.roomadm == 'X' %}
                     <a class="clickable-image" id="{{ queue_item.id }}"
                         href="{{ url_for('main.delqueue', queueid=queue_item.id) }}">
-                        <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-play-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-play-dark.png') }}" height="24" width="24">
+                        {% endif %}
                     </a>
                     {% else %}
-                    <img src="{{ url_for('static', filename='images/icon-play.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-play-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-play-dark.png') }}" height="24" width="24">
+                        {% endif %}
                     {% endif %}
                     {% elif current_user.roomadm == 'X' or current_user.id == queue_item.userid %}
                     <a class="clickable-image" id="{{ queue_item.id }}"
                         href="{{ url_for('main.delqueue', queueid=queue_item.id) }}">
-                        <img src="{{ url_for('static', filename='images/icon-delete.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-delete-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-delete-dark.png') }}" height="24" width="24">
+                        {% endif %}                        
                     </a>
                     {% endif %}
                 </td>
@@ -42,7 +54,11 @@
                 <td>{{ queue_item.artist }}</td>
                 <td>
                     {% if queue_item.status == 'D' %}
-                    <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24">
+                    {% if current_user.theme == 'light' %}
+                    <img src="{{ url_for('static', filename='images/icon-download-light.png') }}" height="24" width="24">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='images/icon-download-dark.png') }}" height="24" width="24">
+                    {% endif %}
                     {% endif %}
                 </td>
             </tr>

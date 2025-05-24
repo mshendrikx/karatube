@@ -23,7 +23,11 @@
                 <td>
                     <a
                         href="#" data-variable1="{{ song_id }} " data-variable2="{{ video['id'] }}" data-variable3="{{ video['image'] }}" data-variable4="{{ singer }}">
-                        <img src="{{ url_for('static', filename='images/icon-download.png') }}" height="24" width="24">
+                        {% if current_user.theme == 'light' %}
+                        <img src="{{ url_for('static', filename='images/icon-download-light.png') }}" height="24" width="24">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/icon-download-dark.png') }}" height="24" width="24">
+                        {% endif %}
                     </a>
                 </td>
                 <td>
