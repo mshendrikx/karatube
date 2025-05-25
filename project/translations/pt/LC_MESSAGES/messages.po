@@ -442,11 +442,11 @@ msgstr "Confirmar Password:"
 
 #: templates/profile.html:91
 msgid "Language:"
-msgstr "Idioma"
+msgstr "Idioma:"
 
 #: templates/profile.html:108
 msgid "Theme:"
-msgstr "Tema"
+msgstr "Tema:"
 
 #: templates/profile.html:126 templates/queue.html:6 templates/room.html:7
 msgid "Room:"
